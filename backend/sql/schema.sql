@@ -1,0 +1,316 @@
+-- TRI CUBE Digital Solutions — MySQL Schema (equivalent to Prisma schema).
+-- Preferred: run `npx prisma migrate dev` from /backend, which generates the real DDL.
+-- This file is a plain-SQL reference for teams who want a raw MySQL setup.
+
+CREATE DATABASE IF NOT EXISTS tricube_lms CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE tricube_lms;
+
+CREATE TABLE users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(191) NOT NULL,
+  email VARCHAR(191) NOT NULL UNIQUE,
+  phone VARCHAR(32) NULL,
+  password_hash VARCHAR(191) NOT NULL,
+  role ENUM('super_admin','admin','trainer','student','guest') NOT NULL DEFAULT 'student',
+  email_verified TINYINT(1) NOT NULL DEFAULT 0,
+  otp VARCHAR(16) NULL,
+  otp_expires_at DATETIME NULL,
+  avatar_url VARCHAR(500) NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE students (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL UNIQUE,
+  college VARCHAR(191) NULL,
+  branch VARCHAR(64) NULL,
+  year_of_study INT NULL,
+  city VARCHAR(64) NULL,
+  linkedin VARCHAR(300) NULL,
+  github VARCHAR(300) NULL,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE admins (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL UNIQUE,
+  title VARCHAR(191) NULL,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE course_categories (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(191) NOT NULL UNIQUE,
+  slug VARCHAR(191) NOT NULL UNIQUE
+);
+
+CREATE TABLE courses (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  slug VARCHAR(191) NOT NULL UNIQUE,
+  title VARCHAR(191) NOT NULL,
+  category_id INT NULL,
+  trainer VARCHAR(191) NOT NULL,
+  description TEXT NOT NULL,
+  thumbnail_url VARCHAR(500) NULL,
+  duration VARCHAR(64) NOT NULL,
+  level ENUM('beginner','intermediate','advanced') NOT NULL DEFAULT 'beginner',
+  price INT NOT NULL,
+  discount INT NOT NULL DEFAULT 0,
+  learning_outcomes TEXT NULL,
+  published TINYINT(1) NOT NULL DEFAULT 1,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (category_id) REFERENCES course_categories(id) ON DELETE SET NULL
+);
+
+CREATE TABLE course_modules (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  course_id INT NOT NULL,
+  title VARCHAR(191) NOT NULL,
+  position INT NOT NULL DEFAULT 0,
+  FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE
+);
+
+CREATE TABLE course_videos (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  course_id INT NOT NULL,
+  module_id INT NULL,
+  title VARCHAR(191) NOT NULL,
+  url VARCHAR(500) NOT NULL,
+  duration_sec INT NOT NULL DEFAULT 0,
+  position INT NOT NULL DEFAULT 0,
+  is_free_preview TINYINT(1) NOT NULL DEFAULT 0,
+  pdf_url VARCHAR(500) NULL,
+  FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE,
+  FOREIGN KEY (module_id) REFERENCES course_modules(id) ON DELETE SET NULL
+);
+
+CREATE TABLE course_progress (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  course_id INT NOT NULL,
+  video_id INT NULL,
+  watched_sec INT NOT NULL DEFAULT 0,
+  completed TINYINT(1) NOT NULL DEFAULT 0,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uniq_progress (user_id, course_id, video_id),
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE
+);
+
+CREATE TABLE services (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  slug VARCHAR(191) NOT NULL UNIQUE,
+  title VARCHAR(191) NOT NULL,
+  description TEXT NOT NULL,
+  image_url VARCHAR(500) NULL,
+  price INT NOT NULL,
+  offer_price INT NOT NULL,
+  duration VARCHAR(64) NOT NULL,
+  features TEXT NOT NULL,
+  published TINYINT(1) NOT NULL DEFAULT 1,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE events (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  slug VARCHAR(191) NOT NULL UNIQUE,
+  title VARCHAR(191) NOT NULL,
+  description TEXT NOT NULL,
+  banner_url VARCHAR(500) NULL,
+  date DATETIME NOT NULL,
+  time VARCHAR(64) NOT NULL,
+  venue VARCHAR(191) NOT NULL,
+  status ENUM('upcoming','live','completed','cancelled') NOT NULL DEFAULT 'upcoming',
+  published TINYINT(1) NOT NULL DEFAULT 1,
+  registration_url VARCHAR(500) NULL,
+  speakers TEXT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE event_gallery (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  event_id INT NOT NULL,
+  url VARCHAR(500) NOT NULL,
+  caption VARCHAR(300) NULL,
+  FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE
+);
+
+CREATE TABLE event_registrations (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  event_id INT NOT NULL,
+  user_id INT NULL,
+  name VARCHAR(191) NOT NULL,
+  email VARCHAR(191) NOT NULL,
+  phone VARCHAR(32) NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+);
+
+CREATE TABLE orders (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  course_id INT NULL,
+  service_id INT NULL,
+  amount INT NOT NULL,
+  currency VARCHAR(8) NOT NULL DEFAULT 'INR',
+  status ENUM('created','paid','failed','refunded') NOT NULL DEFAULT 'created',
+  razorpay_order_id VARCHAR(191) NULL UNIQUE,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE SET NULL
+);
+
+CREATE TABLE payments (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  order_id INT NOT NULL UNIQUE,
+  user_id INT NOT NULL,
+  razorpay_payment_id VARCHAR(191) NOT NULL UNIQUE,
+  razorpay_order_id VARCHAR(191) NOT NULL,
+  razorpay_signature VARCHAR(500) NOT NULL,
+  amount INT NOT NULL,
+  status ENUM('created','paid','failed','refunded') NOT NULL DEFAULT 'paid',
+  invoice_url VARCHAR(500) NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE blogs (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  slug VARCHAR(191) NOT NULL UNIQUE,
+  title VARCHAR(191) NOT NULL,
+  excerpt VARCHAR(500) NOT NULL,
+  content LONGTEXT NOT NULL,
+  cover_url VARCHAR(500) NULL,
+  category VARCHAR(64) NOT NULL,
+  author_name VARCHAR(191) NOT NULL,
+  published TINYINT(1) NOT NULL DEFAULT 1,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE gallery (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  url VARCHAR(500) NOT NULL,
+  caption VARCHAR(300) NULL,
+  kind VARCHAR(16) NOT NULL DEFAULT 'image',
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE testimonials (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(191) NOT NULL,
+  role VARCHAR(191) NOT NULL,
+  quote TEXT NOT NULL,
+  photo_url VARCHAR(500) NULL,
+  rating INT NOT NULL DEFAULT 5,
+  video_url VARCHAR(500) NULL,
+  published TINYINT(1) NOT NULL DEFAULT 1
+);
+
+CREATE TABLE faqs (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  question VARCHAR(500) NOT NULL,
+  answer TEXT NOT NULL,
+  category VARCHAR(64) NOT NULL DEFAULT 'General',
+  position INT NOT NULL DEFAULT 0
+);
+
+CREATE TABLE quizzes (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  course_id INT NOT NULL,
+  title VARCHAR(191) NOT NULL,
+  duration_min INT NOT NULL DEFAULT 20,
+  pass_percent INT NOT NULL DEFAULT 60,
+  FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE
+);
+
+CREATE TABLE questions (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  quiz_id INT NOT NULL,
+  text TEXT NOT NULL,
+  options TEXT NOT NULL,
+  correct_index INT NOT NULL,
+  marks INT NOT NULL DEFAULT 1,
+  FOREIGN KEY (quiz_id) REFERENCES quizzes(id) ON DELETE CASCADE
+);
+
+CREATE TABLE quiz_attempts (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  quiz_id INT NOT NULL,
+  user_id INT NOT NULL,
+  score INT NOT NULL,
+  total INT NOT NULL,
+  passed TINYINT(1) NOT NULL,
+  answers TEXT NOT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (quiz_id) REFERENCES quizzes(id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE certificates (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  cert_number VARCHAR(64) NOT NULL UNIQUE,
+  user_id INT NOT NULL,
+  course_id INT NOT NULL,
+  issued_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  pdf_url VARCHAR(500) NULL,
+  qr_payload VARCHAR(500) NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (course_id) REFERENCES courses(id)
+);
+
+CREATE TABLE contact_messages (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(191) NOT NULL,
+  email VARCHAR(191) NOT NULL,
+  phone VARCHAR(32) NULL,
+  subject VARCHAR(191) NOT NULL,
+  message TEXT NOT NULL,
+  user_id INT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  read_flag TINYINT(1) NOT NULL DEFAULT 0,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+);
+
+CREATE TABLE notifications (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NULL,
+  title VARCHAR(191) NOT NULL,
+  body TEXT NOT NULL,
+  read_flag TINYINT(1) NOT NULL DEFAULT 0,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE email_logs (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  to_email VARCHAR(191) NOT NULL,
+  subject VARCHAR(300) NOT NULL,
+  template VARCHAR(64) NOT NULL,
+  status VARCHAR(32) NOT NULL,
+  error TEXT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE activity_logs (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NULL,
+  action VARCHAR(64) NOT NULL,
+  meta TEXT NULL,
+  ip VARCHAR(64) NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+);
+
+CREATE TABLE settings (
+  `key` VARCHAR(191) PRIMARY KEY,
+  value TEXT NOT NULL
+);
+
+CREATE TABLE newsletter_subscribers (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  email VARCHAR(191) NOT NULL UNIQUE,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);

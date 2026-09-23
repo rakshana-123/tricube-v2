@@ -1,0 +1,481 @@
+// Prisma schema for TRI CUBE Digital Solutions LMS + Website
+// MySQL (local). Run: npx prisma migrate dev --name init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  super_admin
+  admin
+  trainer
+  student
+  guest
+}
+
+enum EventStatus {
+  upcoming
+  live
+  completed
+  cancelled
+}
+
+enum PaymentStatus {
+  created
+  paid
+  failed
+  refunded
+  partially_refunded
+}
+
+enum ServiceRequestStatus {
+  pending
+  paid
+  in_review
+  delivered
+  cancelled
+}
+
+enum CourseLevel {
+  beginner
+  intermediate
+  advanced
+}
+
+model User {
+  id            Int      @id @default(autoincrement())
+  name          String
+  email         String   @unique
+  phone         String?
+  passwordHash  String
+  role          Role     @default(student)
+  emailVerified Boolean  @default(false)
+  otp           String?
+  otpExpiresAt  DateTime?
+  avatarUrl     String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  student       Student?
+  admin         Admin?
+  orders        Order[]
+  payments      Payment[]
+  certificates  Certificate[]
+  progress      CourseProgress[]
+  attempts      QuizAttempt[]
+  activityLogs  ActivityLog[]
+  contactMessages ContactMessage[]
+  eventRegs     EventRegistration[]
+}
+
+model Student {
+  id        Int    @id @default(autoincrement())
+  userId    Int    @unique
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  college   String?
+  branch    String?
+  yearOfStudy Int?
+  city      String?
+  linkedin  String?
+  github    String?
+}
+
+model Admin {
+  id        Int    @id @default(autoincrement())
+  userId    Int    @unique
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String?
+}
+
+model CourseCategory {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  slug      String   @unique
+  courses   Course[]
+}
+
+model Course {
+  id            Int      @id @default(autoincrement())
+  slug          String   @unique
+  title         String
+  categoryId    Int?
+  category      CourseCategory? @relation(fields: [categoryId], references: [id])
+  trainer       String
+  description   String   @db.Text
+  thumbnailUrl  String?
+  duration      String
+  level         CourseLevel  @default(beginner)
+  price         Int
+  discount      Int      @default(0)
+  learningOutcomes String? @db.Text
+  published     Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  modules       CourseModule[]
+  videos        CourseVideo[]
+  quizzes       Quiz[]
+  progress      CourseProgress[]
+  orders        Order[]
+  certificates  Certificate[]
+}
+
+model CourseModule {
+  id        Int    @id @default(autoincrement())
+  courseId  Int
+  course    Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  title     String
+  position  Int    @default(0)
+  videos    CourseVideo[]
+}
+
+model CourseVideo {
+  id         Int    @id @default(autoincrement())
+  courseId   Int
+  moduleId   Int?
+  course     Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  module     CourseModule? @relation(fields: [moduleId], references: [id], onDelete: SetNull)
+  title      String
+  url        String
+  durationSec Int   @default(0)
+  position   Int    @default(0)
+  isFreePreview Boolean @default(false)
+  pdfUrl     String?
+}
+
+model CourseProgress {
+  id         Int    @id @default(autoincrement())
+  userId     Int
+  courseId   Int
+  videoId    Int?
+  watchedSec Int    @default(0)
+  completed  Boolean @default(false)
+  updatedAt  DateTime @updatedAt
+  user       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course     Course  @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId, videoId])
+}
+
+model Service {
+  id          Int    @id @default(autoincrement())
+  slug        String @unique
+  title       String
+  description String @db.Text
+  longDescription String? @db.Text
+  category    String?
+  rating      Float  @default(4.9)
+  imageUrl    String?
+  price       Int
+  offerPrice  Int
+  duration    String
+  features    String @db.Text
+  sections    String? @db.Text
+  published   Boolean @default(true)
+  active      Boolean @default(true)
+  featured    Boolean @default(false)
+  updatedAt   DateTime @default(now()) @updatedAt
+  createdAt   DateTime @default(now())
+}
+
+model Event {
+  id           Int      @id @default(autoincrement())
+  slug         String   @unique
+  title        String
+  description  String   @db.Text
+  bannerUrl    String?
+  date         DateTime
+  time         String
+  venue        String
+  status       EventStatus @default(upcoming)
+  published    Boolean  @default(true)
+  registrationUrl String?
+  speakers     String?  @db.Text
+  createdAt    DateTime @default(now())
+
+  gallery      EventGallery[]
+  registrations EventRegistration[]
+}
+
+model EventGallery {
+  id      Int   @id @default(autoincrement())
+  eventId Int
+  event   Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  url     String
+  caption String?
+}
+
+model EventRegistration {
+  id       Int   @id @default(autoincrement())
+  eventId  Int
+  userId   Int?
+  name     String
+  email    String
+  phone    String?
+  createdAt DateTime @default(now())
+  event    Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user     User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+}
+
+model Order {
+  id           Int    @id @default(autoincrement())
+  userId       Int
+  courseId     Int?
+  serviceId    Int?
+  amount       Int
+  currency     String @default("INR")
+  status       PaymentStatus @default(created)
+  razorpayOrderId String? @unique
+  createdAt    DateTime @default(now())
+  user         User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course       Course? @relation(fields: [courseId], references: [id])
+  payment      Payment?
+}
+
+model Payment {
+  id                  Int    @id @default(autoincrement())
+  orderId             Int    @unique
+  order               Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  userId              Int
+  user                User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  razorpayPaymentId   String @unique
+  razorpayOrderId     String
+  razorpaySignature   String
+  amount              Int
+  status              PaymentStatus @default(paid)
+  invoiceUrl          String?
+  createdAt           DateTime @default(now())
+}
+
+model Blog {
+  id         Int    @id @default(autoincrement())
+  slug       String @unique
+  title      String
+  excerpt    String
+  content    String @db.LongText
+  coverUrl   String?
+  category   String
+  authorName String
+  published  Boolean @default(true)
+  createdAt  DateTime @default(now())
+}
+
+model Gallery {
+  id        Int    @id @default(autoincrement())
+  url       String
+  caption   String?
+  kind      String @default("image")
+  createdAt DateTime @default(now())
+}
+
+model Testimonial {
+  id      Int    @id @default(autoincrement())
+  name    String
+  role    String
+  quote   String @db.Text
+  photoUrl String?
+  rating  Int    @default(5)
+  videoUrl String?
+  published Boolean @default(true)
+}
+
+model FAQ {
+  id       Int    @id @default(autoincrement())
+  question String
+  answer   String @db.Text
+  category String @default("General")
+  position Int    @default(0)
+}
+
+model Quiz {
+  id         Int    @id @default(autoincrement())
+  courseId   Int
+  course     Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  title      String
+  durationMin Int   @default(20)
+  passPercent Int   @default(60)
+  questions  Question[]
+  attempts   QuizAttempt[]
+}
+
+model Question {
+  id       Int    @id @default(autoincrement())
+  quizId   Int
+  quiz     Quiz   @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  text     String @db.Text
+  options  String @db.Text
+  correctIndex Int
+  marks    Int    @default(1)
+}
+
+model QuizAttempt {
+  id       Int    @id @default(autoincrement())
+  quizId   Int
+  userId   Int
+  score    Int
+  total    Int
+  passed   Boolean
+  answers  String @db.Text
+  createdAt DateTime @default(now())
+  quiz     Quiz @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  user     User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Certificate {
+  id            Int    @id @default(autoincrement())
+  certNumber    String @unique
+  userId        Int
+  courseId      Int
+  user          User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course        Course @relation(fields: [courseId], references: [id])
+  issuedAt      DateTime @default(now())
+  pdfUrl        String?
+  qrPayload     String
+}
+
+model ContactMessage {
+  id        Int    @id @default(autoincrement())
+  name      String
+  email     String
+  phone     String?
+  subject   String
+  message   String @db.Text
+  userId    Int?
+  user      User?  @relation(fields: [userId], references: [id], onDelete: SetNull)
+  createdAt DateTime @default(now())
+  read      Boolean @default(false)
+}
+
+model Notification {
+  id        Int    @id @default(autoincrement())
+  userId    Int?
+  title     String
+  body      String @db.Text
+  read      Boolean @default(false)
+  createdAt DateTime @default(now())
+}
+
+model EmailLog {
+  id        Int    @id @default(autoincrement())
+  toEmail   String
+  subject   String
+  template  String
+  status    String
+  error     String? @db.Text
+  createdAt DateTime @default(now())
+}
+
+model ActivityLog {
+  id        Int    @id @default(autoincrement())
+  userId    Int?
+  action    String
+  meta      String? @db.Text
+  ip        String?
+  createdAt DateTime @default(now())
+  user      User?  @relation(fields: [userId], references: [id], onDelete: SetNull)
+}
+
+model Setting {
+  key   String @id
+  value String @db.Text
+}
+
+model NewsletterSubscriber {
+  id    Int    @id @default(autoincrement())
+  email String @unique
+  createdAt DateTime @default(now())
+}
+
+model ServiceRequest {
+  id                Int      @id @default(autoincrement())
+  userId            Int?
+  serviceSlug       String
+  serviceTitle      String
+  name              String
+  email             String
+  phone             String?
+  targetRole        String?
+  notes             String?  @db.Text
+  fileUrl           String?
+  amount            Int
+  currency          String   @default("INR")
+  status            ServiceRequestStatus @default(pending)
+  razorpayOrderId   String?  @unique
+  razorpayPaymentId String?
+  razorpaySignature String?
+  adminNote         String?  @db.Text
+  deliveryFileUrl   String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model MaterialOrder {
+  id                    Int      @id @default(autoincrement())
+  kind                  String   @default("material") // "material" | "bundle"
+  slug                  String
+  email                 String
+  amount                Int
+  currency              String   @default("INR")
+  status                PaymentStatus @default(created)
+  razorpayOrderId       String   @unique
+  razorpayPaymentId     String?
+  razorpaySignature     String?
+  webhookEventId        String?  @unique
+  paidAt                DateTime?
+  downloadTokenIssuedAt DateTime?
+  eventsLog             String?  @db.LongText
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+}
+
+model Material {
+  id              Int      @id @default(autoincrement())
+  slug            String   @unique
+  title           String
+  description     String   @db.Text
+  longDescription String?  @db.Text
+  category        String   @default("General")
+  pages           Int      @default(0)
+  price           Int
+  rating          Float    @default(4.9)
+  highlights      String?  @db.Text  // "a|b|c"
+  coverUrl        String?
+  pdfUrl          String?
+  previewUrl      String?
+  active          Boolean  @default(true)
+  featured        Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  bundles         BundleItem[]
+}
+
+model Bundle {
+  id          Int      @id @default(autoincrement())
+  slug        String   @unique
+  title       String
+  description String?  @db.Text
+  price       Int
+  coverUrl    String?
+  active      Boolean  @default(true)
+  featured    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  items       BundleItem[]
+}
+
+model BundleItem {
+  id         Int      @id @default(autoincrement())
+  bundleId   Int
+  materialId Int
+  bundle     Bundle   @relation(fields: [bundleId], references: [id], onDelete: Cascade)
+  material   Material @relation(fields: [materialId], references: [id], onDelete: Cascade)
+
+  @@unique([bundleId, materialId])
+}

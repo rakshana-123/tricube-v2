@@ -1,0 +1,151 @@
+.rb-tools-page {
+  --tool-overlay-bg: rgba(13, 7, 22, 0.9);
+  --tool-overlay-hover: rgba(39, 30, 55, 0.94);
+  --tool-control-hover: rgba(255, 255, 255, 0.1);
+}
+
+:root {
+  --tool-popover-bg: var(--bg-elevated);
+  --tool-popover-border: var(--border-primary);
+  --tool-menu-shadow: var(--shadow-menu);
+}
+
+.tool-selector-wrapper {
+  position: relative;
+  border-radius: 14px;
+  cursor: pointer;
+}
+
+.tool-selector-wrapper::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  padding: 2px;
+  background: conic-gradient(from var(--border-angle, 0deg), #5227ff, #B497CF, #5227ff, #B497CF, #5227ff);
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: rotateBorder 4s linear infinite;
+}
+
+.tool-selector-wrapper::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 16px;
+  background: conic-gradient(from var(--border-angle, 0deg), #5227ff, #B497CF, #5227ff, #B497CF, #5227ff);
+  filter: blur(6px);
+  opacity: 0.3;
+  z-index: -1;
+  animation: rotateBorder 4s linear infinite;
+}
+
+@property --border-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes rotateBorder {
+  to {
+    --border-angle: 360deg;
+  }
+}
+
+.tool-selector-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 14px 14px;
+  background: linear-gradient(135deg, var(--bg-elevated) 0%, #1a0f2e 100%);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.tool-selector-button:hover {
+  background: linear-gradient(135deg, #1f1235 0%, #251840 100%);
+}
+
+/* Info Tooltip */
+.info-tooltip-trigger {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: var(--bg-hover);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.info-tooltip-trigger:hover {
+  background: var(--border-secondary);
+}
+
+:root[data-theme='light'] .tool-selector-wrapper::before {
+  padding: 1px;
+  background: var(--shell-border-strong);
+  opacity: 1;
+  animation: none;
+}
+
+:root[data-theme='light'] .tool-selector-wrapper::after {
+  display: none;
+}
+
+:root[data-theme='light'] .tool-selector-button {
+  border: 0;
+  background: #fff;
+}
+
+:root[data-theme='light'] .tool-selector-button:hover {
+  background: #fafafa;
+}
+
+:root[data-theme='light'] {
+  --tool-popover-bg: #fff;
+  --tool-popover-border: var(--shell-border);
+  --tool-menu-shadow: 0 14px 34px rgba(24, 24, 27, 0.09);
+}
+
+:root[data-theme='light'] .rb-tools-page {
+  --bg-card: #fff;
+  --bg-elevated: #fff;
+  --bg-hover: #f8f8f9;
+  --border-primary: var(--shell-border);
+  --border-secondary: var(--shell-border-strong);
+  --surface-ghost: #fff;
+  --surface-ghost-hover: #f8f8f9;
+  --tool-overlay-bg: rgba(255, 255, 255, 0.92);
+  --tool-overlay-hover: rgba(248, 248, 249, 0.96);
+  --tool-control-hover: rgba(24, 24, 27, 0.055);
+}
+
+:root[data-theme='light'] .rb-tools-page .info-tooltip-trigger {
+  border: 1px solid var(--shell-border);
+  background: #fff;
+}
+
+:root[data-theme='light'] .rb-tools-page .info-tooltip-trigger:hover {
+  background: #f8f8f9;
+}
+
+:root[data-theme='light'] .rb-tools-page .scrubber-track {
+  background: #fff;
+  border-color: var(--shell-border);
+}
+
+:root[data-theme='light'] .rb-tools-page .scrubber-fill {
+  background: rgba(24, 24, 27, 0.045);
+}

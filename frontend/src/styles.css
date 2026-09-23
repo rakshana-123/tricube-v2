@@ -1,0 +1,299 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfMZhrib2Bg-4.woff2")
+    format("woff2");
+}
+
+/* ================================================================
+   NEUMORPHIC DESIGN SYSTEM — TRI CUBE
+   ================================================================ */
+:root {
+  --white: #ffffff;
+  --teal: #2ea5a1;
+  --navy: #0e263a;
+  --blue: #265ca0;
+
+  --bg: #f0f4f8;
+  --bg-white: #ffffff;
+  --text-primary: #0e263a;
+  --text-secondary: #526575;
+
+  /* Neumorphic shadows */
+  --shadow-light: rgba(255, 255, 255, 0.92);
+  --shadow-dark: rgba(14, 38, 58, 0.12);
+  --shadow-dark-strong: rgba(14, 38, 58, 0.18);
+
+  /* Radius tokens */
+  --radius-sm: 12px;
+  --radius-md: 20px;
+  --radius-lg: 30px;
+  --radius-xl: 40px;
+
+  /* Spacing */
+  --section-padding: 120px 0;
+  --container-max: 1280px;
+}
+
+@theme inline {
+  --color-background: #ffffff;
+  --color-foreground: #0e263a;
+  --color-card: #ffffff;
+  --color-card-foreground: #0e263a;
+  --color-primary: #2ea5a1;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #265ca0;
+  --color-secondary-foreground: #ffffff;
+  --color-accent: #2ea5a1;
+  --color-accent-foreground: #ffffff;
+  --color-muted: #f1f5f9;
+  --color-muted-foreground: #475569;
+  --color-border: #e2e8f0;
+  --color-ring: #2ea5a1;
+  --color-destructive: #dc2626;
+  --color-destructive-foreground: #ffffff;
+  --color-teal: #2ea5a1;
+  --color-navy: #0e263a;
+  --color-steel: #265ca0;
+  --font-heading: "Inter", system-ui, sans-serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply text-foreground font-sans antialiased;
+    background: #f0f4f8;
+    overflow-x: hidden;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* ── Neumorphic Raised Card ── */
+  .neu-raised {
+    background: #f0f4f8;
+    box-shadow:
+      8px 8px 20px rgba(14, 38, 58, 0.12),
+      -8px -8px 20px rgba(255, 255, 255, 0.9);
+    border-radius: var(--radius-md);
+  }
+
+  /* ── Neumorphic Soft (White) ── */
+  .neu-soft {
+    background: #ffffff;
+    box-shadow:
+      6px 6px 18px rgba(14, 38, 58, 0.1),
+      -6px -6px 18px rgba(255, 255, 255, 0.95);
+    border-radius: var(--radius-md);
+  }
+
+  /* ── Neumorphic Inset ── */
+  .neu-inset {
+    box-shadow:
+      inset 5px 5px 12px rgba(14, 38, 58, 0.1),
+      inset -5px -5px 12px rgba(255, 255, 255, 0.95);
+    background: #f0f4f8;
+    border-radius: var(--radius-md);
+  }
+
+  /* ── Neumorphic Button ── */
+  .neu-btn {
+    background: #f0f4f8;
+    box-shadow:
+      5px 5px 14px rgba(14, 38, 58, 0.14),
+      -5px -5px 14px rgba(255, 255, 255, 0.88);
+    border-radius: var(--radius-sm);
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+  }
+  .neu-btn:hover {
+    box-shadow:
+      8px 8px 20px rgba(14, 38, 58, 0.18),
+      -8px -8px 20px rgba(255, 255, 255, 0.92);
+  }
+  .neu-btn:active {
+    box-shadow:
+      inset 4px 4px 10px rgba(14, 38, 58, 0.12),
+      inset -4px -4px 10px rgba(255, 255, 255, 0.9);
+  }
+
+  /* ── Eyebrow label ── */
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 16px;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #2ea5a1;
+    background: rgba(46, 165, 161, 0.1);
+    border: 1px solid rgba(46, 165, 161, 0.2);
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  /* ── Teal primary button ── */
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 28px;
+    border-radius: var(--radius-sm);
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    color: #fff;
+    background: linear-gradient(135deg, #2ea5a1 0%, #247f7c 100%);
+    box-shadow:
+      0 4px 16px rgba(46, 165, 161, 0.35),
+      0 1px 4px rgba(46, 165, 161, 0.2);
+    transition: all 0.25s ease;
+    border: none;
+    cursor: pointer;
+  }
+  .btn-primary:hover {
+    box-shadow:
+      0 8px 24px rgba(46, 165, 161, 0.45),
+      0 2px 8px rgba(46, 165, 161, 0.3);
+    transform: translateY(-2px);
+  }
+
+  /* ── Ghost button ── */
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 28px;
+    border-radius: var(--radius-sm);
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    color: #0e263a;
+    background: #ffffff;
+    box-shadow:
+      5px 5px 14px rgba(14, 38, 58, 0.1),
+      -5px -5px 14px rgba(255, 255, 255, 0.92);
+    transition: all 0.25s ease;
+    border: none;
+    cursor: pointer;
+  }
+  .btn-ghost:hover {
+    box-shadow:
+      8px 8px 20px rgba(14, 38, 58, 0.14),
+      -8px -8px 20px rgba(255, 255, 255, 0.94);
+    transform: translateY(-2px);
+  }
+
+  /* ── Section heading ── */
+  .section-h2 {
+    font-family: "Inter", system-ui, sans-serif;
+    font-size: clamp(32px, 4vw, 48px);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: #0e263a;
+    line-height: 1.1;
+    margin-top: 20px;
+  }
+
+  /* ── Dot separator ── */
+  .teal-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #2ea5a1;
+  }
+
+  /* ── Layout helpers ── */
+  .section-padding {
+    @apply py-20 md:py-28 lg:py-32;
+  }
+
+  .container-wide {
+    @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .container-narrow {
+    @apply mx-auto max-w-5xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 48px;
+    align-items: center;
+  }
+
+  @media (min-width: 1024px) {
+    .hero-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .split-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 48px;
+    align-items: center;
+  }
+
+  @media (min-width: 1024px) {
+    .split-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  @media (min-width: 640px) {
+    .stats-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  /* ── Carousel dot ── */
+  .carousel-dot {
+    border: none;
+    cursor: pointer;
+    height: 8px;
+    border-radius: 4px;
+    transition: all 0.35s ease;
+  }
+  .carousel-dot.active {
+    background: #2ea5a1;
+    width: 28px;
+  }
+  .carousel-dot.inactive {
+    background: rgba(14, 38, 58, 0.15);
+    width: 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
