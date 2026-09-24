@@ -1,4 +1,4 @@
-﻿import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import {
   CheckCircle2,
@@ -19,12 +19,7 @@ import {
 } from "lucide-react";
 import { PageHero } from "@/components/site/SectionHeading";
 import { AdminTabs } from "@/components/site/AdminTabs";
-import {
-  adminLogin,
-  getAdminToken,
-  setAdminToken,
-  absoluteMedia,
-} from "@/lib/services-api";
+import { adminLogin, getAdminToken, setAdminToken, absoluteMedia } from "@/lib/services-api";
 import {
   listServiceRequests,
   updateServiceRequest,
@@ -35,53 +30,79 @@ import {
 export const Route = createFileRoute("/admin/service-requests")({
   head: () => ({
     meta: [
-      { title: "Admin Â· Service Requests â€” TRI CUBE" },
+      { title: "Admin · Service Requests — TRI CUBE" },
       { name: "robots", content: "noindex" },
     ],
   }),
   component: AdminServiceRequestsPage,
 });
 
-const STATUS_FLOW: ServiceRequestStatus[] = [
-  "pending",
-  "paid",
-  "in_review",
-  "delivered",
-];
+const STATUS_FLOW: ServiceRequestStatus[] = ["pending", "paid", "in_review", "delivered"];
 
-const STATUS_META: Record<
-  ServiceRequestStatus,
-  { label: string; className: string; dot: string }
-> = {
-  pending:   { label: "Pending",     className: "bg-amber-100 text-amber-800 border-amber-200",   dot: "bg-amber-500" },
-  paid:      { label: "Paid",        className: "bg-emerald-100 text-emerald-800 border-emerald-200", dot: "bg-emerald-500" },
-  in_review: { label: "In review",   className: "bg-blue-100 text-blue-800 border-blue-200",       dot: "bg-blue-500" },
-  delivered: { label: "Delivered",   className: "bg-violet-100 text-violet-800 border-violet-200", dot: "bg-violet-500" },
-  cancelled: { label: "Cancelled",   className: "bg-rose-100 text-rose-800 border-rose-200",       dot: "bg-rose-500" },
-};
+const STATUS_META: Record<ServiceRequestStatus, { label: string; className: string; dot: string }> =
+  {
+    pending: {
+      label: "Pending",
+      className: "bg-amber-100 text-amber-800 border-amber-200",
+      dot: "bg-amber-500",
+    },
+    paid: {
+      label: "Paid",
+      className: "bg-emerald-100 text-emerald-800 border-emerald-200",
+      dot: "bg-emerald-500",
+    },
+    in_review: {
+      label: "In review",
+      className: "bg-blue-100 text-blue-800 border-blue-200",
+      dot: "bg-blue-500",
+    },
+    delivered: {
+      label: "Delivered",
+      className: "bg-violet-100 text-violet-800 border-violet-200",
+      dot: "bg-violet-500",
+    },
+    cancelled: {
+      label: "Cancelled",
+      className: "bg-rose-100 text-rose-800 border-rose-200",
+      dot: "bg-rose-500",
+    },
+  };
 
 function AdminServiceRequestsPage() {
   const [authed, setAuthed] = useState(false);
-  useEffect(() => { setAuthed(!!getAdminToken()); }, []);
+  useEffect(() => {
+    setAuthed(!!getAdminToken());
+  }, []);
   return (
     <>
       <PageHero
         eyebrow="Admin"
-        title={<>Service <span className="teal-text">Requests</span></>}
+        title={
+          <>
+            Service <span className="gold-text">Requests</span>
+          </>
+        }
         subtitle="Review paid requests, track their status timeline, attach deliverables, and email clients."
       />
       {authed ? <AdminTabs /> : null}
       <section className="mx-auto max-w-7xl px-6 py-12">
-        {authed
-          ? <RequestsManager onSignOut={() => { setAdminToken(null); setAuthed(false); }} />
-          : <LoginForm onSuccess={() => setAuthed(true)} />}
+        {authed ? (
+          <RequestsManager
+            onSignOut={() => {
+              setAdminToken(null);
+              setAuthed(false);
+            }}
+          />
+        ) : (
+          <LoginForm onSuccess={() => setAuthed(true)} />
+        )}
       </section>
     </>
   );
 }
 
 const inputCls =
-  "w-full rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none transition focus:border-[var(--teal)] focus:ring-2 focus:ring-[var(--teal-soft)]";
+  "w-full rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none transition focus:border-[var(--gold)] focus:ring-2 focus:ring-[var(--gold-soft)]";
 
 function LoginForm({ onSuccess }: { onSuccess: () => void }) {
   const [email, setEmail] = useState("tricubedigitalsolutions@gmail.com");
@@ -93,25 +114,56 @@ function LoginForm({ onSuccess }: { onSuccess: () => void }) {
       className="mx-auto max-w-md rounded-2xl border border-border bg-card p-6 shadow-sm"
       onSubmit={async (e) => {
         e.preventDefault();
-        setBusy(true); setErr(null);
-        try { await adminLogin(email, password); onSuccess(); }
-        catch (e: any) { setErr(e.message || "Login failed"); }
-        finally { setBusy(false); }
+        setBusy(true);
+        setErr(null);
+        try {
+          await adminLogin(email, password);
+          onSuccess();
+        } catch (e: any) {
+          setErr(e.message || "Login failed");
+        } finally {
+          setBusy(false);
+        }
       }}
     >
       <h2 className="text-lg font-semibold">Admin sign in</h2>
-      <p className="mt-1 text-xs text-muted-foreground">Requires the backend to be running locally.</p>
+      <p className="mt-1 text-xs text-muted-foreground">
+        Requires the backend to be running locally.
+      </p>
       <label className="mt-5 block text-sm">
-        <span className="mb-1 block text-xs font-medium uppercase tracking-widest text-muted-foreground">Email</span>
-        <input required type="email" value={email} onChange={(e) => setEmail(e.target.value)} className={inputCls} />
+        <span className="mb-1 block text-xs font-medium uppercase tracking-widest text-muted-foreground">
+          Email
+        </span>
+        <input
+          required
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className={inputCls}
+        />
       </label>
       <label className="mt-3 block text-sm">
-        <span className="mb-1 block text-xs font-medium uppercase tracking-widest text-muted-foreground">Password</span>
-        <input required type="password" value={password} onChange={(e) => setPassword(e.target.value)} className={inputCls} />
+        <span className="mb-1 block text-xs font-medium uppercase tracking-widest text-muted-foreground">
+          Password
+        </span>
+        <input
+          required
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className={inputCls}
+        />
       </label>
-      {err && <p className="mt-3 rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-xs text-destructive">{err}</p>}
-      <button disabled={busy} className="mt-5 w-full rounded-full bg-[var(--gradient-gold)] px-5 py-2.5 text-sm font-semibold text-primary-foreground disabled:opacity-60">
-        {busy ? "Signing inâ€¦" : "Sign in"}
+      {err && (
+        <p className="mt-3 rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-xs text-destructive">
+          {err}
+        </p>
+      )}
+      <button
+        disabled={busy}
+        className="mt-5 w-full rounded-full bg-[var(--gradient-gold)] px-5 py-2.5 text-sm font-semibold text-primary-foreground disabled:opacity-60"
+      >
+        {busy ? "Signing in…" : "Sign in"}
       </button>
     </form>
   );
@@ -126,12 +178,19 @@ function RequestsManager({ onSignOut }: { onSignOut: () => void }) {
   const [openId, setOpenId] = useState<number | null>(null);
 
   async function refresh() {
-    setLoading(true); setErr(null);
-    try { setItems(await listServiceRequests()); }
-    catch (e: any) { setErr(e.message || "Failed to load"); }
-    finally { setLoading(false); }
+    setLoading(true);
+    setErr(null);
+    try {
+      setItems(await listServiceRequests());
+    } catch (e: any) {
+      setErr(e.message || "Failed to load");
+    } finally {
+      setLoading(false);
+    }
   }
-  useEffect(() => { refresh(); }, []);
+  useEffect(() => {
+    refresh();
+  }, []);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -151,7 +210,9 @@ function RequestsManager({ onSignOut }: { onSignOut: () => void }) {
 
   const counts = useMemo(() => {
     const c: Record<string, number> = { all: items.length };
-    items.forEach((i) => { c[i.status] = (c[i.status] || 0) + 1; });
+    items.forEach((i) => {
+      c[i.status] = (c[i.status] || 0) + 1;
+    });
     return c;
   }, [items]);
 
@@ -165,14 +226,20 @@ function RequestsManager({ onSignOut }: { onSignOut: () => void }) {
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search by name, email, service, payment idâ€¦"
+            placeholder="Search by name, email, service, payment id…"
             className={`${inputCls} pl-9`}
           />
         </div>
-        <button onClick={refresh} className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm font-medium hover:bg-accent">
+        <button
+          onClick={refresh}
+          className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm font-medium hover:bg-accent"
+        >
           <RefreshCw className="h-4 w-4" /> Refresh
         </button>
-        <button onClick={onSignOut} className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm font-medium hover:bg-accent">
+        <button
+          onClick={onSignOut}
+          className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm font-medium hover:bg-accent"
+        >
           <LogOut className="h-4 w-4" /> Sign out
         </button>
       </div>
@@ -188,7 +255,7 @@ function RequestsManager({ onSignOut }: { onSignOut: () => void }) {
               onClick={() => setStatus(s)}
               className={`rounded-full border px-3 py-1 text-xs font-medium transition ${
                 isActive
-                  ? "border-[var(--teal)] bg-[var(--teal-soft)] text-foreground"
+                  ? "border-[var(--gold)] bg-[var(--gold-soft)] text-foreground"
                   : "border-border bg-card text-muted-foreground hover:bg-accent"
               }`}
             >
@@ -198,7 +265,11 @@ function RequestsManager({ onSignOut }: { onSignOut: () => void }) {
         })}
       </div>
 
-      {err && <p className="mb-4 rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">{err}</p>}
+      {err && (
+        <p className="mb-4 rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+          {err}
+        </p>
+      )}
 
       <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
         <div className="overflow-x-auto">
@@ -216,33 +287,47 @@ function RequestsManager({ onSignOut }: { onSignOut: () => void }) {
             </thead>
             <tbody>
               {loading ? (
-                <tr><td colSpan={7} className="px-4 py-8 text-center text-muted-foreground">Loadingâ€¦</td></tr>
-              ) : filtered.length === 0 ? (
-                <tr><td colSpan={7} className="px-4 py-8 text-center text-muted-foreground">No requests found.</td></tr>
-              ) : filtered.map((it) => (
-                <tr key={it.id} className="border-t border-border/60 hover:bg-accent/30">
-                  <td className="px-4 py-3 font-mono text-xs text-muted-foreground">#{it.id}</td>
-                  <td className="px-4 py-3">
-                    <div className="font-medium">{it.serviceTitle}</div>
-                    <div className="text-xs text-muted-foreground">{it.serviceSlug}</div>
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="font-medium">{it.name}</div>
-                    <div className="text-xs text-muted-foreground">{it.email}</div>
-                  </td>
-                  <td className="px-4 py-3">â‚¹{it.amount.toLocaleString("en-IN")}</td>
-                  <td className="px-4 py-3"><StatusBadge status={it.status} /></td>
-                  <td className="px-4 py-3 text-xs text-muted-foreground">{new Date(it.createdAt).toLocaleString()}</td>
-                  <td className="px-4 py-3 text-right">
-                    <button
-                      onClick={() => setOpenId(it.id)}
-                      className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1.5 text-xs font-medium hover:bg-accent"
-                    >
-                      <Eye className="h-3.5 w-3.5" /> Open
-                    </button>
+                <tr>
+                  <td colSpan={7} className="px-4 py-8 text-center text-muted-foreground">
+                    Loading…
                   </td>
                 </tr>
-              ))}
+              ) : filtered.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="px-4 py-8 text-center text-muted-foreground">
+                    No requests found.
+                  </td>
+                </tr>
+              ) : (
+                filtered.map((it) => (
+                  <tr key={it.id} className="border-t border-border/60 hover:bg-accent/30">
+                    <td className="px-4 py-3 font-mono text-xs text-muted-foreground">#{it.id}</td>
+                    <td className="px-4 py-3">
+                      <div className="font-medium">{it.serviceTitle}</div>
+                      <div className="text-xs text-muted-foreground">{it.serviceSlug}</div>
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="font-medium">{it.name}</div>
+                      <div className="text-xs text-muted-foreground">{it.email}</div>
+                    </td>
+                    <td className="px-4 py-3">₹{it.amount.toLocaleString("en-IN")}</td>
+                    <td className="px-4 py-3">
+                      <StatusBadge status={it.status} />
+                    </td>
+                    <td className="px-4 py-3 text-xs text-muted-foreground">
+                      {new Date(it.createdAt).toLocaleString()}
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      <button
+                        onClick={() => setOpenId(it.id)}
+                        className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1.5 text-xs font-medium hover:bg-accent"
+                      >
+                        <Eye className="h-3.5 w-3.5" /> Open
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
@@ -264,7 +349,9 @@ function RequestsManager({ onSignOut }: { onSignOut: () => void }) {
 function StatusBadge({ status }: { status: ServiceRequestStatus }) {
   const meta = STATUS_META[status];
   return (
-    <span className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-medium ${meta.className}`}>
+    <span
+      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-medium ${meta.className}`}
+    >
       <span className={`h-1.5 w-1.5 rounded-full ${meta.dot}`} />
       {meta.label}
     </span>
@@ -287,7 +374,8 @@ function RequestDrawer({
   const [err, setErr] = useState<string | null>(null);
 
   async function save(status?: ServiceRequestStatus, tag = "save") {
-    setBusy(tag); setErr(null);
+    setBusy(tag);
+    setErr(null);
     try {
       const updated = await updateServiceRequest(request.id, {
         status,
@@ -312,21 +400,27 @@ function RequestDrawer({
       <div className="w-full max-w-2xl overflow-y-auto bg-background shadow-2xl">
         <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border bg-background/95 px-6 py-4 backdrop-blur">
           <div>
-            <div className="text-xs uppercase tracking-widest text-muted-foreground">Request #{request.id}</div>
+            <div className="text-xs uppercase tracking-widest text-muted-foreground">
+              Request #{request.id}
+            </div>
             <h3 className="text-lg font-semibold">{request.serviceTitle}</h3>
           </div>
-          <button onClick={onClose} className="rounded-full p-2 hover:bg-accent"><X className="h-5 w-5" /></button>
+          <button onClick={onClose} className="rounded-full p-2 hover:bg-accent">
+            <X className="h-5 w-5" />
+          </button>
         </div>
 
         <div className="space-y-6 px-6 py-6">
           <div className="flex items-center justify-between rounded-xl border border-border bg-card px-4 py-3">
             <div>
               <div className="text-xs text-muted-foreground">Current status</div>
-              <div className="mt-1"><StatusBadge status={request.status} /></div>
+              <div className="mt-1">
+                <StatusBadge status={request.status} />
+              </div>
             </div>
             <div className="text-right">
               <div className="text-xs text-muted-foreground">Amount</div>
-              <div className="text-lg font-semibold">â‚¹{request.amount.toLocaleString("en-IN")}</div>
+              <div className="text-lg font-semibold">₹{request.amount.toLocaleString("en-IN")}</div>
             </div>
           </div>
 
@@ -334,23 +428,45 @@ function RequestDrawer({
             <h4 className="mb-2 text-sm font-semibold">Client</h4>
             <dl className="grid grid-cols-1 gap-2 rounded-xl border border-border bg-card p-4 text-sm sm:grid-cols-2">
               <Field label="Name" value={request.name} />
-              <Field label="Email" value={<a href={`mailto:${request.email}`} className="text-[var(--teal)] hover:underline">{request.email}</a>} />
-              <Field label="Phone" value={request.phone || "â€”"} />
-              <Field label="Target role" value={request.targetRole || "â€”"} />
-              <Field label="Payment ID" value={<span className="font-mono text-xs">{request.razorpayPaymentId || "â€”"}</span>} />
-              <Field label="Order ID" value={<span className="font-mono text-xs">{request.razorpayOrderId || "â€”"}</span>} />
+              <Field
+                label="Email"
+                value={
+                  <a
+                    href={`mailto:${request.email}`}
+                    className="text-[var(--gold-dark)] hover:underline"
+                  >
+                    {request.email}
+                  </a>
+                }
+              />
+              <Field label="Phone" value={request.phone || "—"} />
+              <Field label="Target role" value={request.targetRole || "—"} />
+              <Field
+                label="Payment ID"
+                value={
+                  <span className="font-mono text-xs">{request.razorpayPaymentId || "—"}</span>
+                }
+              />
+              <Field
+                label="Order ID"
+                value={<span className="font-mono text-xs">{request.razorpayOrderId || "—"}</span>}
+              />
             </dl>
           </section>
 
           {request.notes && (
             <section>
               <h4 className="mb-2 text-sm font-semibold">Client notes</h4>
-              <p className="whitespace-pre-wrap rounded-xl border border-border bg-card p-4 text-sm text-muted-foreground">{request.notes}</p>
+              <p className="whitespace-pre-wrap rounded-xl border border-border bg-card p-4 text-sm text-muted-foreground">
+                {request.notes}
+              </p>
             </section>
           )}
 
           <section>
-            <h4 className="mb-2 flex items-center gap-2 text-sm font-semibold"><Paperclip className="h-4 w-4" /> Client attachment</h4>
+            <h4 className="mb-2 flex items-center gap-2 text-sm font-semibold">
+              <Paperclip className="h-4 w-4" /> Client attachment
+            </h4>
             {request.fileUrl ? (
               <a
                 href={absoluteMedia(request.fileUrl)}
@@ -360,7 +476,9 @@ function RequestDrawer({
               >
                 <FileText className="h-4 w-4" /> Open uploaded file
               </a>
-            ) : <p className="text-sm text-muted-foreground">No file uploaded.</p>}
+            ) : (
+              <p className="text-sm text-muted-foreground">No file uploaded.</p>
+            )}
           </section>
 
           <section>
@@ -368,14 +486,24 @@ function RequestDrawer({
             <ol className="space-y-3 rounded-xl border border-border bg-card p-4">
               {timeline.map((t, i) => (
                 <li key={i} className="flex items-start gap-3">
-                  <div className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full ${t.done ? "bg-emerald-100 text-emerald-700" : "bg-muted text-muted-foreground"}`}>
-                    {t.done ? <CheckCircle2 className="h-4 w-4" /> : <CircleDot className="h-4 w-4" />}
+                  <div
+                    className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full ${t.done ? "bg-emerald-100 text-emerald-700" : "bg-muted text-muted-foreground"}`}
+                  >
+                    {t.done ? (
+                      <CheckCircle2 className="h-4 w-4" />
+                    ) : (
+                      <CircleDot className="h-4 w-4" />
+                    )}
                   </div>
                   <div className="flex-1">
                     <div className="text-sm font-medium">{t.label}</div>
                     {t.detail && <div className="text-xs text-muted-foreground">{t.detail}</div>}
                   </div>
-                  {t.at && <div className="text-xs text-muted-foreground">{new Date(t.at).toLocaleString()}</div>}
+                  {t.at && (
+                    <div className="text-xs text-muted-foreground">
+                      {new Date(t.at).toLocaleString()}
+                    </div>
+                  )}
                 </li>
               ))}
             </ol>
@@ -393,7 +521,9 @@ function RequestDrawer({
           </section>
 
           <section>
-            <h4 className="mb-2 flex items-center gap-2 text-sm font-semibold"><Upload className="h-4 w-4" /> Delivery attachment</h4>
+            <h4 className="mb-2 flex items-center gap-2 text-sm font-semibold">
+              <Upload className="h-4 w-4" /> Delivery attachment
+            </h4>
             <div className="space-y-3 rounded-xl border border-border bg-card p-4">
               {request.deliveryFileUrl && (
                 <a
@@ -406,18 +536,39 @@ function RequestDrawer({
                 </a>
               )}
               <label className="block text-xs">
-                <span className="mb-1 block font-medium uppercase tracking-widest text-muted-foreground">Upload new file</span>
-                <input type="file" onChange={(e) => setFile(e.target.files?.[0] || null)} className="block w-full text-sm" />
-                {file && <span className="mt-1 block text-xs text-muted-foreground">Selected: {file.name}</span>}
+                <span className="mb-1 block font-medium uppercase tracking-widest text-muted-foreground">
+                  Upload new file
+                </span>
+                <input
+                  type="file"
+                  onChange={(e) => setFile(e.target.files?.[0] || null)}
+                  className="block w-full text-sm"
+                />
+                {file && (
+                  <span className="mt-1 block text-xs text-muted-foreground">
+                    Selected: {file.name}
+                  </span>
+                )}
               </label>
               <label className="block text-xs">
-                <span className="mb-1 block font-medium uppercase tracking-widest text-muted-foreground">Or paste external URL</span>
-                <input value={urlInput} onChange={(e) => setUrlInput(e.target.value)} placeholder="https://â€¦" className={inputCls} />
+                <span className="mb-1 block font-medium uppercase tracking-widest text-muted-foreground">
+                  Or paste external URL
+                </span>
+                <input
+                  value={urlInput}
+                  onChange={(e) => setUrlInput(e.target.value)}
+                  placeholder="https://…"
+                  className={inputCls}
+                />
               </label>
             </div>
           </section>
 
-          {err && <p className="rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">{err}</p>}
+          {err && (
+            <p className="rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+              {err}
+            </p>
+          )}
 
           <section className="sticky bottom-0 -mx-6 border-t border-border bg-background/95 px-6 py-4 backdrop-blur">
             <div className="flex flex-wrap items-center gap-2">
@@ -426,7 +577,7 @@ function RequestDrawer({
                 disabled={!!busy}
                 className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm font-medium hover:bg-accent disabled:opacity-60"
               >
-                {busy === "save" ? "Savingâ€¦" : "Save changes"}
+                {busy === "save" ? "Saving…" : "Save changes"}
               </button>
               <button
                 onClick={() => save("in_review", "in_review")}
@@ -440,7 +591,8 @@ function RequestDrawer({
                 disabled={!!busy}
                 className="inline-flex items-center gap-2 rounded-full bg-[var(--gradient-gold)] px-4 py-2 text-sm font-semibold text-primary-foreground shadow-sm hover:opacity-95 disabled:opacity-60"
               >
-                <Send className="h-4 w-4" /> {busy === "delivered" ? "Deliveringâ€¦" : "Deliver & email client"}
+                <Send className="h-4 w-4" />{" "}
+                {busy === "delivered" ? "Delivering…" : "Deliver & email client"}
               </button>
               <button
                 onClick={() => save("cancelled", "cancelled")}
@@ -451,7 +603,8 @@ function RequestDrawer({
               </button>
             </div>
             <p className="mt-2 flex items-center gap-1 text-xs text-muted-foreground">
-              <Mail className="h-3 w-3" /> "Deliver" sends the client an email with your note and the attached file.
+              <Mail className="h-3 w-3" /> "Deliver" sends the client an email with your note and
+              the attached file.
             </p>
           </section>
         </div>
@@ -476,11 +629,36 @@ function buildTimeline(r: ServiceRequestDTO) {
   const delivered = r.status === "delivered";
   const cancelled = r.status === "cancelled";
   return [
-    { label: "Request created", detail: `${r.name} Â· ${r.email}`, done: true, at: created },
-    { label: "Payment received", detail: paid ? `Razorpay Â· ${r.razorpayPaymentId}` : "Awaiting payment", done: paid },
-    { label: "In review by admin", detail: inReview ? (r.adminNote ? "Notes attached" : "Being processed") : "Not started yet", done: inReview },
-    { label: "Delivered to client", detail: delivered ? (r.deliveryFileUrl ? "File shared via email" : "Email sent") : "Pending delivery", done: delivered, at: delivered ? r.updatedAt : undefined },
-    ...(cancelled ? [{ label: "Cancelled", detail: r.adminNote || "Marked cancelled", done: true, at: r.updatedAt }] : []),
+    { label: "Request created", detail: `${r.name} · ${r.email}`, done: true, at: created },
+    {
+      label: "Payment received",
+      detail: paid ? `Razorpay · ${r.razorpayPaymentId}` : "Awaiting payment",
+      done: paid,
+    },
+    {
+      label: "In review by admin",
+      detail: inReview ? (r.adminNote ? "Notes attached" : "Being processed") : "Not started yet",
+      done: inReview,
+    },
+    {
+      label: "Delivered to client",
+      detail: delivered
+        ? r.deliveryFileUrl
+          ? "File shared via email"
+          : "Email sent"
+        : "Pending delivery",
+      done: delivered,
+      at: delivered ? r.updatedAt : undefined,
+    },
+    ...(cancelled
+      ? [
+          {
+            label: "Cancelled",
+            detail: r.adminNote || "Marked cancelled",
+            done: true,
+            at: r.updatedAt,
+          },
+        ]
+      : []),
   ];
 }
-

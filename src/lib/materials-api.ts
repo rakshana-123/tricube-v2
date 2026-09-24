@@ -36,7 +36,10 @@ export type BundleDTO = {
 
 export function splitHighlights(h?: string | null): string[] {
   if (!h) return [];
-  return h.split(/[|\n]/).map((x) => x.trim()).filter(Boolean);
+  return h
+    .split(/[|\n]/)
+    .map((x) => x.trim())
+    .filter(Boolean);
 }
 
 export function absoluteMedia(url?: string | null): string | undefined {
@@ -63,12 +66,19 @@ function staticFallback(): MaterialDTO[] {
 async function tryFetch(path: string, init?: RequestInit): Promise<Response | null> {
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), 3000);
-  try { return await fetch(`${API_BASE}${path}`, { ...init, signal: ctrl.signal }); }
-  catch { return null; }
-  finally { clearTimeout(t); }
+  try {
+    return await fetch(`${API_BASE}${path}`, { ...init, signal: ctrl.signal });
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(t);
+  }
 }
 
-export async function listMaterials(params?: { category?: string; q?: string }): Promise<MaterialDTO[]> {
+export async function listMaterials(params?: {
+  category?: string;
+  q?: string;
+}): Promise<MaterialDTO[]> {
   const qs = new URLSearchParams();
   if (params?.category && params.category !== "all") qs.set("category", params.category);
   if (params?.q) qs.set("q", params.q);
@@ -76,7 +86,8 @@ export async function listMaterials(params?: { category?: string; q?: string }):
   if (!r || !r.ok) {
     const all = staticFallback();
     return all.filter((m) => {
-      if (params?.category && params.category !== "all" && m.category !== params.category) return false;
+      if (params?.category && params.category !== "all" && m.category !== params.category)
+        return false;
       if (params?.q) {
         const q = params.q.toLowerCase();
         return m.title.toLowerCase().includes(q) || m.description.toLowerCase().includes(q);
@@ -115,43 +126,83 @@ function authHeaders(): HeadersInit {
 }
 
 export async function adminListMaterials(): Promise<MaterialDTO[]> {
-  const r = await adminFetch("/api/materials/admin/all", { headers: authHeaders() }, "Failed to load materials");
+  const r = await adminFetch(
+    "/api/materials/admin/all",
+    { headers: authHeaders() },
+    "Failed to load materials",
+  );
   return (await r.json()).materials || [];
 }
 export async function adminCreateMaterial(fd: FormData): Promise<MaterialDTO> {
-  const r = await adminFetch("/api/materials/admin/materials", { method: "POST", headers: authHeaders(), body: fd }, "Create failed");
+  const r = await adminFetch(
+    "/api/materials/admin/materials",
+    { method: "POST", headers: authHeaders(), body: fd },
+    "Create failed",
+  );
   return (await r.json()).material;
 }
 export async function adminUpdateMaterial(id: number, fd: FormData): Promise<MaterialDTO> {
-  const r = await adminFetch(`/api/materials/admin/materials/${id}`, { method: "PATCH", headers: authHeaders(), body: fd }, "Update failed");
+  const r = await adminFetch(
+    `/api/materials/admin/materials/${id}`,
+    { method: "PATCH", headers: authHeaders(), body: fd },
+    "Update failed",
+  );
   return (await r.json()).material;
 }
 export async function adminToggleMaterial(id: number): Promise<MaterialDTO> {
-  const r = await adminFetch(`/api/materials/admin/materials/${id}/toggle`, { method: "PATCH", headers: authHeaders() }, "Toggle failed");
+  const r = await adminFetch(
+    `/api/materials/admin/materials/${id}/toggle`,
+    { method: "PATCH", headers: authHeaders() },
+    "Toggle failed",
+  );
   return (await r.json()).material;
 }
 export async function adminDeleteMaterial(id: number): Promise<void> {
-  await adminFetch(`/api/materials/admin/materials/${id}`, { method: "DELETE", headers: authHeaders() }, "Delete failed");
+  await adminFetch(
+    `/api/materials/admin/materials/${id}`,
+    { method: "DELETE", headers: authHeaders() },
+    "Delete failed",
+  );
 }
 
 export async function adminListBundles(): Promise<BundleDTO[]> {
-  const r = await adminFetch("/api/materials/admin/bundles/all", { headers: authHeaders() }, "Failed to load bundles");
+  const r = await adminFetch(
+    "/api/materials/admin/bundles/all",
+    { headers: authHeaders() },
+    "Failed to load bundles",
+  );
   return (await r.json()).bundles || [];
 }
 export async function adminCreateBundle(fd: FormData): Promise<BundleDTO> {
-  const r = await adminFetch("/api/materials/admin/bundles", { method: "POST", headers: authHeaders(), body: fd }, "Create failed");
+  const r = await adminFetch(
+    "/api/materials/admin/bundles",
+    { method: "POST", headers: authHeaders(), body: fd },
+    "Create failed",
+  );
   return (await r.json()).bundle;
 }
 export async function adminUpdateBundle(id: number, fd: FormData): Promise<BundleDTO> {
-  const r = await adminFetch(`/api/materials/admin/bundles/${id}`, { method: "PATCH", headers: authHeaders(), body: fd }, "Update failed");
+  const r = await adminFetch(
+    `/api/materials/admin/bundles/${id}`,
+    { method: "PATCH", headers: authHeaders(), body: fd },
+    "Update failed",
+  );
   return (await r.json()).bundle;
 }
 export async function adminToggleBundle(id: number): Promise<BundleDTO> {
-  const r = await adminFetch(`/api/materials/admin/bundles/${id}/toggle`, { method: "PATCH", headers: authHeaders() }, "Toggle failed");
+  const r = await adminFetch(
+    `/api/materials/admin/bundles/${id}/toggle`,
+    { method: "PATCH", headers: authHeaders() },
+    "Toggle failed",
+  );
   return (await r.json()).bundle;
 }
 export async function adminDeleteBundle(id: number): Promise<void> {
-  await adminFetch(`/api/materials/admin/bundles/${id}`, { method: "DELETE", headers: authHeaders() }, "Delete failed");
+  await adminFetch(
+    `/api/materials/admin/bundles/${id}`,
+    { method: "DELETE", headers: authHeaders() },
+    "Delete failed",
+  );
 }
 
 // ---------- Admin: order timeline ----------
@@ -175,10 +226,16 @@ export type OrderRow = {
   events: OrderEvent[];
 };
 
-export async function adminListMaterialOrders(params: { q?: string; status?: string } = {}): Promise<OrderRow[]> {
+export async function adminListMaterialOrders(
+  params: { q?: string; status?: string } = {},
+): Promise<OrderRow[]> {
   const qs = new URLSearchParams();
   if (params.q) qs.set("q", params.q);
   if (params.status) qs.set("status", params.status);
-  const r = await adminFetch(`/api/materials/admin/orders?${qs.toString()}`, { headers: authHeaders() }, "Failed to load orders");
+  const r = await adminFetch(
+    `/api/materials/admin/orders?${qs.toString()}`,
+    { headers: authHeaders() },
+    "Failed to load orders",
+  );
   return (await r.json()).orders || [];
 }

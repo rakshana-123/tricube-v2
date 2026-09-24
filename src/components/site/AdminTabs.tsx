@@ -1,5 +1,15 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { BookOpen, Briefcase, CalendarDays, FileText, Image as ImageIcon, LayoutDashboard, MessageSquare, Newspaper, ScrollText } from "lucide-react";
+import {
+  BookOpen,
+  Briefcase,
+  CalendarDays,
+  FileText,
+  Image as ImageIcon,
+  LayoutDashboard,
+  MessageSquare,
+  Newspaper,
+  ScrollText,
+} from "lucide-react";
 
 const TABS = [
   { to: "/admin", label: "Dashboard", icon: LayoutDashboard },

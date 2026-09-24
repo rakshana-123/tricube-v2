@@ -32,7 +32,8 @@ export function BackendStatusProvider({ children }: { children: ReactNode }) {
               <div>
                 <p className="font-semibold">Backend not reachable at {API_BASE}</p>
                 <p className="mt-1 text-red-800/90">
-                  All create, edit, upload, and delete actions are disabled. Start the local API and try again:
+                  All create, edit, upload, and delete actions are disabled. Start the local API and
+                  try again:
                 </p>
                 <code className="mt-2 inline-block rounded bg-red-100 px-2 py-1 font-mono text-xs">
                   cd backend &amp;&amp; npm run dev

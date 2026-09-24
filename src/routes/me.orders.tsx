@@ -1,8 +1,15 @@
-﻿import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import {
-  Loader2, Receipt, ExternalLink, ArrowLeft, RefreshCw,
-  BookOpen, FileText, Package, LifeBuoy,
+  Loader2,
+  Receipt,
+  ExternalLink,
+  ArrowLeft,
+  RefreshCw,
+  BookOpen,
+  FileText,
+  Package,
+  LifeBuoy,
 } from "lucide-react";
 import { PageHero } from "@/components/site/SectionHeading";
 import { getToken, getStoredUser } from "@/lib/auth";
@@ -25,10 +32,7 @@ type OrderItem = {
 
 export const Route = createFileRoute("/me/orders")({
   head: () => ({
-    meta: [
-      { title: "My orders â€” TRI CUBE" },
-      { name: "robots", content: "noindex" },
-    ],
+    meta: [{ title: "My orders — TRI CUBE" }, { name: "robots", content: "noindex" }],
   }),
   component: MyOrdersPage,
 });
@@ -84,8 +88,12 @@ function MyOrdersPage() {
     <>
       <PageHero
         eyebrow="Student dashboard"
-        title={<>Orders &amp; <span className="teal-text">payments</span></>}
-        subtitle="A complete history of everything you've purchased â€” courses, materials, bundles, and services."
+        title={
+          <>
+            Orders &amp; <span className="gold-text">payments</span>
+          </>
+        }
+        subtitle="A complete history of everything you've purchased — courses, materials, bundles, and services."
       />
       <section className="mx-auto max-w-6xl px-6 py-10">
         <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
@@ -96,8 +104,8 @@ function MyOrdersPage() {
             <ArrowLeft className="h-4 w-4" /> Back to dashboard
           </Link>
           <div className="flex items-center gap-3">
-            <div className="rounded-full bg-[var(--teal-soft)] px-3 py-1 text-xs font-medium text-[var(--teal)]">
-              Lifetime paid: â‚¹{totalPaid.toLocaleString("en-IN")}
+            <div className="rounded-full bg-[var(--gold-soft)] px-3 py-1 text-xs font-medium text-[var(--gold-dark)]">
+              Lifetime paid: ₹{totalPaid.toLocaleString("en-IN")}
             </div>
             <button
               onClick={() => void load()}
@@ -120,7 +128,10 @@ function MyOrdersPage() {
               ["service", "Services"],
             ] as const
           ).map(([k, label]) => {
-            const count = k === "all" ? orders?.length ?? 0 : (orders ?? []).filter((o) => o.kind === k).length;
+            const count =
+              k === "all"
+                ? (orders?.length ?? 0)
+                : (orders ?? []).filter((o) => o.kind === k).length;
             const active = filter === k;
             return (
               <button
@@ -128,7 +139,7 @@ function MyOrdersPage() {
                 onClick={() => setFilter(k as any)}
                 className={`rounded-full border px-4 py-1.5 text-xs font-medium transition ${
                   active
-                    ? "border-[var(--teal)] bg-[var(--teal-soft)] text-[var(--teal)]"
+                    ? "border-[var(--gold)] bg-[var(--gold-soft)] text-[var(--gold-dark)]"
                     : "border-border bg-background text-muted-foreground hover:bg-accent"
                 }`}
               >
@@ -146,7 +157,7 @@ function MyOrdersPage() {
 
         {loading && !orders && (
           <div className="flex items-center justify-center py-16 text-sm text-muted-foreground">
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Loading your ordersâ€¦
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Loading your orders…
           </div>
         )}
 
@@ -158,7 +169,7 @@ function MyOrdersPage() {
             </p>
             <Link
               to="/courses"
-              className="mt-4 inline-block rounded-full bg-[var(--teal)] px-4 py-2 text-xs font-semibold text-black hover:bg-[var(--teal)]"
+              className="mt-4 inline-block rounded-full bg-[var(--gold)] px-4 py-2 text-xs font-semibold text-black hover:bg-[var(--gold-dark)]"
             >
               Browse courses
             </Link>
@@ -188,7 +199,7 @@ function OrderCard({ order: o }: { order: OrderItem }) {
     <div className="rounded-2xl border border-border bg-card p-5 shadow-sm transition hover:shadow-md">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="flex min-w-0 items-start gap-3">
-          <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[var(--teal-soft)] text-[var(--teal)]">
+          <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[var(--gold-soft)] text-[var(--gold-dark)]">
             <KindIcon kind={o.kind} />
           </div>
           <div className="min-w-0">
@@ -198,13 +209,13 @@ function OrderCard({ order: o }: { order: OrderItem }) {
             <div className="truncate font-semibold">{o.title}</div>
             <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
               <span>Placed {created}</span>
-              {paid && <span>Â· Paid {paid}</span>}
+              {paid && <span>· Paid {paid}</span>}
             </div>
           </div>
         </div>
         <div className="flex flex-col items-end gap-2">
           <div className="font-mono text-sm font-semibold">
-            â‚¹{o.amount.toLocaleString("en-IN")}{" "}
+            ₹{o.amount.toLocaleString("en-IN")}{" "}
             <span className="text-[10px] font-normal text-muted-foreground">{o.currency}</span>
           </div>
           <StatusPill status={o.status} />
@@ -220,14 +231,15 @@ function OrderCard({ order: o }: { order: OrderItem }) {
           )}
           {o.razorpayPaymentId && (
             <span>
-              Payment ID: <span className="font-mono text-foreground/80">{o.razorpayPaymentId}</span>
+              Payment ID:{" "}
+              <span className="font-mono text-foreground/80">{o.razorpayPaymentId}</span>
             </span>
           )}
         </div>
         {o.accessUrl && (
           <a
             href={o.accessUrl}
-            className="inline-flex items-center gap-1.5 rounded-full bg-[var(--teal)] px-4 py-1.5 text-xs font-semibold text-black hover:bg-[var(--teal)]"
+            className="inline-flex items-center gap-1.5 rounded-full bg-[var(--gold)] px-4 py-1.5 text-xs font-semibold text-black hover:bg-[var(--gold-dark)]"
           >
             {o.accessLabel || "Open"} <ExternalLink className="h-3 w-3" />
           </a>
@@ -246,7 +258,13 @@ function KindIcon({ kind }: { kind: OrderItem["kind"] }) {
 }
 
 function kindLabel(k: OrderItem["kind"]) {
-  return k === "course" ? "Course" : k === "material" ? "Material" : k === "bundle" ? "Bundle" : "Service";
+  return k === "course"
+    ? "Course"
+    : k === "material"
+      ? "Material"
+      : k === "bundle"
+        ? "Bundle"
+        : "Service";
 }
 
 function StatusPill({ status }: { status: string }) {
@@ -255,19 +273,18 @@ function StatusPill({ status }: { status: string }) {
     s === "paid" || s === "delivered" || s === "completed"
       ? "bg-emerald-50 text-emerald-700 border-emerald-200"
       : s === "failed"
-      ? "bg-red-50 text-red-700 border-red-200"
-      : s === "refunded" || s === "partially_refunded"
-      ? "bg-slate-100 text-slate-700 border-slate-200"
-      : s === "in_review" || s === "in_progress"
-      ? "bg-sky-50 text-sky-700 border-sky-200"
-      : "bg-amber-50 text-amber-700 border-amber-200";
-  const label =
-    s === "partially_refunded" ? "Partially refunded" : s.replace(/_/g, " ");
+        ? "bg-red-50 text-red-700 border-red-200"
+        : s === "refunded" || s === "partially_refunded"
+          ? "bg-slate-100 text-slate-700 border-slate-200"
+          : s === "in_review" || s === "in_progress"
+            ? "bg-sky-50 text-sky-700 border-sky-200"
+            : "bg-amber-50 text-amber-700 border-amber-200";
+  const label = s === "partially_refunded" ? "Partially refunded" : s.replace(/_/g, " ");
   return (
-    <span className={`rounded-full border px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${tone}`}>
+    <span
+      className={`rounded-full border px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${tone}`}
+    >
       {label}
     </span>
   );
 }
-
-

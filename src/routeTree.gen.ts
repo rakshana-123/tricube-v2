@@ -15,11 +15,13 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as CoursesRouteImport } from './routes/courses'
 import { Route as EventsRouteImport } from './routes/events'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as GalleryRouteImport } from './routes/gallery'
 import { Route as MeRouteImport } from './routes/me'
 import { Route as MyMaterialsRouteImport } from './routes/my-materials'
+import { Route as ServicesRouteImport } from './routes/services'
 import { Route as TestimonialsRouteImport } from './routes/testimonials'
 import { Route as AdminAuditRouteImport } from './routes/admin.audit'
 import { Route as AdminBlogRouteImport } from './routes/admin.blog'
@@ -71,6 +73,11 @@ const ContactRoute = ContactRouteImport.update({
   path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CoursesRoute = CoursesRouteImport.update({
+  id: '/courses',
+  path: '/courses',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EventsRoute = EventsRouteImport.update({
   id: '/events',
   path: '/events',
@@ -94,6 +101,11 @@ const MeRoute = MeRouteImport.update({
 const MyMaterialsRoute = MyMaterialsRouteImport.update({
   id: '/my-materials',
   path: '/my-materials',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServicesRoute = ServicesRouteImport.update({
+  id: '/services',
+  path: '/services',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TestimonialsRoute = TestimonialsRouteImport.update({
@@ -157,14 +169,14 @@ const BundlesSlugRoute = BundlesSlugRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const CoursesIndexRoute = CoursesIndexRouteImport.update({
-  id: '/courses/',
-  path: '/courses/',
-  getParentRoute: () => rootRouteImport,
+  id: '/',
+  path: '/',
+  getParentRoute: () => CoursesRoute,
 } as any)
 const CoursesSlugRoute = CoursesSlugRouteImport.update({
-  id: '/courses/$slug',
-  path: '/courses/$slug',
-  getParentRoute: () => rootRouteImport,
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => CoursesRoute,
 } as any)
 const MaterialsIndexRoute = MaterialsIndexRouteImport.update({
   id: '/materials/',
@@ -187,14 +199,14 @@ const MeOrdersRoute = MeOrdersRouteImport.update({
   getParentRoute: () => MeRoute,
 } as any)
 const ServicesIndexRoute = ServicesIndexRouteImport.update({
-  id: '/services/',
-  path: '/services/',
-  getParentRoute: () => rootRouteImport,
+  id: '/',
+  path: '/',
+  getParentRoute: () => ServicesRoute,
 } as any)
 const ServicesSlugRoute = ServicesSlugRouteImport.update({
-  id: '/services/$slug',
-  path: '/services/$slug',
-  getParentRoute: () => rootRouteImport,
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => ServicesRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -204,11 +216,13 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRouteWithChildren
   '/blog': typeof BlogRoute
   '/contact': typeof ContactRoute
+  '/courses': typeof CoursesRouteWithChildren
   '/events': typeof EventsRoute
   '/faq': typeof FaqRoute
   '/gallery': typeof GalleryRoute
   '/me': typeof MeRouteWithChildren
   '/my-materials': typeof MyMaterialsRoute
+  '/services': typeof ServicesRouteWithChildren
   '/testimonials': typeof TestimonialsRoute
   '/admin/audit': typeof AdminAuditRoute
   '/admin/blog': typeof AdminBlogRoute
@@ -271,11 +285,13 @@ export interface FileRoutesById {
   '/auth': typeof AuthRouteWithChildren
   '/blog': typeof BlogRoute
   '/contact': typeof ContactRoute
+  '/courses': typeof CoursesRouteWithChildren
   '/events': typeof EventsRoute
   '/faq': typeof FaqRoute
   '/gallery': typeof GalleryRoute
   '/me': typeof MeRouteWithChildren
   '/my-materials': typeof MyMaterialsRoute
+  '/services': typeof ServicesRouteWithChildren
   '/testimonials': typeof TestimonialsRoute
   '/admin/audit': typeof AdminAuditRoute
   '/admin/blog': typeof AdminBlogRoute
@@ -306,11 +322,13 @@ export interface FileRouteTypes {
     | '/auth'
     | '/blog'
     | '/contact'
+    | '/courses'
     | '/events'
     | '/faq'
     | '/gallery'
     | '/me'
     | '/my-materials'
+    | '/services'
     | '/testimonials'
     | '/admin/audit'
     | '/admin/blog'
@@ -372,11 +390,13 @@ export interface FileRouteTypes {
     | '/auth'
     | '/blog'
     | '/contact'
+    | '/courses'
     | '/events'
     | '/faq'
     | '/gallery'
     | '/me'
     | '/my-materials'
+    | '/services'
     | '/testimonials'
     | '/admin/audit'
     | '/admin/blog'
@@ -406,19 +426,17 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRouteWithChildren
   BlogRoute: typeof BlogRoute
   ContactRoute: typeof ContactRoute
+  CoursesRoute: typeof CoursesRouteWithChildren
   EventsRoute: typeof EventsRoute
   FaqRoute: typeof FaqRoute
   GalleryRoute: typeof GalleryRoute
   MeRoute: typeof MeRouteWithChildren
   MyMaterialsRoute: typeof MyMaterialsRoute
+  ServicesRoute: typeof ServicesRouteWithChildren
   TestimonialsRoute: typeof TestimonialsRoute
   BundlesSlugRoute: typeof BundlesSlugRoute
-  CoursesSlugRoute: typeof CoursesSlugRoute
   MaterialsSlugRoute: typeof MaterialsSlugRoute
-  ServicesSlugRoute: typeof ServicesSlugRoute
-  CoursesIndexRoute: typeof CoursesIndexRoute
   MaterialsIndexRoute: typeof MaterialsIndexRoute
-  ServicesIndexRoute: typeof ServicesIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -465,6 +483,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/courses': {
+      id: '/courses'
+      path: '/courses'
+      fullPath: '/courses'
+      preLoaderRoute: typeof CoursesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/events': {
       id: '/events'
       path: '/events'
@@ -498,6 +523,13 @@ declare module '@tanstack/react-router' {
       path: '/my-materials'
       fullPath: '/my-materials'
       preLoaderRoute: typeof MyMaterialsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services': {
+      id: '/services'
+      path: '/services'
+      fullPath: '/services'
+      preLoaderRoute: typeof ServicesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/testimonials': {
@@ -586,17 +618,17 @@ declare module '@tanstack/react-router' {
     }
     '/courses/': {
       id: '/courses/'
-      path: '/courses'
+      path: '/'
       fullPath: '/courses/'
       preLoaderRoute: typeof CoursesIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof CoursesRoute
     }
     '/courses/$slug': {
       id: '/courses/$slug'
-      path: '/courses/$slug'
+      path: '/$slug'
       fullPath: '/courses/$slug'
       preLoaderRoute: typeof CoursesSlugRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof CoursesRoute
     }
     '/materials/': {
       id: '/materials/'
@@ -628,17 +660,17 @@ declare module '@tanstack/react-router' {
     }
     '/services/': {
       id: '/services/'
-      path: '/services'
+      path: '/'
       fullPath: '/services/'
       preLoaderRoute: typeof ServicesIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof ServicesRoute
     }
     '/services/$slug': {
       id: '/services/$slug'
-      path: '/services/$slug'
+      path: '/$slug'
       fullPath: '/services/$slug'
       preLoaderRoute: typeof ServicesSlugRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof ServicesRoute
     }
   }
 }
@@ -679,6 +711,19 @@ const AuthRouteChildren: AuthRouteChildren = {
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
+interface CoursesRouteChildren {
+  CoursesSlugRoute: typeof CoursesSlugRoute
+  CoursesIndexRoute: typeof CoursesIndexRoute
+}
+
+const CoursesRouteChildren: CoursesRouteChildren = {
+  CoursesSlugRoute: CoursesSlugRoute,
+  CoursesIndexRoute: CoursesIndexRoute,
+}
+
+const CoursesRouteWithChildren =
+  CoursesRoute._addFileChildren(CoursesRouteChildren)
+
 interface MeRouteChildren {
   MeCoursesRoute: typeof MeCoursesRoute
   MeOrdersRoute: typeof MeOrdersRoute
@@ -691,6 +736,20 @@ const MeRouteChildren: MeRouteChildren = {
 
 const MeRouteWithChildren = MeRoute._addFileChildren(MeRouteChildren)
 
+interface ServicesRouteChildren {
+  ServicesSlugRoute: typeof ServicesSlugRoute
+  ServicesIndexRoute: typeof ServicesIndexRoute
+}
+
+const ServicesRouteChildren: ServicesRouteChildren = {
+  ServicesSlugRoute: ServicesSlugRoute,
+  ServicesIndexRoute: ServicesIndexRoute,
+}
+
+const ServicesRouteWithChildren = ServicesRoute._addFileChildren(
+  ServicesRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
@@ -698,19 +757,17 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRouteWithChildren,
   BlogRoute: BlogRoute,
   ContactRoute: ContactRoute,
+  CoursesRoute: CoursesRouteWithChildren,
   EventsRoute: EventsRoute,
   FaqRoute: FaqRoute,
   GalleryRoute: GalleryRoute,
   MeRoute: MeRouteWithChildren,
   MyMaterialsRoute: MyMaterialsRoute,
+  ServicesRoute: ServicesRouteWithChildren,
   TestimonialsRoute: TestimonialsRoute,
   BundlesSlugRoute: BundlesSlugRoute,
-  CoursesSlugRoute: CoursesSlugRoute,
   MaterialsSlugRoute: MaterialsSlugRoute,
-  ServicesSlugRoute: ServicesSlugRoute,
-  CoursesIndexRoute: CoursesIndexRoute,
   MaterialsIndexRoute: MaterialsIndexRoute,
-  ServicesIndexRoute: ServicesIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

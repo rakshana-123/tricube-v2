@@ -15,7 +15,6 @@ export function addWorkingDays(from: Date, days: number): Date {
 export function formatExpectedRange(from = new Date()): string {
   const min = addWorkingDays(from, 3);
   const max = addWorkingDays(from, 4);
-  const fmt = (d: Date) =>
-    d.toLocaleDateString("en-IN", { day: "numeric", month: "short" });
+  const fmt = (d: Date) => d.toLocaleDateString("en-IN", { day: "numeric", month: "short" });
   return `${fmt(min)} – ${fmt(max)}`;
 }

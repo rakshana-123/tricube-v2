@@ -9,7 +9,14 @@ interface PaymentRetryProps {
   className?: string;
 }
 
-export function PaymentRetry({ message, onRetry, onDismiss, busy, attempt, className }: PaymentRetryProps) {
+export function PaymentRetry({
+  message,
+  onRetry,
+  onDismiss,
+  busy,
+  attempt,
+  className,
+}: PaymentRetryProps) {
   return (
     <div
       role="alert"
@@ -24,7 +31,9 @@ export function PaymentRetry({ message, onRetry, onDismiss, busy, attempt, class
           <div className="font-medium">Payment didn&apos;t go through</div>
           <div className="mt-0.5 text-xs opacity-90">{message}</div>
           {attempt && attempt > 1 ? (
-            <div className="mt-0.5 text-[10px] uppercase tracking-widest opacity-70">Attempt {attempt}</div>
+            <div className="mt-0.5 text-[10px] uppercase tracking-widest opacity-70">
+              Attempt {attempt}
+            </div>
           ) : null}
         </div>
       </div>

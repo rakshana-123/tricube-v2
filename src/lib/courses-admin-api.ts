@@ -49,55 +49,86 @@ function authHeaders(json = true): HeadersInit {
 }
 
 export async function listAdminCourses(): Promise<AdminCourse[]> {
-  const r = await adminFetch("/api/courses/admin/all", { headers: authHeaders(false) }, "Failed to load courses");
+  const r = await adminFetch(
+    "/api/courses/admin/all",
+    { headers: authHeaders(false) },
+    "Failed to load courses",
+  );
   return (await r.json()).courses || [];
 }
 
 export async function listCategories(): Promise<CourseCategory[]> {
-  const r = await adminFetch("/api/courses/admin/categories", { headers: authHeaders(false) }, "Failed to load categories");
+  const r = await adminFetch(
+    "/api/courses/admin/categories",
+    { headers: authHeaders(false) },
+    "Failed to load categories",
+  );
   return (await r.json()).categories || [];
 }
 
 export async function createCourse(payload: Partial<AdminCourse>): Promise<AdminCourse> {
-  const r = await adminFetch("/api/courses", {
-    method: "POST",
-    headers: authHeaders(),
-    body: JSON.stringify(payload),
-  }, "Create failed");
+  const r = await adminFetch(
+    "/api/courses",
+    {
+      method: "POST",
+      headers: authHeaders(),
+      body: JSON.stringify(payload),
+    },
+    "Create failed",
+  );
   return (await r.json()).course;
 }
 
-export async function updateCourse(id: number, payload: Partial<AdminCourse>): Promise<AdminCourse> {
-  const r = await adminFetch(`/api/courses/${id}`, {
-    method: "PUT",
-    headers: authHeaders(),
-    body: JSON.stringify(payload),
-  }, "Update failed");
+export async function updateCourse(
+  id: number,
+  payload: Partial<AdminCourse>,
+): Promise<AdminCourse> {
+  const r = await adminFetch(
+    `/api/courses/${id}`,
+    {
+      method: "PUT",
+      headers: authHeaders(),
+      body: JSON.stringify(payload),
+    },
+    "Update failed",
+  );
   return (await r.json()).course;
 }
 
 export async function togglePublishCourse(id: number): Promise<AdminCourse> {
-  const r = await adminFetch(`/api/courses/${id}/publish`, {
-    method: "PATCH",
-    headers: authHeaders(false),
-  }, "Toggle failed");
+  const r = await adminFetch(
+    `/api/courses/${id}/publish`,
+    {
+      method: "PATCH",
+      headers: authHeaders(false),
+    },
+    "Toggle failed",
+  );
   return (await r.json()).course;
 }
 
 export async function uploadCourseThumbnail(id: number, file: File): Promise<AdminCourse> {
   const fd = new FormData();
   fd.append("image", file);
-  const r = await adminFetch(`/api/courses/${id}/thumbnail`, {
-    method: "POST",
-    headers: authHeaders(false),
-    body: fd,
-  }, "Upload failed");
+  const r = await adminFetch(
+    `/api/courses/${id}/thumbnail`,
+    {
+      method: "POST",
+      headers: authHeaders(false),
+      body: fd,
+    },
+    "Upload failed",
+  );
   return (await r.json()).course;
 }
 
 export async function deleteCourse(id: number): Promise<void> {
-  await adminFetch(`/api/courses/${id}`, {
-    method: "DELETE",
-    headers: authHeaders(false),
-  }, "Delete failed");
+  await adminFetch(
+    `/api/courses/${id}`,
+    {
+      method: "DELETE",
+      headers: authHeaders(false),
+    },
+    "Delete failed",
+  );
 }

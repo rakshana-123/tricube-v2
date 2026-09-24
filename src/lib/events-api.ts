@@ -37,9 +37,13 @@ function staticFallback(): EventDTO[] {
 async function tryFetch(path: string, init?: RequestInit): Promise<Response | null> {
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), 2500);
-  try { return await fetch(`${API_BASE}${path}`, { ...init, signal: ctrl.signal }); }
-  catch { return null; }
-  finally { clearTimeout(t); }
+  try {
+    return await fetch(`${API_BASE}${path}`, { ...init, signal: ctrl.signal });
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(t);
+  }
 }
 
 export async function listEvents(): Promise<EventDTO[]> {
@@ -58,28 +62,40 @@ function authHeaders(): HeadersInit {
 }
 
 export async function adminCreateEvent(input: Partial<EventDTO>): Promise<EventDTO> {
-  const r = await adminFetch("/api/events", {
-    method: "POST",
-    headers: authHeaders(),
-    body: JSON.stringify({ ...input, date: new Date(input.date!).toISOString() }),
-  }, "Failed to create event");
+  const r = await adminFetch(
+    "/api/events",
+    {
+      method: "POST",
+      headers: authHeaders(),
+      body: JSON.stringify({ ...input, date: new Date(input.date!).toISOString() }),
+    },
+    "Failed to create event",
+  );
   return (await r.json()).event;
 }
 
 export async function adminUpdateEvent(id: number, input: Partial<EventDTO>): Promise<EventDTO> {
   const body: any = { ...input };
   if (body.date) body.date = new Date(body.date).toISOString();
-  const r = await adminFetch(`/api/events/${id}`, {
-    method: "PUT",
-    headers: authHeaders(),
-    body: JSON.stringify(body),
-  }, "Failed to update event");
+  const r = await adminFetch(
+    `/api/events/${id}`,
+    {
+      method: "PUT",
+      headers: authHeaders(),
+      body: JSON.stringify(body),
+    },
+    "Failed to update event",
+  );
   return (await r.json()).event;
 }
 
 export async function adminDeleteEvent(id: number): Promise<void> {
-  await adminFetch(`/api/events/${id}`, {
-    method: "DELETE",
-    headers: authHeaders(),
-  }, "Failed to delete event");
+  await adminFetch(
+    `/api/events/${id}`,
+    {
+      method: "DELETE",
+      headers: authHeaders(),
+    },
+    "Failed to delete event",
+  );
 }

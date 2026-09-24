@@ -1,49 +1,74 @@
-﻿import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { PageHero } from "@/components/site/SectionHeading";
-import { listGallery, type GalleryDTO } from "@/lib/content-api";
+import { createFileRoute } from "@tanstack/react-router";
+import { motion } from "framer-motion";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+
+const items = [
+  {
+    title: "Campus Overview",
+    gradient: "from-violet-500 to-purple-600",
+    span: "col-span-2 row-span-2",
+  },
+  { title: "Classroom Session", gradient: "from-blue-500 to-cyan-500", span: "" },
+  { title: "Student Projects", gradient: "from-pink-500 to-rose-600", span: "" },
+  { title: "Workshop", gradient: "from-emerald-500 to-teal-500", span: "" },
+  { title: "Graduation Day", gradient: "from-amber-500 to-orange-500", span: "col-span-2" },
+  { title: "Lab Session", gradient: "from-sky-500 to-blue-600", span: "" },
+];
 
 export const Route = createFileRoute("/gallery")({
-  head: () => ({
-    meta: [
-      { title: "Gallery â€” TRI CUBE Digital Solutions" },
-      { name: "description", content: "Campus, workshops, hackathons and student moments from TRI CUBE." },
-      { property: "og:title", content: "TRI CUBE Gallery" },
-      { property: "og:description", content: "Campus and student moments." },
-    ],
-  }),
   component: GalleryPage,
 });
 
-const FALLBACK_IDS = [
-  "photo-1522202176988-66273c2fd55f",
-  "photo-1523240795612-9a054b0db644",
-  "photo-1531482615713-2afd69097998",
-  "photo-1517245386807-bb43f82c33c4",
-  "photo-1524178232363-1fb2b075b655",
-  "photo-1540575467063-178a50c2df87",
-  "photo-1552664730-d307ca884978",
-  "photo-1515169067868-5387ec356754",
-  "photo-1516321318423-f06f85e504b3",
-];
-
 function GalleryPage() {
-  const [items, setItems] = useState<GalleryDTO[] | null>(null);
-  useEffect(() => { listGallery().then(setItems).catch(() => setItems([])); }, []);
-  const rows: { url: string; caption?: string | null }[] = items && items.length
-    ? items.map((g) => ({ url: g.url, caption: g.caption }))
-    : FALLBACK_IDS.map((id) => ({ url: `https://images.unsplash.com/${id}?auto=format&fit=crop&w=800&q=80` }));
+  const { ref, isVisible } = useScrollAnimation();
+
   return (
     <>
-      <PageHero eyebrow="Gallery" title={<>Moments from <span className="teal-text">TRI CUBE</span></>} subtitle="Workshops, hackathons, campus days and shipping nights." />
-      <section className="mx-auto max-w-7xl px-6 py-16">
-        <div className="columns-2 gap-4 md:columns-3">
-          {rows.map((g, i) => (
-            <img key={g.url + i} src={g.url} alt={g.caption || "Campus moment"} className="mb-4 w-full rounded-2xl object-cover transition-transform hover:scale-[1.02]" loading="lazy" />
-          ))}
+      <section className="relative pt-24 pb-16 md:pt-32 md:pb-24">
+        <div className="container-wide">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="mx-auto max-w-3xl text-center"
+          >
+            <span className="inline-block rounded-full bg-teal/10 px-4 py-1.5 text-sm font-medium text-teal">
+              Gallery
+            </span>
+            <h1 className="mt-6 font-heading text-4xl font-bold text-navy md:text-5xl lg:text-6xl">
+              Our Gallery
+            </h1>
+            <p className="mt-6 text-lg text-muted-foreground">
+              A glimpse into life at TRI CUBE Digital Solutions.
+            </p>
+          </motion.div>
+        </div>
+      </section>
+
+      <section ref={ref} className="section-padding">
+        <div className="container-wide">
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+            {items.map((item, i) => (
+              <motion.div
+                key={item.title}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={isVisible ? { opacity: 1, scale: 1 } : {}}
+                transition={{ duration: 0.5, delay: i * 0.08 }}
+                className={`group relative overflow-hidden rounded-2xl ${item.span} min-h-[200px] cursor-pointer`}
+              >
+                <div
+                  className={`absolute inset-0 bg-gradient-to-br ${item.gradient} transition-transform duration-500 group-hover:scale-110`}
+                />
+                <div className="absolute inset-0 flex items-end bg-gradient-to-t from-black/60 to-transparent p-6 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                  <span className="font-heading text-lg font-semibold text-white">
+                    {item.title}
+                  </span>
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
     </>
   );
 }
-

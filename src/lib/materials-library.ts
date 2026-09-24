@@ -6,8 +6,7 @@ export type OwnedMaterial = { slug: string; purchasedAt: string };
 const KEY = "tricube.materials.owned";
 const URL_KEY = "tricube.materials.downloadUrls";
 
-const API_BASE =
-  (import.meta.env.VITE_API_URL as string | undefined) || "http://localhost:5000";
+const API_BASE = (import.meta.env.VITE_API_URL as string | undefined) || "http://localhost:5000";
 
 export type OwnedMaterialDetail = {
   slug: string;
@@ -105,9 +104,10 @@ function clickDownload(href: string, filename: string) {
 // Downloads the material PDF only after the backend confirms the signed
 // URL is still valid (HEAD check → 200). Falls back to the sample PDF only
 // when the backend is entirely unreachable (demo mode).
-export async function triggerDownload(slug: string, title: string): Promise<
-  { ok: true; demo: boolean } | { ok: false; error: string }
-> {
+export async function triggerDownload(
+  slug: string,
+  title: string,
+): Promise<{ ok: true; demo: boolean } | { ok: false; error: string }> {
   void title;
   const stored = getDownloadUrl(slug);
   if (stored) {

@@ -45,7 +45,11 @@ export function getStoredUser(): AuthUser | null {
   if (typeof window === "undefined") return null;
   const raw = localStorage.getItem(USER_KEY);
   if (!raw) return null;
-  try { return JSON.parse(raw) as AuthUser; } catch { return null; }
+  try {
+    return JSON.parse(raw) as AuthUser;
+  } catch {
+    return null;
+  }
 }
 
 function persist({ access, refresh, user }: LoginResponse) {
@@ -98,7 +102,9 @@ export async function verifyOtp(email: string, otp: string): Promise<LoginRespon
   return res;
 }
 
-export async function resendOtp(email: string): Promise<{ ok: true; mailSent?: boolean; devOtp?: string }> {
+export async function resendOtp(
+  email: string,
+): Promise<{ ok: true; mailSent?: boolean; devOtp?: string }> {
   return post("/api/auth/resend-otp", { email });
 }
 
@@ -108,11 +114,17 @@ export async function login(email: string, password: string): Promise<LoginRespo
   return res;
 }
 
-export async function forgotPassword(email: string): Promise<{ ok: true; mailSent?: boolean; devOtp?: string }> {
+export async function forgotPassword(
+  email: string,
+): Promise<{ ok: true; mailSent?: boolean; devOtp?: string }> {
   return post("/api/auth/forgot-password", { email });
 }
 
-export async function resetPassword(email: string, otp: string, password: string): Promise<{ ok: true }> {
+export async function resetPassword(
+  email: string,
+  otp: string,
+  password: string,
+): Promise<{ ok: true }> {
   return post("/api/auth/reset-password", { email, otp, password });
 }
 
@@ -122,7 +134,10 @@ export async function fetchMe(): Promise<AuthUser | null> {
   const r = await fetch(`${API_BASE}/api/auth/me`, {
     headers: { Authorization: `Bearer ${t}` },
   });
-  if (r.status === 401) { signOut(); return null; }
+  if (r.status === 401) {
+    signOut();
+    return null;
+  }
   if (!r.ok) throw new Error("Failed to load profile");
   const j = await r.json();
   const user = j.user as AuthUser;

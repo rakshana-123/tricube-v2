@@ -1,16 +1,22 @@
-import { QueryClient } from "@tanstack/react-query";
-import { createRouter } from "@tanstack/react-router";
+import { createRouter as createTanStackRouter } from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
 
-export const getRouter = () => {
-  const queryClient = new QueryClient();
-
-  const router = createRouter({
+export function createRouter() {
+  const router = createTanStackRouter({
     routeTree,
-    context: { queryClient },
     scrollRestoration: true,
-    defaultPreloadStaleTime: 0,
+    defaultPreload: "intent",
+    defaultStaleTime: 5000,
   });
 
   return router;
-};
+}
+
+// Alias for TanStack Start compatibility
+export { createRouter as getRouter };
+
+declare module "@tanstack/react-router" {
+  interface Register {
+    router: ReturnType<typeof createRouter>;
+  }
+}

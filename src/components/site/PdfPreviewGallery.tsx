@@ -29,7 +29,11 @@ const RESUME_KEY = "tricube.materials.resume";
 
 function readResume(): Record<string, number> {
   if (typeof window === "undefined") return {};
-  try { return JSON.parse(localStorage.getItem(RESUME_KEY) || "{}") || {}; } catch { return {}; }
+  try {
+    return JSON.parse(localStorage.getItem(RESUME_KEY) || "{}") || {};
+  } catch {
+    return {};
+  }
 }
 function writeResume(key: string, page: number) {
   const all = readResume();
@@ -41,7 +45,13 @@ export function getResumePage(key: string): number | null {
   return typeof p === "number" && p > 0 ? p : null;
 }
 
-export default function PdfPreviewGallery({ src, storageKey, label, maxThumbs = 8, showAll }: Props) {
+export default function PdfPreviewGallery({
+  src,
+  storageKey,
+  label,
+  maxThumbs = 8,
+  showAll,
+}: Props) {
   const [thumbs, setThumbs] = useState<string[]>([]);
   const [total, setTotal] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
@@ -84,7 +94,9 @@ export default function PdfPreviewGallery({ src, storageKey, label, maxThumbs = 
         if (!cancelled.current) setLoading(false);
       }
     })();
-    return () => { cancelled.current = true; };
+    return () => {
+      cancelled.current = true;
+    };
   }, [src, maxThumbs, showAll, storageKey]);
 
   function open(page: number) {
@@ -92,7 +104,9 @@ export default function PdfPreviewGallery({ src, storageKey, label, maxThumbs = 
     writeResume(storageKey, page);
     setResume(page);
   }
-  function close() { setOpenPage(null); }
+  function close() {
+    setOpenPage(null);
+  }
   function step(delta: number) {
     if (openPage == null || total == null) return;
     const next = Math.min(total, Math.max(1, openPage + delta));
@@ -113,9 +127,17 @@ export default function PdfPreviewGallery({ src, storageKey, label, maxThumbs = 
     <div className="mt-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          {label && <h3 className="text-sm font-semibold uppercase tracking-widest text-muted-foreground">{label}</h3>}
+          {label && (
+            <h3 className="text-sm font-semibold uppercase tracking-widest text-muted-foreground">
+              {label}
+            </h3>
+          )}
           <p className="mt-1 text-xs text-muted-foreground">
-            {total ? `${total} page${total === 1 ? "" : "s"} · Tap a thumbnail to open the reader` : loading ? "Rendering thumbnails…" : ""}
+            {total
+              ? `${total} page${total === 1 ? "" : "s"} · Tap a thumbnail to open the reader`
+              : loading
+                ? "Rendering thumbnails…"
+                : ""}
           </p>
         </div>
         {resume != null && (
@@ -126,7 +148,10 @@ export default function PdfPreviewGallery({ src, storageKey, label, maxThumbs = 
             >
               <RotateCcw className="h-3.5 w-3.5" /> Resume page {resume}
             </button>
-            <button onClick={clearResume} className="text-xs text-muted-foreground underline-offset-4 hover:underline">
+            <button
+              onClick={clearResume}
+              className="text-xs text-muted-foreground underline-offset-4 hover:underline"
+            >
               Clear
             </button>
           </div>
@@ -153,12 +178,16 @@ export default function PdfPreviewGallery({ src, storageKey, label, maxThumbs = 
                 <img src={t} alt={`Page ${page}`} className="aspect-[3/4] w-full object-cover" />
                 <div className="absolute inset-x-0 bottom-0 flex items-center justify-between bg-gradient-to-t from-black/70 to-transparent px-2 py-1.5 text-[11px] font-medium text-white">
                   <span>Page {page}</span>
-                  {isResume && <span className="rounded-full bg-primary px-1.5 py-0.5 text-[10px] text-primary-foreground">Last read</span>}
+                  {isResume && (
+                    <span className="rounded-full bg-primary px-1.5 py-0.5 text-[10px] text-primary-foreground">
+                      Last read
+                    </span>
+                  )}
                 </div>
               </button>
             );
           })}
-          {loading && thumbs.length < (showAll ? total ?? 0 : maxThumbs) && (
+          {loading && thumbs.length < (showAll ? (total ?? 0) : maxThumbs) && (
             <div className="grid aspect-[3/4] place-items-center rounded-xl border border-dashed border-border">
               <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
             </div>
@@ -177,7 +206,10 @@ export default function PdfPreviewGallery({ src, storageKey, label, maxThumbs = 
           <div className="flex items-center justify-between gap-3 border-b border-white/10 px-4 py-3 text-white">
             <div className="flex items-center gap-2 text-sm">
               <FileText className="h-4 w-4 text-primary" />
-              <span>Page {openPage}{total ? ` / ${total}` : ""}</span>
+              <span>
+                Page {openPage}
+                {total ? ` / ${total}` : ""}
+              </span>
             </div>
             <div className="flex items-center gap-2">
               <button
@@ -196,7 +228,11 @@ export default function PdfPreviewGallery({ src, storageKey, label, maxThumbs = 
               >
                 <ChevronRight className="h-4 w-4" />
               </button>
-              <button onClick={close} className="ml-2 grid h-8 w-8 place-items-center rounded-full bg-white/10" aria-label="Close">
+              <button
+                onClick={close}
+                className="ml-2 grid h-8 w-8 place-items-center rounded-full bg-white/10"
+                aria-label="Close"
+              >
                 <X className="h-4 w-4" />
               </button>
             </div>

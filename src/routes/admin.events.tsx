@@ -1,4 +1,4 @@
-﻿import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { CalendarPlus, Trash2, Save, Edit3, Plus } from "lucide-react";
 import { PageHero } from "@/components/site/SectionHeading";
@@ -15,8 +15,11 @@ import {
 export const Route = createFileRoute("/admin/events")({
   head: () => ({
     meta: [
-      { title: "Events â€” Admin â€” TRI CUBE" },
-      { name: "description", content: "Manage TRI CUBE events, workshops, hackathons and announcements." },
+      { title: "Events — Admin — TRI CUBE" },
+      {
+        name: "description",
+        content: "Manage TRI CUBE events, workshops, hackathons and announcements.",
+      },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -24,7 +27,11 @@ export const Route = createFileRoute("/admin/events")({
     <BackendStatusProvider>
       <PageHero
         eyebrow="Admin"
-        title={<>Manage <span className="teal-text">Events</span></>}
+        title={
+          <>
+            Manage <span className="gold-text">Events</span>
+          </>
+        }
         subtitle="Create, edit, publish, and remove upcoming bootcamps, hackathons and workshops."
       />
       <AdminTabs />
@@ -73,7 +80,9 @@ function AdminEventsInner() {
     }
   }
 
-  useEffect(() => { reload(); }, []);
+  useEffect(() => {
+    reload();
+  }, []);
 
   async function handleSave() {
     if (!draft) return;
@@ -121,7 +130,11 @@ function AdminEventsInner() {
         </button>
       </div>
 
-      {err && <p className="mb-4 rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">{err}</p>}
+      {err && (
+        <p className="mb-4 rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+          {err}
+        </p>
+      )}
 
       {draft && (
         <EventEditor
@@ -135,9 +148,11 @@ function AdminEventsInner() {
 
       <div className="mt-6 overflow-hidden rounded-2xl border border-border bg-card">
         {loading ? (
-          <p className="p-6 text-sm text-muted-foreground">Loading eventsâ€¦</p>
+          <p className="p-6 text-sm text-muted-foreground">Loading events…</p>
         ) : rows.length === 0 ? (
-          <p className="p-6 text-sm text-muted-foreground">No events yet. Click "New event" to publish one.</p>
+          <p className="p-6 text-sm text-muted-foreground">
+            No events yet. Click "New event" to publish one.
+          </p>
         ) : (
           <table className="w-full text-sm">
             <thead className="bg-muted/50 text-left text-xs uppercase tracking-widest text-muted-foreground">
@@ -157,7 +172,9 @@ function AdminEventsInner() {
                     <div className="font-medium">{e.title}</div>
                     <div className="text-xs text-muted-foreground">/{e.slug}</div>
                   </td>
-                  <td className="px-4 py-3">{new Date(e.date).toLocaleDateString()} Â· {e.time}</td>
+                  <td className="px-4 py-3">
+                    {new Date(e.date).toLocaleDateString()} · {e.time}
+                  </td>
                   <td className="px-4 py-3">{e.venue}</td>
                   <td className="px-4 py-3 capitalize">{e.status}</td>
                   <td className="px-4 py-3">{e.published ? "Yes" : "No"}</td>
@@ -185,14 +202,19 @@ function AdminEventsInner() {
       </div>
 
       <p className="mt-4 flex items-center gap-2 text-xs text-muted-foreground">
-        <CalendarPlus className="h-3.5 w-3.5" /> Events you publish appear on the public /events page and in the "Latest updates" section on the homepage.
+        <CalendarPlus className="h-3.5 w-3.5" /> Events you publish appear on the public /events
+        page and in the "Latest updates" section on the homepage.
       </p>
     </section>
   );
 }
 
 function EventEditor({
-  value, onChange, onCancel, onSave, busy,
+  value,
+  onChange,
+  onCancel,
+  onSave,
+  busy,
 }: {
   value: Draft;
   onChange: (v: Draft) => void;
@@ -203,51 +225,114 @@ function EventEditor({
   const set = <K extends keyof Draft>(k: K, v: Draft[K]) => onChange({ ...value, [k]: v });
   return (
     <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-      <h3 className="mb-4 text-lg font-semibold">{value._isNew ? "New event" : `Edit â€” ${value.title}`}</h3>
+      <h3 className="mb-4 text-lg font-semibold">
+        {value._isNew ? "New event" : `Edit — ${value.title}`}
+      </h3>
       <div className="grid gap-4 md:grid-cols-2">
         <Field label="Title">
-          <input className="input" value={value.title || ""} onChange={(e) => set("title", e.target.value)} />
+          <input
+            className="input"
+            value={value.title || ""}
+            onChange={(e) => set("title", e.target.value)}
+          />
         </Field>
         <Field label="Slug (URL)">
-          <input className="input" value={value.slug || ""} onChange={(e) => set("slug", e.target.value.toLowerCase().replace(/[^a-z0-9-]+/g, "-"))} placeholder="e.g. tricube-summit-2026" />
+          <input
+            className="input"
+            value={value.slug || ""}
+            onChange={(e) => set("slug", e.target.value.toLowerCase().replace(/[^a-z0-9-]+/g, "-"))}
+            placeholder="e.g. tricube-summit-2026"
+          />
         </Field>
         <Field label="Date">
-          <input type="date" className="input" value={String(value.date || "").slice(0, 10)} onChange={(e) => set("date", e.target.value)} />
+          <input
+            type="date"
+            className="input"
+            value={String(value.date || "").slice(0, 10)}
+            onChange={(e) => set("date", e.target.value)}
+          />
         </Field>
         <Field label="Time">
-          <input className="input" value={value.time || ""} onChange={(e) => set("time", e.target.value)} placeholder="10:00 AM â€“ 4:00 PM" />
+          <input
+            className="input"
+            value={value.time || ""}
+            onChange={(e) => set("time", e.target.value)}
+            placeholder="10:00 AM – 4:00 PM"
+          />
         </Field>
         <Field label="Venue">
-          <input className="input" value={value.venue || ""} onChange={(e) => set("venue", e.target.value)} />
+          <input
+            className="input"
+            value={value.venue || ""}
+            onChange={(e) => set("venue", e.target.value)}
+          />
         </Field>
         <Field label="Status">
-          <select className="input" value={value.status || "upcoming"} onChange={(e) => set("status", e.target.value as EventDTO["status"])}>
+          <select
+            className="input"
+            value={value.status || "upcoming"}
+            onChange={(e) => set("status", e.target.value as EventDTO["status"])}
+          >
             <option value="upcoming">Upcoming</option>
             <option value="live">Live</option>
             <option value="past">Past</option>
           </select>
         </Field>
         <Field label="Banner image URL">
-          <input className="input" value={value.bannerUrl || ""} onChange={(e) => set("bannerUrl", e.target.value)} placeholder="https://..." />
+          <input
+            className="input"
+            value={value.bannerUrl || ""}
+            onChange={(e) => set("bannerUrl", e.target.value)}
+            placeholder="https://..."
+          />
         </Field>
         <Field label="Registration URL">
-          <input className="input" value={value.registrationUrl || ""} onChange={(e) => set("registrationUrl", e.target.value)} placeholder="https://..." />
+          <input
+            className="input"
+            value={value.registrationUrl || ""}
+            onChange={(e) => set("registrationUrl", e.target.value)}
+            placeholder="https://..."
+          />
         </Field>
         <Field label="Speakers (comma-separated)" full>
-          <input className="input" value={value.speakers || ""} onChange={(e) => set("speakers", e.target.value)} placeholder="Jane Doe, John Doe" />
+          <input
+            className="input"
+            value={value.speakers || ""}
+            onChange={(e) => set("speakers", e.target.value)}
+            placeholder="Jane Doe, John Doe"
+          />
         </Field>
         <Field label="Description" full>
-          <textarea rows={4} className="input" value={value.description || ""} onChange={(e) => set("description", e.target.value)} />
+          <textarea
+            rows={4}
+            className="input"
+            value={value.description || ""}
+            onChange={(e) => set("description", e.target.value)}
+          />
         </Field>
         <label className="flex items-center gap-2 text-sm">
-          <input type="checkbox" checked={!!value.published} onChange={(e) => set("published", e.target.checked)} />
+          <input
+            type="checkbox"
+            checked={!!value.published}
+            onChange={(e) => set("published", e.target.checked)}
+          />
           Publish (visible on public site)
         </label>
       </div>
       <div className="mt-6 flex justify-end gap-3">
-        <button onClick={onCancel} disabled={busy} className="rounded-lg border border-border px-4 py-2 text-sm font-medium">Cancel</button>
-        <button onClick={onSave} disabled={busy} className="inline-flex items-center gap-2 rounded-lg bg-[var(--gradient-gold)] px-4 py-2 text-sm font-semibold text-primary-foreground disabled:opacity-60">
-          <Save className="h-4 w-4" /> {busy ? "Savingâ€¦" : "Save event"}
+        <button
+          onClick={onCancel}
+          disabled={busy}
+          className="rounded-lg border border-border px-4 py-2 text-sm font-medium"
+        >
+          Cancel
+        </button>
+        <button
+          onClick={onSave}
+          disabled={busy}
+          className="inline-flex items-center gap-2 rounded-lg bg-[var(--gradient-gold)] px-4 py-2 text-sm font-semibold text-primary-foreground disabled:opacity-60"
+        >
+          <Save className="h-4 w-4" /> {busy ? "Saving…" : "Save event"}
         </button>
       </div>
       <style>{`.input { width:100%; border:1px solid hsl(var(--border)); background:hsl(var(--background)); border-radius:0.5rem; padding:0.5rem 0.75rem; font-size:0.875rem; }`}</style>
@@ -255,7 +340,15 @@ function EventEditor({
   );
 }
 
-function Field({ label, children, full }: { label: string; children: React.ReactNode; full?: boolean }) {
+function Field({
+  label,
+  children,
+  full,
+}: {
+  label: string;
+  children: React.ReactNode;
+  full?: boolean;
+}) {
   return (
     <label className={`block text-sm ${full ? "md:col-span-2" : ""}`}>
       <span className="mb-1 block text-muted-foreground">{label}</span>

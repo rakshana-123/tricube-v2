@@ -1,4 +1,4 @@
-﻿import { createFileRoute, notFound, Link } from "@tanstack/react-router";
+import { createFileRoute, notFound, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { getStoredUser, getToken } from "@/lib/auth";
@@ -7,14 +7,23 @@ import { Lock, PlayCircle, Star, ArrowLeft, CheckCircle2 } from "lucide-react";
 import { API_BASE, startPayment } from "@/lib/payments";
 import { getAdminToken } from "@/lib/services-api";
 import { PaymentRetry } from "@/components/site/PaymentRetry";
-import { absoluteMedia, getCourse, listUnlockedCourseVideos, type CourseDTO, type CourseVideoDTO } from "@/lib/courses-api";
+import {
+  absoluteMedia,
+  getCourse,
+  listUnlockedCourseVideos,
+  type CourseDTO,
+  type CourseVideoDTO,
+} from "@/lib/courses-api";
 
 export const Route = createFileRoute("/courses/$slug")({
   head: ({ params }) => {
     return {
       meta: [
-        { title: `${params.slug} â€” TRI CUBE Courses` },
-        { name: "description", content: "Enroll in a TRI CUBE course to unlock the full video library." },
+        { title: `${params.slug} — TRI CUBE Courses` },
+        {
+          name: "description",
+          content: "Enroll in a TRI CUBE course to unlock the full video library.",
+        },
       ],
     };
   },
@@ -54,7 +63,10 @@ function CourseDetail() {
   const [activeVideoId, setActiveVideoId] = useState<number | undefined>();
 
   const publicPreviewVideos = useMemo(
-    () => (course.modules?.flatMap((m) => m.videos) ?? course.videos ?? []).filter((v) => v.isFreePreview && v.url),
+    () =>
+      (course.modules?.flatMap((m) => m.videos) ?? course.videos ?? []).filter(
+        (v) => v.isFreePreview && v.url,
+      ),
     [course.modules, course.videos],
   );
   const playableVideos = enrolled ? videos : publicPreviewVideos;
@@ -91,12 +103,9 @@ function CourseDetail() {
     // requireAuth-gated backend accepts the request. Student auth UI is not
     // yet built; without a token the backend falls through to demo mode.
     const token =
-      getToken() ||
-      (typeof localStorage !== "undefined" ? localStorage.getItem("token") : null);
+      getToken() || (typeof localStorage !== "undefined" ? localStorage.getItem("token") : null);
     console.log("handleEnroll: token", token);
-    const authHeader: Record<string, string> = token
-      ? { Authorization: `Bearer ${token}` }
-      : {};
+    const authHeader: Record<string, string> = token ? { Authorization: `Bearer ${token}` } : {};
     const res = await startPayment({
       createOrderPath: "/api/payments/create-order",
       createOrderBody: { courseSlug: course.slug },
@@ -128,10 +137,14 @@ function CourseDetail() {
           .getElementById("course-player")
           ?.scrollIntoView({ behavior: "smooth", block: "start" });
       }, 300);
-    }
-    else if (res.status === "demo") setErr(res.message || "Demo mode is enabled â€” no real payment was taken, so the course stays locked.");
+    } else if (res.status === "demo")
+      setErr(
+        res.message ||
+          "Demo mode is enabled — no real payment was taken, so the course stays locked.",
+      );
     else if (res.status === "failed") setErr(res.message || "Payment failed. Please try again.");
-    else if (res.status === "cancelled") setErr(res.message || "Payment was cancelled before it completed.");
+    else if (res.status === "cancelled")
+      setErr(res.message || "Payment was cancelled before it completed.");
   }
 
   return (
@@ -139,7 +152,7 @@ function CourseDetail() {
       <PageHero
         eyebrow={course.category}
         title={<>{course.title}</>}
-        subtitle={`${course.trainer} Â· ${course.duration} Â· ${course.level}`}
+        subtitle={`${course.trainer} · ${course.duration} · ${course.level}`}
       />
 
       <section className="mx-auto grid max-w-6xl gap-8 px-6 py-16 md:grid-cols-[1.4fr_1fr]">
@@ -148,20 +161,31 @@ function CourseDetail() {
             <div className="mb-3 flex items-center justify-between rounded-xl border border-primary/30 bg-primary/10 px-4 py-3 text-sm">
               <span className="flex items-center gap-2 font-medium">
                 <CheckCircle2 className="h-4 w-4 text-primary" />
-                Payment successful â€” video library unlocked.
+                Payment successful — video library unlocked.
               </span>
-              <Link to="/me/courses" className="text-xs font-semibold text-primary underline-offset-4 hover:underline">
-                My courses â†’
+              <Link
+                to="/me/courses"
+                className="text-xs font-semibold text-primary underline-offset-4 hover:underline"
+              >
+                My courses →
               </Link>
             </div>
           )}
-          <div id="course-player" className="glass relative aspect-video overflow-hidden rounded-2xl scroll-mt-24">
+          <div
+            id="course-player"
+            className="glass relative aspect-video overflow-hidden rounded-2xl scroll-mt-24"
+          >
             {activeVideo?.url ? (
               <>
-                <CoursePlayer url={activeVideo.url} title={activeVideo.title} poster={thumbnail} autoPlay={enrolled} />
+                <CoursePlayer
+                  url={activeVideo.url}
+                  title={activeVideo.title}
+                  poster={thumbnail}
+                  autoPlay={enrolled}
+                />
                 {!enrolled && (
                   <span className="pointer-events-none absolute left-3 top-3 rounded-full bg-black/70 px-3 py-1 text-[11px] font-semibold uppercase tracking-widest text-white backdrop-blur">
-                    Free preview Â· Enroll to unlock full course
+                    Free preview · Enroll to unlock full course
                   </span>
                 )}
               </>
@@ -188,10 +212,20 @@ function CourseDetail() {
           <div className="mt-8">
             <h2 className="text-2xl font-semibold tracking-tight">About this course</h2>
             <p className="mt-3 text-sm text-muted-foreground">
-              {course.description || `Learn ${course.title} with hands-on capstone projects, weekly live sessions, and lifetime access to recordings.`}
+              {course.description ||
+                `Learn ${course.title} with hands-on capstone projects, weekly live sessions, and lifetime access to recordings.`}
             </p>
             <ul className="mt-6 grid gap-2 md:grid-cols-2">
-              {(course.learningOutcomes?.split(/\r?\n/).filter(Boolean) || ["Live weekly sessions", "Lifetime recordings", "Real capstone project", "Verified certificate", "1:1 mentor calls", "Placement support"]).map((f) => (
+              {(
+                course.learningOutcomes?.split(/\r?\n/).filter(Boolean) || [
+                  "Live weekly sessions",
+                  "Lifetime recordings",
+                  "Real capstone project",
+                  "Verified certificate",
+                  "1:1 mentor calls",
+                  "Placement support",
+                ]
+              ).map((f) => (
                 <li key={f} className="flex items-center gap-2 text-sm">
                   <CheckCircle2 className="h-4 w-4 text-primary" /> {f}
                 </li>
@@ -204,7 +238,9 @@ function CourseDetail() {
                 <div className="mt-4 space-y-4">
                   {course.modules.map((m, mi) => (
                     <div key={m.id ?? m.title}>
-                      <h3 className="text-sm font-semibold text-muted-foreground">Module {mi + 1}: {m.title}</h3>
+                      <h3 className="text-sm font-semibold text-muted-foreground">
+                        Module {mi + 1}: {m.title}
+                      </h3>
                       <div className="mt-2 space-y-2">
                         {m.videos.map((v) => {
                           const unlockedVideo = videos.find((row) => row.id === v.id);
@@ -218,10 +254,16 @@ function CourseDetail() {
                               className="flex w-full items-center justify-between rounded-lg border border-border px-3 py-2 text-left text-sm disabled:cursor-not-allowed disabled:opacity-60 hover:bg-secondary/60"
                             >
                               <span className="flex items-center gap-2">
-                                {canPlay ? <PlayCircle className="h-4 w-4 text-primary" /> : <Lock className="h-4 w-4 text-muted-foreground" />}
+                                {canPlay ? (
+                                  <PlayCircle className="h-4 w-4 text-primary" />
+                                ) : (
+                                  <Lock className="h-4 w-4 text-muted-foreground" />
+                                )}
                                 {v.title}
                               </span>
-                              {v.isFreePreview && !enrolled ? <span className="text-xs text-primary">Preview</span> : null}
+                              {v.isFreePreview && !enrolled ? (
+                                <span className="text-xs text-primary">Preview</span>
+                              ) : null}
                             </button>
                           );
                         })}
@@ -242,26 +284,35 @@ function CourseDetail() {
             </span>
           </div>
           <div className="mt-4 flex items-end flex-wrap gap-x-3 gap-y-1">
-            <div className="text-3xl font-semibold teal-text">â‚¹{course.price.toLocaleString()}</div>
+            <div className="text-3xl font-semibold gold-text">₹{course.price.toLocaleString()}</div>
             {course.discount && course.discount > 0 ? (
               <>
                 <div className="text-base text-muted-foreground line-through">
-                  â‚¹{(course.price + course.discount).toLocaleString()}
+                  ₹{(course.price + course.discount).toLocaleString()}
                 </div>
-                <span className="rounded-full bg-[var(--teal-soft)] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-[var(--teal)]">
-                  Save â‚¹{course.discount.toLocaleString()}
+                <span className="rounded-full bg-[var(--gold-soft)] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-[var(--gold-dark)]">
+                  Save ₹{course.discount.toLocaleString()}
                 </span>
               </>
             ) : null}
           </div>
-          {course.students > 0 && <p className="mt-1 text-xs text-muted-foreground">{course.students.toLocaleString()} students enrolled</p>}
+          {course.students > 0 && (
+            <p className="mt-1 text-xs text-muted-foreground">
+              {course.students.toLocaleString()} students enrolled
+            </p>
+          )}
 
           <button
             onClick={handleEnroll}
             disabled={busy || enrolled}
             className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[var(--gradient-gold)] px-6 py-3 text-sm font-semibold text-primary-foreground"
           >
-            <PlayCircle className="h-4 w-4" /> {enrolled ? "Enrolled â€” videos unlocked" : busy ? "Opening checkoutâ€¦" : "Enroll & unlock videos"}
+            <PlayCircle className="h-4 w-4" />{" "}
+            {enrolled
+              ? "Enrolled — videos unlocked"
+              : busy
+                ? "Opening checkout…"
+                : "Enroll & unlock videos"}
           </button>
           {err && !enrolled && (
             <PaymentRetry
@@ -296,7 +347,17 @@ function youtubeEmbed(url: string): string | null {
   }
 }
 
-function CoursePlayer({ url, title, poster, autoPlay }: { url: string; title: string; poster?: string; autoPlay: boolean }) {
+function CoursePlayer({
+  url,
+  title,
+  poster,
+  autoPlay,
+}: {
+  url: string;
+  title: string;
+  poster?: string;
+  autoPlay: boolean;
+}) {
   const embed = youtubeEmbed(url);
   if (embed) {
     return (
@@ -327,4 +388,3 @@ function CoursePlayer({ url, title, poster, autoPlay }: { url: string; title: st
     </video>
   );
 }
-
