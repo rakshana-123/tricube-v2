@@ -1,0 +1,1 @@
+import{t as e}from"./jsx-runtime-DiK4U9sA.js";var t=e(),n=({error:e})=>(0,t.jsxs)(`div`,{className:`mx-auto max-w-3xl px-6 py-24 text-center`,children:[(0,t.jsx)(`h1`,{className:`text-3xl font-semibold`,children:`Something went wrong`}),(0,t.jsx)(`p`,{className:`mt-2 text-sm text-muted-foreground`,children:String(e?.message||e)})]});export{n as errorComponent};
