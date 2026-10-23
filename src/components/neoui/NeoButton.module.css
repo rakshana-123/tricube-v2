@@ -1,0 +1,197 @@
+/* NeoButton — extruded / recessed push control. Theme-aware accents come from
+   --accent-bg / --accent-bg-hover / --primary-cast so no ancestor selectors
+   are needed. */
+
+.button {
+  --btn-radius: var(--radius-md);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  border: none;
+  border-radius: var(--btn-radius);
+  text-decoration: none;
+  white-space: nowrap;
+  user-select: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  transition:
+    transform var(--dur-press-out) var(--ease-spring),
+    box-shadow var(--dur-press-out) var(--ease-standard),
+    background-color var(--dur-control) var(--ease-standard),
+    filter var(--dur-control) var(--ease-standard),
+    opacity var(--dur-control) var(--ease-standard);
+}
+
+.regular {
+  min-height: var(--min-touch-target);
+  padding: 11px 22px; /* MD button-primary padding, verbatim */
+  font: var(--type-body-strong);
+  letter-spacing: var(--type-body-strong-spacing);
+}
+.large {
+  min-height: 50px;
+  padding: 14px 28px;
+  font: var(--type-button-large);
+  letter-spacing: 0;
+}
+.small {
+  min-height: 32px;
+  padding: 7px 14px;
+  font: var(--type-button-utility);
+  letter-spacing: var(--type-button-utility-spacing);
+}
+
+.pill { --btn-radius: var(--radius-pill); }
+.rounded { --btn-radius: var(--radius-sm); }
+.fullWidth { width: 100%; }
+
+.icon { flex: none; }
+
+/* ---- primary: extruded brand blue ------------------------------------------ */
+.primary {
+  background: var(--accent-bg);
+  color: var(--accent-on); /* white on #265CA0 (6.73:1) · navy on #26A4E6 (5.55:1) */
+  border-radius: var(--radius-pill);
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.26) inset,
+    0 -1px 0 0 rgba(0, 0, 0, 0.2) inset,
+    0 10px 22px -6px var(--primary-cast);
+}
+.primary:hover,
+.primary[data-state="hover"] {
+  background: var(--accent-bg-hover); /* MD: hover → #0071e3 */
+}
+.primary:active,
+.primary[data-state="active"] {
+  transform: scale(0.95); /* MD press micro-interaction */
+  background: var(--accent-bg-hover);
+  box-shadow:
+    0 1px 0 0 rgba(0, 0, 0, 0.24) inset,
+    0 -1px 0 0 rgba(255, 255, 255, 0.14) inset,
+    0 3px 8px -4px var(--primary-cast),
+    0 0 0 4px var(--shadow-color-focus-tint);
+  transition:
+    transform var(--dur-press-in) var(--ease-out),
+    box-shadow var(--dur-press-in) var(--ease-out);
+}
+.primary[data-state="focus"] {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* ---- secondary: extruded pearl workhorse ----------------------------------- */
+.secondary {
+  background: var(--surface-raised);
+  color: var(--accent-bg);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--neo-raised-sm);
+}
+.secondary:hover,
+.secondary[data-state="hover"] {
+  background: var(--surface-elevated);
+  box-shadow: var(--neo-raised-md);
+  transform: translateY(-1px);
+}
+.secondary:active,
+.secondary[data-state="active"] {
+  background: var(--surface-sunken);
+  box-shadow: var(--neo-inset-sm);
+  transform: scale(0.95);
+  transition:
+    transform var(--dur-press-in) var(--ease-out),
+    box-shadow var(--dur-press-in) var(--ease-out);
+}
+.secondary[data-state="focus"] {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* ---- ghost: flat with tint wash --------------------------------------------- */
+.ghost {
+  background: transparent;
+  color: var(--accent-bg);
+  box-shadow: none;
+}
+.ghost:hover,
+.ghost[data-state="hover"] {
+  background: var(--highlight-tint);
+}
+.ghost:active,
+.ghost[data-state="active"] {
+  background: var(--highlight-tint);
+  box-shadow: var(--neo-inset-xs);
+  transform: scale(0.95);
+  transition:
+    transform var(--dur-press-in) var(--ease-out),
+    box-shadow var(--dur-press-in) var(--ease-out);
+}
+.ghost[data-state="focus"] {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* ---- dark utility: MD tile-1, radius 8 -------------------------------------- */
+.dark {
+  background: var(--surface-inverse);
+  color: var(--icon-stroke-on-dark);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--neo-raised-xs);
+}
+.dark:hover,
+.dark[data-state="hover"] {
+  background: var(--surface-inverse-2);
+  box-shadow: var(--neo-raised-sm);
+}
+.dark:active,
+.dark[data-state="active"] {
+  background: var(--surface-inverse-3);
+  box-shadow: var(--neo-inset-xs);
+  transform: scale(0.95);
+  transition:
+    transform var(--dur-press-in) var(--ease-out),
+    box-shadow var(--dur-press-in) var(--ease-out);
+}
+.dark[data-state="focus"] {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* ---- pearl capsule: MD #fafafc, radius 11 ----------------------------------- */
+.pearl {
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  border-radius: var(--radius-md);
+  box-shadow: var(--neo-raised-xs);
+}
+.pearl:hover,
+.pearl[data-state="hover"] {
+  box-shadow: var(--neo-raised-sm);
+  transform: translateY(-1px);
+}
+.pearl:active,
+.pearl[data-state="active"] {
+  background: var(--surface-sunken);
+  box-shadow: var(--neo-inset-xs);
+  transform: scale(0.95);
+  transition:
+    transform var(--dur-press-in) var(--ease-out),
+    box-shadow var(--dur-press-in) var(--ease-out);
+}
+.pearl[data-state="focus"] {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* ---- disabled: shadows collapse, color desaturates --------------------------- */
+.button:disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+  opacity: 0.4;
+  filter: saturate(0.55);
+  box-shadow: none;
+  transform: none;
+}

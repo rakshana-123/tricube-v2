@@ -1,0 +1,26 @@
+{
+  "name": "neomorphic-ui",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Neomorphic UI theme built on Apple design tokens extracted from VoltAgent/awesome-design-md (design-md/apple/DESIGN.md)",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "verify:interact": "node scripts/interact.mjs",
+    "verify:screens": "node scripts/shoot.mjs"
+  },
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "^4.5.2",
+    "puppeteer-core": "^23.11.1",
+    "typescript": "~5.8.3",
+    "vite": "^6.3.5"
+  }
+}

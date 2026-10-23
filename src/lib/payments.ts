@@ -1,11 +1,38 @@
 // Payment helper with demo/mock fallback when backend is unreachable.
 
 const RAW_API_BASE =
-  (import.meta.env.VITE_API_URL as string | undefined) || "http://localhost:5000";
+  (import.meta.env.VITE_API_URL as string | undefined) ||
+  "http://localhost:5000";
 
 export const API_BASE = RAW_API_BASE.replace(/\/+$/, "").replace(/\/api$/i, "");
 
-export const DEMO_FLAG = (import.meta.env.VITE_DEMO_PAYMENTS as string | undefined) === "true";
+export const BACKEND_ENABLED =
+  (import.meta.env.VITE_ENABLE_BACKEND as string | undefined) === "true";
+
+export function resolveAssetUrl(url?: string | null): string | undefined {
+  if (!url) return undefined;
+  if (/^https?:\/\//i.test(url)) return url;
+  if (url.startsWith("/uploads/")) {
+    return `${API_BASE}${url}`;
+  }
+  return url.startsWith("/") ? url : `/${url}`;
+}
+
+export async function tryBackendFetch(path: string, init?: RequestInit): Promise<Response | null> {
+  if (!BACKEND_ENABLED) return null;
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), 2500);
+  try {
+    return await fetch(`${API_BASE}${path}`, { ...init, signal: ctrl.signal });
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(t);
+  }
+}
+
+export const DEMO_FLAG =
+  (import.meta.env.VITE_DEMO_PAYMENTS as string | undefined) === "true";
 
 export type PayResult = {
   status: "paid" | "demo" | "cancelled" | "failed";
@@ -115,19 +142,16 @@ export async function startPayment(args: StartArgs): Promise<PayResult> {
     if (import.meta.env.PROD && isTest) {
       console.warn(
         "[payments] Backend returned a TEST Razorpay key on a production build. " +
-          "Update RAZORPAY_KEY_ID/RAZORPAY_KEY_SECRET in backend/.env to your LIVE keys.",
+        "Update RAZORPAY_KEY_ID/RAZORPAY_KEY_SECRET in backend/.env to your LIVE keys.",
       );
     } else if (!import.meta.env.PROD && !isTest) {
       console.warn(
         "[payments] Backend returned a LIVE Razorpay key in development. " +
-          "Switch backend/.env to rzp_test_* keys before testing.",
+        "Switch backend/.env to rzp_test_* keys before testing.",
       );
     }
   } else {
-    return {
-      status: "failed",
-      message: "Backend did not return a Razorpay Key Id. Check backend/.env.",
-    };
+    return { status: "failed", message: "Backend did not return a Razorpay Key Id. Check backend/.env." };
   }
   const loaded = await loadRazorpay();
   if (!loaded) return { status: "failed", message: "Payment SDK failed to load." };

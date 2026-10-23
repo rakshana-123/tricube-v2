@@ -1,0 +1,103 @@
+/* Frosted bars — MD material recipe: saturate(180%) blur(20px), 72% canvas. */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  width: 100%;
+  padding-inline: var(--space-sm);
+  padding-top: env(safe-area-inset-top);
+  backdrop-filter: var(--frosted-blur);
+  -webkit-backdrop-filter: var(--frosted-blur);
+  transition: background-color var(--dur-control) var(--ease-standard);
+}
+
+.sub {
+  min-height: var(--nav-sub-height);
+  background: var(--frosted-bg);
+  color: var(--text-primary);
+  box-shadow: 0 1px 0 var(--control-border);
+}
+
+.global {
+  min-height: var(--nav-global-height);
+  background: var(--nav-global-bg); /* brand navy · #0E263A at 88% */
+  color: #f5f5f7;
+}
+
+.side {
+  display: flex;
+  gap: var(--space-xxs);
+}
+
+.title {
+  text-align: center;
+  color: inherit;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.iconBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--min-touch-target);
+  height: var(--min-touch-target);
+  border: none;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color var(--dur-control) var(--ease-standard),
+    transform var(--dur-press-in) var(--ease-out);
+}
+.iconBtn:hover { background: var(--highlight-tint); }
+.iconBtn:active { transform: scale(0.95); }
+
+/* ---- Floating pill tab bar -------------------------------------------------- */
+.tabbar {
+  display: inline-flex;
+  gap: var(--space-xxs);
+  padding: var(--space-xxs);
+  border-radius: var(--radius-pill);
+  background: var(--surface-raised);
+  box-shadow: var(--neo-raised-md);
+}
+
+.tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  min-width: 72px;
+  min-height: 56px;
+  padding: var(--space-xxs) var(--space-sm);
+  border: none;
+  border-radius: var(--radius-md);
+  background: transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  color: var(--icon-stroke-muted);
+  transition:
+    background-color var(--dur-control) var(--ease-standard),
+    color var(--dur-control) var(--ease-standard),
+    box-shadow var(--dur-control) var(--ease-standard),
+    transform var(--dur-press-in) var(--ease-out);
+}
+
+.tab:hover { color: var(--text-primary); }
+.tab:active { transform: scale(0.95); }
+
+.tabActive {
+  color: var(--accent-bg);
+  background: var(--highlight-tint);
+  box-shadow: var(--neo-raised-xs);
+}
+
+.tabLabel { color: inherit; }

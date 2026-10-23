@@ -1,0 +1,429 @@
+/* =============================================================================
+   Showcase chrome (scoped under .neo-ui) — presentational scaffolding for the
+   component gallery. Not part of the shipped component library.
+   ========================================================================== */
+
+.neo-ui .showcase { min-height: 100dvh; }
+
+/* ---- Header ---------------------------------------------------------------- */
+.neo-ui .showcaseHeader {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  min-height: var(--nav-sub-height);
+  padding-inline: var(--space-lg);
+  padding-top: env(safe-area-inset-top);
+  backdrop-filter: var(--frosted-blur);
+  -webkit-backdrop-filter: var(--frosted-blur);
+  background: var(--frosted-bg);
+  box-shadow: 0 1px 0 var(--control-border);
+}
+.neo-ui .showcaseHeader .brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  margin-right: auto;
+  color: var(--text-primary);
+}
+.neo-ui .brandMarkImg {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--neo-raised-xs);
+  object-fit: cover;
+}
+.neo-ui .dtSelect {
+  border: none;
+  border-radius: var(--radius-xs);
+  background: var(--surface-sunken);
+  box-shadow: var(--neo-inset-xs);
+  color: var(--text-primary);
+  padding: 6px 10px;
+  font: var(--type-fine-print);
+  cursor: pointer;
+}
+
+/* ---- Section scaffolding ---------------------------------------------------- */
+.neo-ui .section {
+  padding-block: var(--space-section);
+  scroll-margin-top: var(--nav-sub-height);
+}
+.neo-ui .section + .section {
+  border-top: 1px solid var(--control-border);
+}
+.neo-ui .sectionAlt { background: var(--canvas-contrast); }
+.neo-ui .sectionHead {
+  max-width: 720px;
+  margin-bottom: var(--space-xxl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+.neo-ui .sectionIndex { color: var(--accent-bg); }
+.neo-ui .sectionDesc { color: var(--text-secondary); }
+.neo-ui .subhead {
+  margin-top: var(--space-xxl);
+  margin-bottom: var(--space-md);
+}
+
+/* ---- State matrix ----------------------------------------------------------- */
+.neo-ui .matrixRow {
+  display: grid;
+  grid-template-columns: 140px repeat(5, minmax(110px, 1fr));
+  gap: var(--space-sm);
+  align-items: center;
+  margin-bottom: var(--space-md);
+}
+.neo-ui .matrixHeader { color: var(--text-tertiary); }
+.neo-ui .matrixCell {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  min-height: 60px;
+  padding: var(--space-sm);
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--canvas) 92%, transparent);
+}
+@media (max-width: 1067px) {
+  .neo-ui .matrixRow { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .neo-ui .matrixHeader { display: none; }
+}
+
+/* ---- Swatches --------------------------------------------------------------- */
+.neo-ui .swatchGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: var(--space-md);
+}
+.neo-ui .swatchCard {
+  border-radius: var(--radius-md);
+  padding: var(--space-sm);
+  background: var(--surface-raised);
+  box-shadow: var(--neo-raised-xs);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+.neo-ui .swatchChip {
+  height: 64px;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--neo-inset-xs);
+}
+.neo-ui .swatchMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.neo-ui .contrastBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xxs);
+  align-self: flex-start;
+  padding: 2px var(--space-xs);
+  border-radius: var(--radius-xs);
+  font-size: 11px;
+  line-height: 1.4;
+}
+.neo-ui .contrastPass {
+  color: #1d7a34;
+  background: rgba(52, 199, 89, 0.16);
+}
+.neo-ui .contrastWarn {
+  color: #9a6b00;
+  background: rgba(255, 204, 0, 0.18);
+}
+.neo-ui[data-theme="dark"] .contrastPass { color: #6fe08a; }
+.neo-ui[data-theme="dark"] .contrastWarn { color: #ffd449; }
+
+/* ---- Spec tables ------------------------------------------------------------- */
+.neo-ui .specGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-md);
+}
+.neo-ui .typeRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-lg);
+  padding-block: var(--space-sm);
+}
+.neo-ui .typeRow + .typeRow { border-top: 1px solid var(--control-border); }
+.neo-ui .typeSpec {
+  white-space: nowrap;
+  color: var(--text-tertiary);
+}
+
+/* ---- Elevation demo ----------------------------------------------------------- */
+.neo-ui .elevationRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xl);
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-xl) var(--space-lg);
+  border-radius: var(--radius-lg);
+  background: var(--canvas);
+}
+.neo-ui .elevationChip {
+  display: grid;
+  place-items: center;
+  width: 120px;
+  height: 84px;
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+}
+.neo-ui .spacingStack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+.neo-ui .spacingRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+.neo-ui .spacingBar {
+  height: 16px;
+  border-radius: var(--radius-xs);
+  background: var(--accent-bg);
+  opacity: 0.85;
+}
+.neo-ui .radiusDemo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+}
+.neo-ui .radiusChip {
+  display: grid;
+  place-items: center;
+  width: 96px;
+  height: 96px;
+  background: var(--surface-raised);
+  box-shadow: var(--neo-raised-xs);
+}
+
+/* ---- Forms / controls layout -------------------------------------------------- */
+.neo-ui .controlStack {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-lg);
+}
+.neo-ui .controlGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  padding: var(--space-lg);
+  border-radius: var(--radius-lg);
+  background: var(--surface-raised);
+  box-shadow: var(--neo-raised-xs);
+}
+
+/* ---- Card gallery --------------------------------------------------------------- */
+.neo-ui .cardGallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--space-lg);
+}
+
+/* ---- Nav demo --------------------------------------------------------------------- */
+.neo-ui .navDemo {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--neo-raised-md);
+  background: var(--canvas);
+}
+.neo-ui .navDemoBody {
+  padding: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  align-items: flex-start;
+}
+.neo-ui .navScroll {
+  height: 90px;
+  overflow-y: auto;
+  border-radius: var(--radius-md);
+  box-shadow: var(--neo-inset-xs);
+  padding: var(--space-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xxs);
+  width: 100%;
+}
+.neo-ui .navScrollRow {
+  height: 22px;
+  border-radius: var(--radius-xs);
+  background: color-mix(in srgb, var(--text-primary) 7%, transparent);
+}
+.neo-ui .navScrollRow:nth-child(2n) { width: 82%; }
+.neo-ui .navScrollRow:nth-child(3n) { width: 64%; }
+
+/* ---- Motion playground --------------------------------------------------------------- */
+.neo-ui .padGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-lg);
+}
+.neo-ui .bigPad {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  min-height: 150px;
+  border: none;
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  box-shadow: var(--neo-raised-md);
+  transition:
+    transform var(--dur-press-out) var(--ease-spring),
+    box-shadow var(--dur-press-out) var(--ease-standard),
+    background-color var(--dur-press-in) var(--ease-out);
+}
+.neo-ui .bigPad:hover {
+  box-shadow: var(--neo-raised-lg);
+  transform: translateY(-2px);
+}
+.neo-ui .bigPad:active {
+  transform: scale(0.96);
+  background: var(--surface-sunken);
+  box-shadow: var(--neo-inset-md);
+  transition:
+    transform var(--dur-press-in) var(--ease-out),
+    box-shadow var(--dur-press-in) var(--ease-out),
+    background-color var(--dur-press-in) var(--ease-out);
+}
+.neo-ui .hapticTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+.neo-ui .hapticTable th,
+.neo-ui .hapticTable td {
+  text-align: left;
+  padding: var(--space-xs) var(--space-sm);
+  border-bottom: 1px solid var(--control-border);
+}
+.neo-ui .hapticTable th {
+  color: var(--text-tertiary);
+  font-weight: 400;
+}
+
+/* ---- Layout / devices ------------------------------------------------------------ */
+.neo-ui .deviceRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xxl);
+  justify-content: center;
+  align-items: flex-start;
+}
+.neo-ui .device {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  align-items: center;
+}
+.neo-ui .deviceFrame {
+  position: relative;
+  border-radius: 44px;
+  padding: 12px;
+  background: var(--surface-raised);
+  box-shadow: var(--neo-raised-lg), inset 0 0 0 2px var(--control-border);
+}
+.neo-ui .deviceScreen {
+  position: relative;
+  width: 390px;
+  height: 720px;
+  border-radius: 34px;
+  overflow: hidden;
+  background: var(--canvas);
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, #000 22%, transparent);
+}
+.neo-ui .deviceTablet .deviceScreen {
+  width: 660px;
+  height: 760px;
+  border-radius: 28px;
+}
+.neo-ui .notch {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 126px;
+  height: 28px;
+  border-radius: 0 0 18px 18px;
+  background: #1d1d1f;
+  z-index: 10;
+}
+.neo-ui .homeIndicator {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 134px;
+  height: 5px;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--text-primary) 32%, transparent);
+  z-index: 10;
+}
+.neo-ui .deviceApp {
+  height: 100%;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  scrollbar-width: none;
+}
+.neo-ui .deviceApp::-webkit-scrollbar { display: none; }
+
+.neo-ui .safeStrip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--neo-inset-sm);
+}
+.neo-ui .safeCell { padding: var(--space-md); text-align: center; }
+.neo-ui .safeCell:nth-child(1) { background: rgba(0, 113, 227, 0.12); }
+.neo-ui .safeCell:nth-child(2) { background: rgba(0, 113, 227, 0.06); }
+.neo-ui .safeCell:nth-child(3) { background: rgba(0, 113, 227, 0.12); }
+
+.neo-ui .gridDemoTile {
+  display: grid;
+  place-items: center;
+  min-height: 84px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-raised);
+  box-shadow: var(--neo-raised-xs);
+}
+
+/* ---- Footer -------------------------------------------------------------------- */
+.neo-ui .showcaseFooter {
+  padding-block: var(--space-xxl);
+  border-top: 1px solid var(--control-border);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xxs);
+  align-items: center;
+  text-align: center;
+}
+
+/* Syntax badge */
+.neo-ui .tokenBadge {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: var(--radius-xs);
+  background: var(--highlight-tint);
+  color: var(--accent-bg);
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 11.5px;
+  line-height: 1.5;
+  vertical-align: baseline;
+  white-space: nowrap;
+}

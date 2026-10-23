@@ -1,0 +1,279 @@
+/* =============================================================================
+   NEO UI · TRI CUBE brand theme (scoped)
+   Token source: VoltAgent/awesome-design-md → design-md/apple/DESIGN.md (v2.2)
+   Brand source: TRI CUBE logo set (pixel-sampled):
+     white bg #FFFFFF · navy #0E263A · brand blue #265CA0 · teal #2EA5A1 · gold #C9962E
+
+   White-primary theme: #FFFFFF is the dominant canvas; the brand blue carries
+   ALL interaction (AA: 6.73:1 on white); teal marks live/badge accents; gold
+   is reserved for premium markers. Depth shadows are tinted with the brand
+   navy instead of plain black — white-on-white neumorphism stays visible.
+   Everything is namespaced under `.neo-ui`.
+   ========================================================================== */
+
+.neo-ui {
+  /* ---- Brand primitives (logo-sampled) ------------------------------------ */
+  --brand-navy: #0e263a;
+  --brand-blue: #265ca0;
+  --brand-blue-deep: #1c4680;
+  --brand-blue-bright: #26a4e6;
+  --brand-teal: #2ea5a1;
+  --brand-gold: #c9962e;
+
+  /* Legacy Apple tokens kept for reference/portability */
+  --color-primary: #265ca0;
+  --color-primary-focus: #1c4680;
+  --color-primary-on-dark: #26a4e6;
+  --color-on-primary: #ffffff;
+  --color-ink: #1d1d1f;
+  --color-ink-80: #333333;
+  --color-ink-48: #7a7a7a;
+  --color-hairline: #e0e0e0;
+  --color-chip-gray: #d2d2d7;
+
+  /* ---- Theme-aware control accents ---------------------------------------- */
+  --accent-bg: #265ca0;            /* CTA fill, toggles-on, slider fill */
+  --accent-bg-hover: #1c4680;
+  --accent-on: #ffffff;            /* text on accent fill — 6.73:1 on #265CA0 */
+  --primary-cast: rgba(38, 92, 160, 0.45);
+  --chip-border-selected: #265ca0;
+
+  /* ---- Typography (unchanged — MD SF Pro ladder) --------------------------- */
+  --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display",
+    "SF Pro Text", "Helvetica Neue", "Segoe UI", Roboto, Arial, sans-serif;
+  --font-text: -apple-system, BlinkMacSystemFont, "SF Pro Text",
+    "Helvetica Neue", "Segoe UI", Roboto, Arial, sans-serif;
+
+  --type-hero-display: 600 calc(56px * var(--dt-scale, 1)) / 1.07 var(--font-display);
+  --type-display-lg: 600 calc(40px * var(--dt-scale, 1)) / 1.1 var(--font-display);
+  --type-display-md: 600 calc(34px * var(--dt-scale, 1)) / 1.47 var(--font-display);
+  --type-lead: 400 calc(28px * var(--dt-scale, 1)) / 1.14 var(--font-text);
+  --type-lead-airy: 300 calc(24px * var(--dt-scale, 1)) / 1.5 var(--font-text);
+  --type-tagline: 600 calc(21px * var(--dt-scale, 1)) / 1.19 var(--font-text);
+  --type-body-strong: 600 calc(17px * var(--dt-scale, 1)) / 1.24 var(--font-text);
+  --type-body: 400 calc(17px * var(--dt-scale, 1)) / 1.47 var(--font-text);
+  --type-caption: 400 calc(14px * var(--dt-scale, 1)) / 1.43 var(--font-text);
+  --type-caption-strong: 600 calc(14px * var(--dt-scale, 1)) / 1.29 var(--font-text);
+  --type-button-large: 300 calc(18px * var(--dt-scale, 1)) / 1 var(--font-text);
+  --type-button-utility: 400 calc(14px * var(--dt-scale, 1)) / 1.29 var(--font-text);
+  --type-fine-print: 400 calc(12px * var(--dt-scale, 1)) / 1 var(--font-text);
+  --type-micro-legal: 400 calc(10px * var(--dt-scale, 1)) / 1.3 var(--font-text);
+  --type-nav-link: 400 calc(12px * var(--dt-scale, 1)) / 1 var(--font-text);
+
+  --type-hero-display-spacing: calc(-0.28px * var(--dt-scale, 1));
+  --type-display-md-spacing: calc(-0.374px * var(--dt-scale, 1));
+  --type-lead-spacing: calc(0.196px * var(--dt-scale, 1));
+  --type-tagline-spacing: calc(0.231px * var(--dt-scale, 1));
+  --type-body-strong-spacing: calc(-0.374px * var(--dt-scale, 1));
+  --type-body-spacing: calc(-0.374px * var(--dt-scale, 1));
+  --type-caption-spacing: calc(-0.224px * var(--dt-scale, 1));
+  --type-caption-strong-spacing: calc(-0.224px * var(--dt-scale, 1));
+  --type-button-utility-spacing: calc(-0.224px * var(--dt-scale, 1));
+  --type-fine-print-spacing: calc(-0.12px * var(--dt-scale, 1));
+  --type-micro-legal-spacing: calc(-0.08px * var(--dt-scale, 1));
+  --type-nav-link-spacing: calc(-0.12px * var(--dt-scale, 1));
+
+  /* ---- Radius (MD) ---------------------------------------------------------- */
+  --radius-xs: 5px;
+  --radius-sm: 8px;
+  --radius-md: 11px;
+  --radius-lg: 18px;
+  --radius-pill: 9999px;
+
+  /* ---- Spacing (MD, 4px grid) ------------------------------------------------ */
+  --space-xxs: 4px;
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 17px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-xxl: 48px;
+  --space-section: 80px;
+
+  /* ---- Motion ----------------------------------------------------------------- */
+  --dur-press-in: 120ms;
+  --dur-press-out: 420ms;
+  --dur-control: 300ms;
+  --ease-standard: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out: cubic-bezier(0, 0, 0.35, 1);
+
+  /* ---- Layout ------------------------------------------------------------------ */
+  --grid-gutter: var(--space-lg);
+  --min-touch-target: 44px;
+  --nav-global-height: 44px;
+  --nav-sub-height: 52px;
+
+  --frosted-blur: saturate(180%) blur(20px);
+
+  /* ---- LIGHT theme · white primary ----------------------------------------------
+     Canvas #FFFFFF dominant; recessed wells #F5F5F7; raised cards pure white
+     separated by navy-tinted shadows. WCAG: ink 16.7:1 · accent 6.73:1 (AA) ·
+     white-on-accent 6.73:1 (AA). */
+  color-scheme: light;
+  font: var(--type-body);
+  letter-spacing: var(--type-body-spacing);
+  color: var(--text-primary);
+  background: var(--canvas);
+  min-height: 100dvh;
+  -webkit-font-smoothing: antialiased;
+
+  --canvas: #ffffff;
+  --canvas-contrast: #f5f5f7;
+  --surface-raised: #ffffff;
+  --surface-sunken: #f5f5f7;
+  --surface-elevated: #ffffff;
+  --text-primary: #1d1d1f;
+  --text-secondary: #333333;
+  --text-tertiary: #6b6b70;
+  --focus-ring: #265ca0;
+  --focus-ring-offset: 2px;
+  --control-border: rgba(14, 38, 58, 0.1);
+  --color-error: #d70015;
+  --color-error-bg: rgba(215, 0, 21, 0.05);
+  --color-error-ring: rgba(215, 0, 21, 0.18);
+
+  /* Dual-shadow ladder — shade tinted with brand navy #0E263A so white-on-white
+     depth stays perceptible; specular kept subtle (visible over sunken areas). */
+  --neo-raised-xs: 2px 2px 5px rgba(14, 38, 58, 0.1), -2px -2px 5px rgba(255, 255, 255, 0.7);
+  --neo-raised-sm: 4px 4px 8px rgba(14, 38, 58, 0.12), -4px -4px 8px rgba(255, 255, 255, 0.75);
+  --neo-raised-md: 6px 6px 14px rgba(14, 38, 58, 0.14), -6px -6px 14px rgba(255, 255, 255, 0.8);
+  --neo-raised-lg: 12px 12px 28px rgba(14, 38, 58, 0.16), -12px -12px 28px rgba(255, 255, 255, 0.85);
+  --neo-inset-xs: inset 2px 2px 4px rgba(14, 38, 58, 0.1), inset -2px -2px 4px rgba(255, 255, 255, 0.9);
+  --neo-inset-sm: inset 3px 3px 6px rgba(14, 38, 58, 0.12), inset -3px -3px 6px rgba(255, 255, 255, 0.9);
+  --neo-inset-md: inset 5px 5px 10px rgba(14, 38, 58, 0.14), inset -5px -5px 10px rgba(255, 255, 255, 0.9);
+  --neo-product: 3px 5px 30px rgba(14, 38, 58, 0.22);
+
+  /* Inverse surfaces = brand navy tile */
+  --surface-inverse: #0e263a;
+  --surface-inverse-2: #143a6b;
+  --surface-inverse-3: #0a1c2e;
+  --text-on-inverse: #ffffff;
+  --nav-global-bg: rgba(14, 38, 58, 0.88);
+
+  --frosted-bg: rgba(255, 255, 255, 0.72);
+  --icon-stroke: #1d1d1f;
+  --icon-stroke-muted: #6b6b70;
+  --icon-stroke-on-dark: #f5f5f7;
+  --shadow-color-focus-tint: rgba(38, 92, 160, 0.22);
+  --highlight-tint: rgba(38, 92, 160, 0.08);
+  --badge-teal: #2ea5a1;
+  --badge-gold: #c9962e;
+  --badge-gold-fg: #8a6420;
+  --badge-gold-bg: rgba(201, 150, 46, 0.14);
+}
+
+/* ---- DARK theme · brand navy ----------------------------------------------------
+   The dark mode inverts into the logo's navy. Canvas #0E263A (logo ground),
+   raised #142E52, sunken #0B1C33. Accent brightens to the logo's sky blue
+   #26A4E6 (5.55:1 AA on canvas); teal passes as-is (5.16:1). Shadows go
+   near-black navy + faint sky speculars so neomorphic depth survives. */
+.neo-ui[data-theme="dark"] {
+  color-scheme: dark;
+  --accent-bg: #26a4e6;
+  --accent-bg-hover: #4db8ee;
+  --accent-on: #0e263a;            /* navy text on sky-blue fill — 5.55:1 */
+  --primary-cast: rgba(38, 164, 230, 0.35);
+  --chip-border-selected: #26a4e6;
+
+  --canvas: #0e263a;
+  --canvas-contrast: #0a1c30;
+  --surface-raised: #142e52;
+  --surface-sunken: #0b1c33;
+  --surface-elevated: #16325a;
+  --text-primary: #f5f7fa;
+  --text-secondary: #c8d4e2;
+  --text-tertiary: #93a7c0;
+  --focus-ring: #26a4e6;
+  --control-border: rgba(200, 212, 226, 0.14);
+  --color-error: #ff6f66;
+  --color-error-bg: rgba(255, 111, 102, 0.1);
+  --color-error-ring: rgba(255, 111, 102, 0.28);
+
+  --neo-raised-xs: 2px 2px 5px rgba(2, 10, 20, 0.45), -2px -2px 5px rgba(120, 180, 235, 0.05);
+  --neo-raised-sm: 4px 4px 8px rgba(2, 10, 20, 0.5), -4px -4px 8px rgba(120, 180, 235, 0.06);
+  --neo-raised-md: 6px 6px 14px rgba(2, 10, 20, 0.55), -6px -6px 14px rgba(120, 180, 235, 0.07);
+  --neo-raised-lg: 12px 12px 28px rgba(2, 10, 20, 0.6), -12px -12px 28px rgba(120, 180, 235, 0.09);
+  --neo-inset-xs: inset 2px 2px 4px rgba(2, 10, 20, 0.5), inset -2px -2px 4px rgba(120, 180, 235, 0.05);
+  --neo-inset-sm: inset 3px 3px 6px rgba(2, 10, 20, 0.55), inset -3px -3px 6px rgba(120, 180, 235, 0.06);
+  --neo-inset-md: inset 5px 5px 10px rgba(2, 10, 20, 0.6), inset -5px -5px 10px rgba(120, 180, 235, 0.07);
+  --neo-product: 3px 5px 30px rgba(2, 10, 20, 0.6);
+
+  --surface-inverse: #f5f7fa;
+  --surface-inverse-2: #ffffff;
+  --surface-inverse-3: #d8e0ea;
+  --text-on-inverse: #0e263a;
+  --nav-global-bg: rgba(6, 16, 28, 0.9);
+
+  --frosted-bg: rgba(14, 38, 58, 0.74);
+  --icon-stroke: #f5f7fa;
+  --icon-stroke-muted: #93a7c0;
+  --icon-stroke-on-dark: #0e263a;
+  --shadow-color-focus-tint: rgba(38, 164, 230, 0.3);
+  --highlight-tint: rgba(38, 164, 230, 0.13);
+  --badge-teal: #3fc0bb;
+  --badge-gold: #dcae4e;
+  --badge-gold-fg: #e8c07a;
+  --badge-gold-bg: rgba(220, 174, 78, 0.16);
+}
+
+/* ---- Scoped base behaviors ----------------------------------------------------- */
+.neo-ui :focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  border-radius: var(--radius-xs);
+}
+.neo-ui ::selection {
+  background: var(--accent-bg);
+  color: var(--accent-on);
+}
+
+/* ---- Typography classes --------------------------------------------------------- */
+.neo-ui .type-hero-display { font: var(--type-hero-display); letter-spacing: var(--type-hero-display-spacing); color: var(--text-primary); }
+.neo-ui .type-display-lg { font: 600 calc(40px * var(--dt-scale, 1)) / 1.1 var(--font-display); color: var(--text-primary); }
+.neo-ui .type-display-md { font: var(--type-display-md); letter-spacing: var(--type-display-md-spacing); color: var(--text-primary); }
+.neo-ui .type-lead { font: var(--type-lead); letter-spacing: var(--type-lead-spacing); color: var(--text-primary); }
+.neo-ui .type-lead-airy { font: var(--type-lead-airy); color: var(--text-primary); }
+.neo-ui .type-tagline { font: var(--type-tagline); letter-spacing: var(--type-tagline-spacing); color: var(--text-primary); }
+.neo-ui .type-body-strong { font: var(--type-body-strong); letter-spacing: var(--type-body-strong-spacing); color: var(--text-primary); }
+.neo-ui .type-body { font: var(--type-body); letter-spacing: var(--type-body-spacing); color: var(--text-primary); }
+.neo-ui .type-caption { font: var(--type-caption); letter-spacing: var(--type-caption-spacing); color: var(--text-secondary); }
+.neo-ui .type-caption-strong { font: var(--type-caption-strong); letter-spacing: var(--type-caption-strong-spacing); color: var(--text-primary); }
+.neo-ui .type-button-large { font: var(--type-button-large); }
+.neo-ui .type-button-utility { font: var(--type-button-utility); letter-spacing: var(--type-button-utility-spacing); }
+.neo-ui .type-fine-print { font: var(--type-fine-print); letter-spacing: var(--type-fine-print-spacing); color: var(--text-tertiary); }
+.neo-ui .type-micro-legal { font: var(--type-micro-legal); letter-spacing: var(--type-micro-legal-spacing); color: var(--text-tertiary); }
+.neo-ui .type-nav-link { font: var(--type-nav-link); letter-spacing: var(--type-nav-link-spacing); }
+
+/* ---- Layout utilities ------------------------------------------------------------- */
+.neo-ui .safe-area { padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); }
+.neo-ui .safe-area-x { padding-right: env(safe-area-inset-right); padding-left: env(safe-area-inset-left); }
+.neo-ui .neo-container {
+  width: 100%;
+  max-width: 1068px;
+  margin-inline: auto;
+  padding-inline: max(var(--space-lg), env(safe-area-inset-left, var(--space-lg)));
+}
+.neo-ui .neo-grid-tiles { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--space-sm); }
+@media (max-width: 1439px) { .neo-ui .neo-grid-tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (max-width: 1067px) { .neo-ui .neo-grid-tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 833px) { .neo-ui .neo-grid-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 733px) { .neo-ui .neo-grid-tiles { grid-template-columns: minmax(0, 1fr); } }
+.neo-ui .only-ipad { display: initial; }
+.neo-ui .only-phone { display: none; }
+@media (max-width: 733px) {
+  .neo-ui .only-ipad { display: none; }
+  .neo-ui .only-phone { display: initial; }
+}
+.neo-ui .neo-section { padding-block: var(--space-section); }
+.neo-ui .fluid-hero { font-size: clamp(calc(28px * var(--dt-scale, 1)), 6.2vw, calc(56px * var(--dt-scale, 1))); }
+
+@media (prefers-reduced-motion: reduce) {
+  .neo-ui *,
+  .neo-ui *::before,
+  .neo-ui *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

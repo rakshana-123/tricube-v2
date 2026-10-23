@@ -1,0 +1,280 @@
+/* =============================================================================
+   NEO UI · Design tokens
+   Source: VoltAgent/awesome-design-md → design-md/apple/DESIGN.md (v2.2)
+   Every Apple value below is lifted verbatim from that file; the "neo-*"
+   elevation layers are the neomorphic extension (alpha-blended blacks for
+   depth, white specular highlights from the top-left light source).
+
+   Convention: MD value → token, e.g. spacing "1 unit = 4px, sm 12" → --space-sm: 12px
+   ========================================================================== */
+
+:root {
+  /* ---- Color · primitives (MD: brand/color/semantic) --------------------- */
+  --color-primary: #0066cc;        /* MD primary */
+  --color-primary-focus: #0071e3;  /* MD primary-focus */
+  --color-primary-on-dark: #2997ff;/* MD primary-on-dark (Sky Blue) */
+  --color-on-primary: #ffffff;     /* MD on-primary */
+  --color-ink: #1d1d1f;            /* MD ink / body */
+  --color-ink-80: #333333;         /* MD ink-muted-80 */
+  --color-ink-48: #7a7a7a;         /* MD ink-muted-48 */
+  --color-divider: #f0f0f0;        /* MD divider-soft */
+  --color-hairline: #e0e0e0;       /* MD hairline (D8 hairline) */
+  --color-chip-gray: #d2d2d7;      /* MD surface-chip-translucent */
+
+  /* ---- Typography · family ------------------------------------------------ */
+  /* MD typography: SF Pro Display (headlines) / SF Pro Text (body + UI).
+     Web-safe cascade keeps the SF metrics on Apple devices, degrades to
+     system sans elsewhere (Segoe UI on Windows demo). */
+  --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display",
+    "SF Pro Text", "Helvetica Neue", "Segoe UI", Roboto, Arial, sans-serif;
+  --font-text: -apple-system, BlinkMacSystemFont, "SF Pro Text",
+    "Helvetica Neue", "Segoe UI", Roboto, Arial, sans-serif;
+
+  /* ---- Typography · scale (px / weight / line-height / letter-spacing) ----
+     Values verbatim from MD typography scale table. Sizes are wired through
+     --dt-scale so Dynamic Type resizes the whole ladder (see useDynamicType). */
+  --type-hero-display-size: 56px;
+  --type-hero-display-weight: 600;
+  --type-hero-display-lh: 1.07;
+  --type-hero-display-ls: -0.28px;
+  --type-hero-display: 600 calc(56px * var(--dt-scale, 1)) / 1.07 var(--font-display);
+  --type-hero-display-spacing: calc(-0.28px * var(--dt-scale, 1));
+
+  --type-display-lg-size: 40px;
+  --type-display-lg: 600 calc(40px * var(--dt-scale, 1)) / 1.1 var(--font-display);
+  --type-display-lg-spacing: 0px;
+
+  --type-display-md-size: 34px;
+  --type-display-md: 600 calc(34px * var(--dt-scale, 1)) / 1.47 var(--font-display);
+  --type-display-md-spacing: -0.374px;
+
+  --type-lead-size: 28px;
+  --type-lead: 400 calc(28px * var(--dt-scale, 1)) / 1.14 var(--font-text);
+  --type-lead-spacing: 0.196px;
+
+  --type-lead-airy-size: 24px;
+  --type-lead-airy: 300 calc(24px * var(--dt-scale, 1)) / 1.5 var(--font-text);
+  --type-lead-airy-spacing: 0px;
+
+  --type-tagline-size: 21px;
+  --type-tagline: 600 calc(21px * var(--dt-scale, 1)) / 1.19 var(--font-text);
+  --type-tagline-spacing: 0.231px;
+
+  --type-body-strong-size: 17px;
+  --type-body-strong: 600 calc(17px * var(--dt-scale, 1)) / 1.24 var(--font-text);
+  --type-body-strong-spacing: -0.374px;
+
+  --type-body-size: 17px;
+  --type-body: 400 calc(17px * var(--dt-scale, 1)) / 1.47 var(--font-text);
+  --type-body-spacing: -0.374px;
+
+  --type-dense-link-size: 17px;
+  --type-dense-link: 400 calc(17px * var(--dt-scale, 1)) / 2.41 var(--font-text);
+  --type-dense-link-spacing: 0px;
+
+  --type-caption-size: 14px;
+  --type-caption: 400 calc(14px * var(--dt-scale, 1)) / 1.43 var(--font-text);
+  --type-caption-spacing: -0.224px;
+
+  --type-caption-strong-size: 14px;
+  --type-caption-strong: 600 calc(14px * var(--dt-scale, 1)) / 1.29 var(--font-text);
+  --type-caption-strong-spacing: -0.224px;
+
+  --type-button-large-size: 18px;
+  --type-button-large: 300 calc(18px * var(--dt-scale, 1)) / 1 var(--font-text);
+  --type-button-large-spacing: 0px;
+
+  --type-button-utility-size: 14px;
+  --type-button-utility: 400 calc(14px * var(--dt-scale, 1)) / 1.29 var(--font-text);
+  --type-button-utility-spacing: -0.224px;
+
+  --type-fine-print-size: 12px;
+  --type-fine-print: 400 calc(12px * var(--dt-scale, 1)) / 1 var(--font-text);
+  --type-fine-print-spacing: -0.12px;
+
+  --type-micro-legal-size: 10px;
+  --type-micro-legal: 400 calc(10px * var(--dt-scale, 1)) / 1.3 var(--font-text);
+  --type-micro-legal-spacing: -0.08px;
+
+  --type-nav-link-size: 12px;
+  --type-nav-link: 400 calc(12px * var(--dt-scale, 1)) / 1 var(--font-text);
+  --type-nav-link-spacing: -0.12px;
+
+  /* ---- Radius (MD: radius scale) ------------------------------------------ */
+  --radius-none: 0px;
+  --radius-xs: 5px;    /* hairline chips */
+  --radius-sm: 8px;    /* dark utility button */
+  --radius-md: 11px;   /* form fields, pearl capsule */
+  --radius-lg: 18px;   /* cards, tiles */
+  --radius-pill: 9999px;
+
+  /* ---- Spacing (MD: spacing scale, 4px base grid) ------------------------- */
+  --space-xxs: 4px;
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 17px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-xxl: 48px;
+  --space-section: 80px;
+
+  /* ---- Motion ---------------------------------------------------------------
+     Apple press micro-interaction: transform scale(0.95) → held with an
+     ease-out, released with a spring. Springs expressed as over-damped
+     cubic-bezier curves. */
+  --dur-press-in: 120ms;
+  --dur-press-out: 420ms;
+  --dur-control: 300ms;
+  --ease-standard: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1); /* UIKit spring(stiffness 500, damping 30) */
+  --ease-out: cubic-bezier(0, 0, 0.35, 1);
+
+  /* ---- Layout ------------------------------------------------------------- */
+  --grid-columns: 12;
+  --grid-gutter: var(--space-lg);
+  --min-touch-target: 44px;        /* MD: 44px minimum touch target */
+  --nav-global-height: 44px;       /* MD global-nav height */
+  --nav-sub-height: 52px;          /* MD sub-nav-frosted height */
+  --nav-floating-height: 64px;     /* MD floating sticky bar */
+
+  /* ---- Frosted materials (MD: material-frosted recipe) -------------------- */
+  --frosted-blur: saturate(180%) blur(20px);
+
+  /* ---- Breakpoints (MD responsive grid: 1440/1068/834/734/640/480) -------- */
+  /* Consumed in JS via window.matchMedia and in CSS min-width media queries. */
+}
+
+/* =============================================================================
+   THEME · LIGHT  (default)
+   Canvas = parchment #f5f5f7, raised surface = pearl #fafafc, dark shadow
+   alpha-blended black, highlight = near-white specular. WCAG:
+   ink #1d1d1f on #f5f5f7 ≈ 15.4:1 (AAA) · primary #0066cc on #f5f5f7 ≈ 5.1:1 (AA)
+   ========================================================================== */
+:root,
+[data-theme="light"] {
+  color-scheme: light;
+
+  --canvas: #f5f5f7;              /* MD canvas-parchment — global app background */
+  --canvas-contrast: #ffffff;     /* MD canvas-white — alternating section band */
+  --surface-raised: #fafafc;      /* MD surface-pearl — extruded components */
+  --surface-sunken: #f0f0f3;      /* pearl darkened 1 step — recessed wells */
+  --surface-elevated: #ffffff;    /* popovers, menus */
+  --surface-scrim: rgba(0, 0, 0, 0.48);
+
+  --text-primary: #1d1d1f;        /* MD ink */
+  --text-secondary: #333333;      /* MD ink-muted-80 */
+  --text-tertiary: #7a7a7a;       /* MD ink-muted-48 — large text/UI only (3.9:1) */
+  --text-on-primary: #ffffff;
+  --text-on-dark-surface: #ffffff;
+
+  --accent: var(--color-primary);
+  --accent-focus: var(--color-primary-focus);
+  --focus-ring: #0071e3;          /* MD global focus ring: 2px solid */
+  --focus-ring-offset: 2px;
+
+  --control-border: rgba(0, 0, 0, 0.08); /* MD hairline "1px rgba(0,0,0,0.08)" */
+
+  /* Error channel — closes the MD's "known gap: undocumented form errors".
+     #e30000 on #fafafc = 4.69:1 (AA normal text). */
+  --color-error: #e30000;
+  --color-error-bg: rgba(227, 0, 0, 0.05);
+  --color-error-ring: rgba(227, 0, 0, 0.18);
+
+  /* Neomorphic light source: top-left. Dark shade bottom-right at low alpha
+     (MD depth approach: alpha-blended blacks, never borders), specular
+     white highlight top-left. */
+  --neo-raised-xs: 2px 2px 5px rgba(0, 0, 0, 0.09), -2px -2px 5px rgba(255, 255, 255, 0.85);
+  --neo-raised-sm: 4px 4px 8px rgba(0, 0, 0, 0.1), -4px -4px 8px rgba(255, 255, 255, 0.9);
+  --neo-raised-md: 6px 6px 14px rgba(0, 0, 0, 0.12), -6px -6px 14px rgba(255, 255, 255, 0.92);
+  --neo-raised-lg: 12px 12px 28px rgba(0, 0, 0, 0.14), -12px -12px 28px rgba(255, 255, 255, 0.95);
+  --neo-inset-xs: inset 2px 2px 4px rgba(0, 0, 0, 0.1), inset -2px -2px 4px rgba(255, 255, 255, 0.85);
+  --neo-inset-sm: inset 3px 3px 6px rgba(0, 0, 0, 0.12), inset -3px -3px 6px rgba(255, 255, 255, 0.85);
+  --neo-inset-md: inset 5px 5px 10px rgba(0, 0, 0, 0.14), inset -5px -5px 10px rgba(255, 255, 255, 0.9);
+  --neo-product: 3px 5px 30px rgba(0, 0, 0, 0.22); /* MD shadow-product, hero renders only */
+
+  /* Dark utility surfaces (tile-1) sit on light canvases as inverse chips */
+  --surface-inverse: #272729;     /* MD surface-tile-1 */
+  --surface-inverse-2: #2a2a2c;   /* MD surface-tile-2 */
+  --surface-inverse-3: #252527;   /* MD surface-tile-3 */
+
+  --frosted-bg: rgba(245, 245, 247, 0.72); /* parchment at 72% + blur */
+
+  --icon-stroke: #1d1d1f;
+  --icon-stroke-muted: #7a7a7a;
+  --icon-stroke-on-primary: #ffffff;
+  --icon-stroke-on-dark: #f5f5f7;
+
+  --shadow-color-focus-tint: rgba(0, 113, 227, 0.25);
+  --highlight-tint: rgba(0, 113, 227, 0.08); /* interactive hover wash */
+}
+
+/* =============================================================================
+   THEME · DARK
+   Surfaces come from the MD dark tile set (#252527 base, #272729 / #2a2a2c
+   elevated). Neomorphic depth is preserved by inverting the recipe: shadows
+   go near-black at higher alpha, highlights become faint white speculars
+   (~5%) so surfaces still read as physically lit. WCAG:
+   #f5f5f7 on #252527 ≈ 13.9:1 (AAA) · #2997ff on #252527 ≈ 6.3:1 (AA)
+   ========================================================================== */
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --canvas: #252527;              /* MD surface-tile-3 */
+  --canvas-contrast: #1d1d1f;     /* ink tone — alternating band */
+  --surface-raised: #2a2a2c;      /* MD surface-tile-2 */
+  --surface-sunken: #212123;      /* recessed wells, one step darker than base */
+  --surface-elevated: #2a2a2c;
+  --surface-scrim: rgba(0, 0, 0, 0.6);
+
+  --text-primary: #f5f5f7;
+  --text-secondary: #cccccc;      /* MD body-muted */
+  --text-tertiary: #98989d;       /* lifted from #7a7a7a to clear 4.5:1 on #252527 */
+  --text-on-primary: #ffffff;
+  --text-on-dark-surface: #ffffff;
+
+  --accent: var(--color-primary-on-dark); /* #2997ff — MD primary-on-dark */
+  --accent-focus: var(--color-primary-on-dark);
+  --focus-ring: #2997ff;
+  --focus-ring-offset: 2px;
+
+  --control-border: rgba(255, 255, 255, 0.12);
+
+  /* Dark error channel — Apple red lifted one step (#ff453a → #ff6359) to
+     clear 4.5:1 on #2a2a2c wells (4.91:1). */
+  --color-error: #ff6359;
+  --color-error-bg: rgba(255, 99, 89, 0.1);
+  --color-error-ring: rgba(255, 99, 89, 0.28);
+
+  /* Neomorphic dark: near-black shades + faint white specular highlights.
+     Alpha-blended blacks only — no hard borders. */
+  --neo-raised-xs: 2px 2px 5px rgba(0, 0, 0, 0.4), -2px -2px 5px rgba(255, 255, 255, 0.035);
+  --neo-raised-sm: 4px 4px 8px rgba(0, 0, 0, 0.45), -4px -4px 8px rgba(255, 255, 255, 0.04);
+  --neo-raised-md: 6px 6px 14px rgba(0, 0, 0, 0.5), -6px -6px 14px rgba(255, 255, 255, 0.05);
+  --neo-raised-lg: 12px 12px 28px rgba(0, 0, 0, 0.6), -12px -12px 28px rgba(255, 255, 255, 0.07);
+  --neo-inset-xs: inset 2px 2px 4px rgba(0, 0, 0, 0.45), inset -2px -2px 4px rgba(255, 255, 255, 0.035);
+  --neo-inset-sm: inset 3px 3px 6px rgba(0, 0, 0, 0.5), inset -3px -3px 6px rgba(255, 255, 255, 0.04);
+  --neo-inset-md: inset 5px 5px 10px rgba(0, 0, 0, 0.55), inset -5px -5px 10px rgba(255, 255, 255, 0.05);
+  --neo-product: 3px 5px 30px rgba(0, 0, 0, 0.6);
+
+  --surface-inverse: #f5f5f7;     /* inverted chips on dark = pearl */
+  --surface-inverse-2: #ffffff;
+  --surface-inverse-3: #d2d2d7;   /* MD surface-chip-translucent */
+
+  --frosted-bg: rgba(37, 37, 39, 0.72);
+
+  --icon-stroke: #f5f5f7;
+  --icon-stroke-muted: #98989d;
+  --icon-stroke-on-primary: #ffffff;
+  --icon-stroke-on-dark: #1d1d1f;
+
+  --shadow-color-focus-tint: rgba(41, 151, 255, 0.35);
+  --highlight-tint: rgba(41, 151, 255, 0.12);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-press-in: 1ms;
+    --dur-press-out: 1ms;
+    --dur-control: 1ms;
+  }
+}

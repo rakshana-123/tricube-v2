@@ -1,4 +1,4 @@
-import { API_BASE } from "./payments";
+import { API_BASE, resolveAssetUrl, tryBackendFetch } from "./payments";
 import { COURSES as STATIC_COURSES } from "./site-data";
 
 export type CourseVideoDTO = {
@@ -106,6 +106,7 @@ function normalizeCourse(row: any): CourseDTO {
 function staticFallback(): CourseDTO[] {
   return STATIC_COURSES.map((c) => ({
     ...c,
+    thumbnailUrl: (c as any).thumbnailUrl || `/images/courses/${c.slug}.svg`,
     description: "Mentor-led training with projects, recordings, and certificate support.",
     discount: 0,
     published: true,
@@ -115,27 +116,14 @@ function staticFallback(): CourseDTO[] {
 }
 
 async function tryFetch(path: string, init?: RequestInit): Promise<Response | null> {
-  const ctrl = new AbortController();
-  const t = setTimeout(() => ctrl.abort(), 3000);
-  try {
-    return await fetch(`${API_BASE}${path}`, { ...init, signal: ctrl.signal });
-  } catch {
-    return null;
-  } finally {
-    clearTimeout(t);
-  }
+  return tryBackendFetch(path, init);
 }
 
 export function absoluteMedia(url?: string | null): string | undefined {
-  if (!url) return undefined;
-  if (/^https?:\/\//i.test(url)) return url;
-  return `${API_BASE}${url.startsWith("/") ? "" : "/"}${url}`;
+  return resolveAssetUrl(url);
 }
 
-export async function listCourses(params?: {
-  category?: string;
-  q?: string;
-}): Promise<CourseDTO[]> {
+export async function listCourses(params?: { category?: string; q?: string }): Promise<CourseDTO[]> {
   const qs = new URLSearchParams();
   if (params?.category && params.category !== "All") qs.set("category", params.category);
   if (params?.q) qs.set("q", params.q);
@@ -144,8 +132,7 @@ export async function listCourses(params?: {
   if (!r) {
     const q = params?.q?.toLowerCase() || "";
     return staticFallback().filter((c) => {
-      if (params?.category && params.category !== "All" && c.category !== params.category)
-        return false;
+      if (params?.category && params.category !== "All" && c.category !== params.category) return false;
       return !q || c.title.toLowerCase().includes(q);
     });
   }
@@ -162,16 +149,11 @@ export async function getCourse(slug: string): Promise<CourseDTO | null> {
   return j.course ? normalizeCourse(j.course) : null;
 }
 
-export async function listUnlockedCourseVideos(
-  slug: string,
-  token: string,
-): Promise<CourseVideoDTO[]> {
+export async function listUnlockedCourseVideos(slug: string, token: string): Promise<CourseVideoDTO[]> {
   const r = await fetch(`${API_BASE}/api/courses/${encodeURIComponent(slug)}/videos`, {
     headers: { Authorization: `Bearer ${token}` },
   });
   if (!r.ok) return [];
   const j = await r.json();
-  return Array.isArray(j.videos)
-    ? j.videos.map((v: any) => normalizeCourse({ slug, title: "", videos: [v] }).videos![0])
-    : [];
+  return Array.isArray(j.videos) ? j.videos.map((v: any) => normalizeCourse({ slug, title: "", videos: [v] }).videos![0]) : [];
 }

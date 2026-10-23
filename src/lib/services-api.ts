@@ -1,7 +1,7 @@
 // Client wrapper around the /api/services endpoints. Falls back to the
 // static SERVICES catalogue when the backend is unreachable so the preview
 // still renders offline.
-import { API_BASE } from "./payments";
+import { API_BASE, resolveAssetUrl, tryBackendFetch } from "./payments";
 import { SERVICES as STATIC_SERVICES } from "./site-data";
 
 export type ServiceDTO = {
@@ -54,6 +54,7 @@ function staticFallback(): ServiceDTO[] {
     slug: s.slug,
     title: s.title,
     description: (s.features || []).slice(0, 2).join(" · "),
+    imageUrl: (s as any).imageUrl || `/images/services/${s.slug}.svg`,
     price: s.price,
     offerPrice: s.offer,
     duration: s.duration,
@@ -70,21 +71,11 @@ function backendUnavailableMessage() {
 }
 
 export function absoluteMedia(url?: string | null): string | undefined {
-  if (!url) return undefined;
-  if (/^https?:\/\//i.test(url)) return url;
-  return `${API_BASE}${url.startsWith("/") ? "" : "/"}${url}`;
+  return resolveAssetUrl(url);
 }
 
 async function tryFetch(path: string, init?: RequestInit): Promise<Response | null> {
-  const ctrl = new AbortController();
-  const t = setTimeout(() => ctrl.abort(), 2500);
-  try {
-    return await fetch(`${API_BASE}${path}`, { ...init, signal: ctrl.signal });
-  } catch {
-    return null;
-  } finally {
-    clearTimeout(t);
-  }
+  return tryBackendFetch(path, init);
 }
 
 export async function listServices(): Promise<ServiceDTO[]> {
@@ -143,17 +134,11 @@ export async function ensureAdminOk(r: Response, fallbackMsg = "Request failed")
     throw new Error("Your admin session expired. Please sign in again.");
   }
   let msg = fallbackMsg;
-  try {
-    msg = (await r.json())?.error || msg;
-  } catch {}
+  try { msg = (await r.json())?.error || msg; } catch {}
   throw new Error(msg);
 }
 
-export async function adminFetch(
-  path: string,
-  init: RequestInit = {},
-  fallbackMsg = "Request failed",
-): Promise<Response> {
+export async function adminFetch(path: string, init: RequestInit = {}, fallbackMsg = "Request failed"): Promise<Response> {
   const headers = new Headers(init.headers);
   const token = getAdminToken();
   if (token && !headers.has("Authorization")) headers.set("Authorization", `Bearer ${token}`);
@@ -161,11 +146,7 @@ export async function adminFetch(
   try {
     r = await fetch(`${API_BASE}${path}`, { ...init, headers });
   } catch (error: any) {
-    if (
-      error?.message === "Failed to fetch" ||
-      error?.name === "TypeError" ||
-      error?.name === "AbortError"
-    ) {
+    if (error?.message === "Failed to fetch" || error?.name === "TypeError" || error?.name === "AbortError") {
       throw new Error(backendUnavailableMessage());
     }
     throw error;
@@ -188,11 +169,7 @@ export async function adminLogin(email: string, password: string): Promise<strin
       body: JSON.stringify({ email, password }),
     });
   } catch (error: any) {
-    if (
-      error?.message === "Failed to fetch" ||
-      error?.name === "TypeError" ||
-      error?.name === "AbortError"
-    ) {
+    if (error?.message === "Failed to fetch" || error?.name === "TypeError" || error?.name === "AbortError") {
       throw new Error(backendUnavailableMessage());
     }
     throw error;
@@ -219,59 +196,39 @@ export async function adminLogin(email: string, password: string): Promise<strin
 }
 
 export async function adminListAll(): Promise<ServiceDTO[]> {
-  const r = await adminFetch(
-    "/api/services/admin/all",
-    { headers: authHeaders() },
-    "Failed to load services",
-  );
+  const r = await adminFetch("/api/services/admin/all", { headers: authHeaders() }, "Failed to load services");
   return (await r.json()).services || [];
 }
 
 export async function adminCreate(fd: FormData): Promise<ServiceDTO> {
-  const r = await adminFetch(
-    "/api/services",
-    {
-      method: "POST",
-      headers: authHeaders(),
-      body: fd,
-    },
-    "Create failed",
-  );
+  const r = await adminFetch("/api/services", {
+    method: "POST",
+    headers: authHeaders(),
+    body: fd,
+  }, "Create failed");
   return (await r.json()).service;
 }
 
 export async function adminUpdate(id: number, fd: FormData): Promise<ServiceDTO> {
-  const r = await adminFetch(
-    `/api/services/${id}`,
-    {
-      method: "PATCH",
-      headers: authHeaders(),
-      body: fd,
-    },
-    "Update failed",
-  );
+  const r = await adminFetch(`/api/services/${id}`, {
+    method: "PATCH",
+    headers: authHeaders(),
+    body: fd,
+  }, "Update failed");
   return (await r.json()).service;
 }
 
 export async function adminToggle(id: number): Promise<ServiceDTO> {
-  const r = await adminFetch(
-    `/api/services/${id}/toggle`,
-    {
-      method: "PATCH",
-      headers: authHeaders(),
-    },
-    "Toggle failed",
-  );
+  const r = await adminFetch(`/api/services/${id}/toggle`, {
+    method: "PATCH",
+    headers: authHeaders(),
+  }, "Toggle failed");
   return (await r.json()).service;
 }
 
 export async function adminDelete(id: number): Promise<void> {
-  await adminFetch(
-    `/api/services/${id}`,
-    {
-      method: "DELETE",
-      headers: authHeaders(),
-    },
-    "Delete failed",
-  );
+  await adminFetch(`/api/services/${id}`, {
+    method: "DELETE",
+    headers: authHeaders(),
+  }, "Delete failed");
 }

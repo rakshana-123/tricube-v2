@@ -1,0 +1,114 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.label {
+  color: var(--text-secondary);
+}
+.value {
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Recessed rail */
+.track {
+  position: relative;
+  height: var(--min-touch-target);
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  touch-action: none;
+}
+
+.track::before {
+  content: "";
+  position: absolute;
+  inset: 14px 0;
+  border-radius: var(--radius-pill);
+  background: var(--surface-sunken);
+  box-shadow: var(--neo-inset-xs);
+  transition: box-shadow var(--dur-control) var(--ease-standard);
+}
+.track:hover::before,
+.track[data-state="hover"]::before {
+  box-shadow: var(--neo-inset-sm);
+}
+.track:focus-visible,
+.track[data-state="focus"] {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  border-radius: var(--radius-xs);
+}
+
+/* Accent fill floods the rail up to the thumb */
+.fill {
+  position: absolute;
+  left: 0;
+  height: 12px;
+  border-radius: var(--radius-pill);
+  background: var(--color-primary);
+  transition: width 80ms var(--ease-standard);
+}
+[data-theme="dark"] .fill {
+  background: var(--color-primary-on-dark);
+}
+.track[data-state="active"] .fill {
+  box-shadow: 0 0 0 4px var(--shadow-color-focus-tint);
+}
+
+/* Ticks sit inside the well; passed ticks brighten to white */
+.tick {
+  position: absolute;
+  width: 3px;
+  height: 8px;
+  border-radius: 2px;
+  background: var(--text-tertiary);
+  opacity: 0.55;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+.tickPast {
+  background: #ffffff;
+  opacity: 0.9;
+}
+
+/* Pearl thumb — raised, springs to 1.12 under drag */
+.thumb {
+  position: absolute;
+  width: 27px;
+  height: 27px;
+  border-radius: var(--radius-pill);
+  background: var(--surface-elevated);
+  box-shadow: var(--neo-raised-sm);
+  transform: translateX(-50%);
+  transition:
+    transform var(--dur-press-out) var(--ease-spring),
+    box-shadow var(--dur-press-out) var(--ease-standard);
+}
+.thumb:hover {
+  box-shadow: var(--neo-raised-md);
+}
+.thumbActive,
+.track[data-state="active"] .thumb {
+  transform: translateX(-50%) scale(1.12);
+  box-shadow: var(--neo-raised-md);
+}
+
+.disabled {
+  cursor: not-allowed;
+}
+.disabled .fill {
+  background: var(--text-tertiary);
+}
+.disabled .thumb {
+  opacity: 0.45;
+  filter: saturate(0.55);
+  box-shadow: var(--neo-raised-xs);
+}

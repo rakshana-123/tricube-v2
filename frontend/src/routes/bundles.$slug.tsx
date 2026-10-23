@@ -78,14 +78,9 @@ function BundleDetail() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ ...r, bundleId: bundle.slug }),
           });
-          if (vr.status === 202) {
-            await new Promise((s) => setTimeout(s, 2000));
-            continue;
-          }
+          if (vr.status === 202) { await new Promise((s) => setTimeout(s, 2000)); continue; }
           if (!vr.ok) {
-            try {
-              lastErr = (await vr.json())?.error || lastErr;
-            } catch {}
+            try { lastErr = (await vr.json())?.error || lastErr; } catch {}
             throw new Error(lastErr);
           }
           const data = await vr.json();
@@ -93,15 +88,10 @@ function BundleDetail() {
             for (const d of data.downloads) setDownloadUrl(d.slug, d.url);
             return;
           }
-          if (data?.pending) {
-            await new Promise((s) => setTimeout(s, 2000));
-            continue;
-          }
+          if (data?.pending) { await new Promise((s) => setTimeout(s, 2000)); continue; }
           throw new Error("Verification rejected");
         }
-        throw new Error(
-          "Payment received. Confirmation is taking longer than usual — check your email.",
-        );
+        throw new Error("Payment received. Confirmation is taking longer than usual — check your email.");
       },
     });
     setBusy(false);
@@ -111,33 +101,22 @@ function BundleDetail() {
       setTimeout(() => {
         items.forEach((it: any) => triggerDownload(it.material.slug, it.material.title));
       }, 250);
-      setTimeout(() => {
-        navigate({ to: "/my-materials" });
-      }, 1800);
+      setTimeout(() => { navigate({ to: "/my-materials" }); }, 1800);
     } else if (res.status === "demo") {
       setErr("Demo mode is enabled — no real payment was taken, so the bundle stays locked.");
     } else if (res.status === "failed") setErr(res.message || "Payment failed. Please try again.");
-    else if (res.status === "cancelled")
-      setErr(res.message || "Payment was cancelled before it completed.");
+    else if (res.status === "cancelled") setErr(res.message || "Payment was cancelled before it completed.");
   }
 
   return (
     <>
-      <PageHero
-        eyebrow="Bundle"
-        title={<>{bundle.title}</>}
-        subtitle={bundle.description || `${items.length} materials in one pack`}
-      />
+      <PageHero eyebrow="Bundle" title={<>{bundle.title}</>} subtitle={bundle.description || `${items.length} materials in one pack`} />
 
       <section className="mx-auto grid max-w-6xl gap-8 px-6 py-16 md:grid-cols-[1.4fr_1fr]">
         <div>
           <div className="glass relative aspect-[16/9] overflow-hidden rounded-2xl">
             {cover ? (
-              <img
-                src={cover}
-                alt={bundle.title}
-                className="absolute inset-0 h-full w-full object-cover"
-              />
+              <img src={cover} alt={bundle.title} className="absolute inset-0 h-full w-full object-cover" />
             ) : (
               <div className="absolute inset-0 grid place-items-center bg-[var(--gradient-hero)]">
                 <Package className="h-16 w-16 text-primary" />
@@ -148,43 +127,28 @@ function BundleDetail() {
           <h2 className="mt-8 text-2xl font-semibold tracking-tight">What&apos;s included</h2>
           <div className="mt-4 grid gap-3">
             {items.map((it: any) => (
-              <div
-                key={it.material.slug}
-                className="flex items-center gap-4 rounded-2xl border border-border bg-card p-4"
-              >
+              <div key={it.material.slug} className="flex items-center gap-4 rounded-2xl border border-border bg-card p-4">
                 <div className="grid h-12 w-12 place-items-center rounded-xl bg-secondary">
                   <CheckCircle2 className="h-5 w-5 text-primary" />
                 </div>
                 <div className="flex-1">
                   <p className="text-sm font-semibold">{it.material.title}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {it.material.pages} pages · {it.material.category}
-                  </p>
+                  <p className="text-xs text-muted-foreground">{it.material.pages} pages · {it.material.category}</p>
                 </div>
-                <span className="text-xs text-muted-foreground line-through">
-                  ₹{it.material.price.toLocaleString()}
-                </span>
+                <span className="text-xs text-muted-foreground line-through">₹{it.material.price.toLocaleString()}</span>
               </div>
             ))}
           </div>
         </div>
 
         <aside className="glass h-fit rounded-2xl p-6">
-          <div className="text-xs uppercase tracking-widest text-muted-foreground">
-            Bundle price
-          </div>
+          <div className="text-xs uppercase tracking-widest text-muted-foreground">Bundle price</div>
           <div className="mt-2 flex items-baseline gap-2">
             <div className="text-3xl font-semibold gold-text">₹{bundle.price.toLocaleString()}</div>
-            {savings > 0 && (
-              <span className="text-xs text-muted-foreground line-through">
-                ₹{original.toLocaleString()}
-              </span>
-            )}
+            {savings > 0 && <span className="text-xs text-muted-foreground line-through">₹{original.toLocaleString()}</span>}
           </div>
           {savings > 0 && (
-            <p className="mt-1 text-xs font-semibold text-primary">
-              You save ₹{savings.toLocaleString()}
-            </p>
+            <p className="mt-1 text-xs font-semibold text-primary">You save ₹{savings.toLocaleString()}</p>
           )}
           <button
             onClick={handleBuy}
@@ -192,11 +156,7 @@ function BundleDetail() {
             className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[var(--gradient-gold)] px-6 py-3 text-sm font-semibold text-primary-foreground disabled:opacity-60"
           >
             <Download className="h-4 w-4" />
-            {ownedAll
-              ? "You own this bundle"
-              : busy
-                ? "Opening checkout…"
-                : "Buy bundle & download all"}
+            {ownedAll ? "You own this bundle" : busy ? "Opening checkout…" : "Buy bundle & download all"}
           </button>
           {err && !ownedAll && (
             <PaymentRetry
@@ -207,9 +167,7 @@ function BundleDetail() {
               onDismiss={() => setErr(null)}
             />
           )}
-          <p className="mt-3 text-center text-xs text-muted-foreground">
-            <Lock className="mr-1 inline h-3 w-3" /> Secure payment via Razorpay.
-          </p>
+          <p className="mt-3 text-center text-xs text-muted-foreground"><Lock className="mr-1 inline h-3 w-3" /> Secure payment via Razorpay.</p>
         </aside>
       </section>
 
@@ -217,19 +175,14 @@ function BundleDetail() {
         <section className="mx-auto max-w-6xl px-6 pb-16">
           <h2 className="text-2xl font-semibold tracking-tight">Preview each material</h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            Thumbnails and page counts for every PDF in this pack. Unlocked items show the full
-            document; locked ones show the free sample.
+            Thumbnails and page counts for every PDF in this pack. Unlocked items show the full document; locked ones show the free sample.
           </p>
           <div className="mt-6 grid gap-3">
             {items.map((it: any) => {
               const slug = it.material.slug as string;
               const isItemOwned = isOwned(slug);
               const unlocked = getDownloadUrl(slug);
-              const unlockedAbs = unlocked
-                ? unlocked.startsWith("http")
-                  ? unlocked
-                  : `${API}${unlocked}`
-                : null;
+              const unlockedAbs = unlocked ? (unlocked.startsWith("http") ? unlocked : `${API}${unlocked}`) : null;
               const previewAbs = it.material.previewUrl
                 ? `${API}/api/materials/preview/${encodeURIComponent(slug)}`
                 : null;
@@ -242,11 +195,7 @@ function BundleDetail() {
                     className="flex w-full items-center gap-4 p-4 text-left"
                   >
                     <div className="grid h-12 w-12 place-items-center rounded-xl bg-secondary">
-                      {isItemOwned ? (
-                        <CheckCircle2 className="h-5 w-5 text-primary" />
-                      ) : (
-                        <Lock className="h-4 w-4 text-muted-foreground" />
-                      )}
+                      {isItemOwned ? <CheckCircle2 className="h-5 w-5 text-primary" /> : <Lock className="h-4 w-4 text-muted-foreground" />}
                     </div>
                     <div className="flex-1">
                       <p className="text-sm font-semibold">{it.material.title}</p>
@@ -255,9 +204,7 @@ function BundleDetail() {
                         {isItemOwned ? " · Unlocked" : previewAbs ? " · Sample available" : ""}
                       </p>
                     </div>
-                    <span className="text-xs text-primary">
-                      {isOpen ? "Hide" : src ? "Preview" : "No preview"}
-                    </span>
+                    <span className="text-xs text-primary">{isOpen ? "Hide" : src ? "Preview" : "No preview"}</span>
                   </button>
                   {isOpen && src && (
                     <div className="border-t border-border px-4 pb-5">

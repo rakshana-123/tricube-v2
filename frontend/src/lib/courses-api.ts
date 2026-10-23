@@ -132,10 +132,7 @@ export function absoluteMedia(url?: string | null): string | undefined {
   return `${API_BASE}${url.startsWith("/") ? "" : "/"}${url}`;
 }
 
-export async function listCourses(params?: {
-  category?: string;
-  q?: string;
-}): Promise<CourseDTO[]> {
+export async function listCourses(params?: { category?: string; q?: string }): Promise<CourseDTO[]> {
   const qs = new URLSearchParams();
   if (params?.category && params.category !== "All") qs.set("category", params.category);
   if (params?.q) qs.set("q", params.q);
@@ -144,8 +141,7 @@ export async function listCourses(params?: {
   if (!r) {
     const q = params?.q?.toLowerCase() || "";
     return staticFallback().filter((c) => {
-      if (params?.category && params.category !== "All" && c.category !== params.category)
-        return false;
+      if (params?.category && params.category !== "All" && c.category !== params.category) return false;
       return !q || c.title.toLowerCase().includes(q);
     });
   }
@@ -162,16 +158,11 @@ export async function getCourse(slug: string): Promise<CourseDTO | null> {
   return j.course ? normalizeCourse(j.course) : null;
 }
 
-export async function listUnlockedCourseVideos(
-  slug: string,
-  token: string,
-): Promise<CourseVideoDTO[]> {
+export async function listUnlockedCourseVideos(slug: string, token: string): Promise<CourseVideoDTO[]> {
   const r = await fetch(`${API_BASE}/api/courses/${encodeURIComponent(slug)}/videos`, {
     headers: { Authorization: `Bearer ${token}` },
   });
   if (!r.ok) return [];
   const j = await r.json();
-  return Array.isArray(j.videos)
-    ? j.videos.map((v: any) => normalizeCourse({ slug, title: "", videos: [v] }).videos![0])
-    : [];
+  return Array.isArray(j.videos) ? j.videos.map((v: any) => normalizeCourse({ slug, title: "", videos: [v] }).videos![0]) : [];
 }

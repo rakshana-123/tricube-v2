@@ -1,0 +1,83 @@
+/* Typography utilities generated from the MD type ladder.
+   Rules honored from the source file:
+   - negative tracking only at ≥17px (we never apply negative ls below it)
+   - no weight 500 anywhere (ladder is 300/400/600/700)
+   - body is 17px, not 16px */
+
+.type-hero-display {
+  font: var(--type-hero-display);
+  letter-spacing: var(--type-hero-display-spacing);
+  color: var(--text-primary);
+}
+.type-display-lg {
+  font: var(--type-display-lg);
+  letter-spacing: var(--type-display-lg-spacing);
+  color: var(--text-primary);
+}
+.type-display-md {
+  font: var(--type-display-md);
+  letter-spacing: var(--type-display-md-spacing);
+  color: var(--text-primary);
+}
+.type-lead {
+  font: var(--type-lead);
+  letter-spacing: var(--type-lead-spacing);
+  color: var(--text-primary);
+}
+.type-lead-airy {
+  font: var(--type-lead-airy);
+  letter-spacing: var(--type-lead-airy-spacing);
+  color: var(--text-primary);
+}
+.type-tagline {
+  font: var(--type-tagline);
+  letter-spacing: var(--type-tagline-spacing);
+  color: var(--text-primary);
+}
+.type-body-strong {
+  font: var(--type-body-strong);
+  letter-spacing: var(--type-body-strong-spacing);
+  color: var(--text-primary);
+}
+.type-body {
+  font: var(--type-body);
+  letter-spacing: var(--type-body-spacing);
+  color: var(--text-primary);
+}
+.type-dense-link {
+  font: var(--type-dense-link);
+  letter-spacing: var(--type-dense-link-spacing);
+  color: var(--text-primary);
+}
+.type-caption {
+  font: var(--type-caption);
+  letter-spacing: var(--type-caption-spacing);
+  color: var(--text-secondary);
+}
+.type-caption-strong {
+  font: var(--type-caption-strong);
+  letter-spacing: var(--type-caption-strong-spacing);
+  color: var(--text-primary);
+}
+.type-button-large {
+  font: var(--type-button-large);
+  letter-spacing: var(--type-button-large-spacing);
+}
+.type-button-utility {
+  font: var(--type-button-utility);
+  letter-spacing: var(--type-button-utility-spacing);
+}
+.type-fine-print {
+  font: var(--type-fine-print);
+  letter-spacing: var(--type-fine-print-spacing);
+  color: var(--text-tertiary);
+}
+.type-micro-legal {
+  font: var(--type-micro-legal);
+  letter-spacing: var(--type-micro-legal-spacing);
+  color: var(--text-tertiary);
+}
+.type-nav-link {
+  font: var(--type-nav-link);
+  letter-spacing: var(--type-nav-link-spacing);
+}

@@ -1,0 +1,159 @@
+/* =============================================================================
+   GLOBAL · reset, base, safe areas, grid, adaptive utilities
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  font: var(--type-body);
+  letter-spacing: var(--type-body-spacing);
+  color: var(--text-primary);
+  background: var(--canvas);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100dvh;
+  transition: background-color var(--dur-control) var(--ease-standard),
+    color var(--dur-control) var(--ease-standard);
+}
+
+img,
+svg {
+  display: block;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Apple focus ring (MD global focus spec): 2px solid focus blue, never removed. */
+:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  border-radius: var(--radius-xs);
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--text-on-primary);
+}
+
+/* ---- Safe area insets (notched devices; requires viewport-fit=cover) ------ */
+.safe-area {
+  padding-top: env(safe-area-inset-top);
+  padding-right: env(safe-area-inset-right);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+}
+
+.safe-area-x {
+  padding-right: env(safe-area-inset-right);
+  padding-left: env(safe-area-inset-left);
+}
+
+/* ---- Grid (MD: 12-col, 4px base unit, breakpoints 1440/1068/834/734/640/480) */
+.neo-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr));
+  gap: var(--grid-gutter);
+}
+
+.neo-container {
+  width: 100%;
+  max-width: 1068px; /* MD breakpoint xl — content pins inside the wide grid */
+  margin-inline: auto;
+  padding-inline: max(var(--space-lg), env(safe-area-inset-left, var(--space-lg)));
+}
+
+/* Grid auto-collapse demo: 5 → 4 → 3 → 2 → 1 columns (MD product-grid rule) */
+.neo-grid-tiles {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: var(--space-sm);
+}
+@media (max-width: 1439px) {
+  .neo-grid-tiles {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+@media (max-width: 1067px) {
+  .neo-grid-tiles {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (max-width: 833px) {
+  .neo-grid-tiles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 733px) {
+  .neo-grid-tiles {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Hide/show helpers keyed to MD breakpoints */
+.only-ipad {
+  display: initial;
+}
+.only-phone {
+  display: none;
+}
+@media (max-width: 733px) {
+  .only-ipad {
+    display: none;
+  }
+  .only-phone {
+    display: initial;
+  }
+}
+
+/* Section rhythm (MD spacing section token: 80px) */
+.neo-section {
+  padding-block: var(--space-section);
+}
+
+/* Dynamic-type fluid hero clamp for narrow viewports (MD hero 56→40→34→28) */
+.fluid-hero {
+  font-size: clamp(
+    calc(28px * var(--dt-scale, 1)),
+    6.2vw,
+    calc(56px * var(--dt-scale, 1))
+  );
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

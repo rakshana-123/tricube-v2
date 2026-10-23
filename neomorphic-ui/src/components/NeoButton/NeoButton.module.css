@@ -1,0 +1,220 @@
+/* NeoButton — extruded / recessed push control.
+   State channels: :hover + [data-state=hover], :active + [data-state=active],
+   :disabled — showcase pins states through data-state so the matrix renders
+   without real interaction. */
+
+.button {
+  --btn-radius: var(--radius-md);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  border: none;
+  border-radius: var(--btn-radius);
+  text-decoration: none;
+  white-space: nowrap;
+  user-select: none;
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  /* Release springs back; press snaps down fast (set again in :active). */
+  transition:
+    transform var(--dur-press-out) var(--ease-spring),
+    box-shadow var(--dur-press-out) var(--ease-standard),
+    background-color var(--dur-control) var(--ease-standard),
+    filter var(--dur-control) var(--ease-standard),
+    opacity var(--dur-control) var(--ease-standard);
+}
+
+/* ---- Sizes ---------------------------------------------------------------- */
+.regular {
+  min-height: var(--min-touch-target);
+  padding: 11px 22px; /* MD button-primary padding, verbatim */
+  font: var(--type-body-strong);
+  letter-spacing: var(--type-body-strong-spacing);
+}
+.large {
+  min-height: 50px;
+  padding: 14px 28px;
+  font: var(--type-button-large);
+  letter-spacing: var(--type-button-large-spacing);
+}
+.small {
+  min-height: 32px;
+  padding: 7px 14px;
+  font: var(--type-button-utility);
+  letter-spacing: var(--type-button-utility-spacing);
+}
+
+.pill {
+  --btn-radius: var(--radius-pill);
+}
+.rounded {
+  --btn-radius: var(--radius-sm);
+}
+.fullWidth {
+  width: 100%;
+}
+
+.icon {
+  flex: none;
+}
+
+/* ---- Variant · primary (MD button-primary, extruded Action Blue) ---------- */
+.primary {
+  background: var(--color-primary);
+  color: var(--text-on-primary);
+  border-radius: var(--radius-pill);
+  /* Extrusion: tinted cast shadow + specular top edge, no border */
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.28) inset,
+    0 -1px 0 0 rgba(0, 0, 0, 0.18) inset,
+    0 10px 22px -6px rgba(0, 102, 204, 0.5);
+}
+[data-theme="dark"] .primary {
+  background: var(--color-primary-on-dark);
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.22) inset,
+    0 -1px 0 0 rgba(0, 0, 0, 0.35) inset,
+    0 10px 22px -6px rgba(41, 151, 255, 0.4);
+}
+.primary:hover,
+.primary[data-state="hover"] {
+  background: var(--color-primary-focus); /* MD: hover → #0071e3 */
+}
+.primary:active,
+.primary[data-state="active"] {
+  transform: scale(0.95); /* MD press micro-interaction */
+  background: var(--color-primary-focus);
+  /* Inversion: light source flips, surface reads as pushed in */
+  box-shadow:
+    0 1px 0 0 rgba(0, 0, 0, 0.22) inset,
+    0 -1px 0 0 rgba(255, 255, 255, 0.15) inset,
+    0 3px 8px -4px rgba(0, 102, 204, 0.55),
+    0 0 0 4px var(--shadow-color-focus-tint);
+  transition:
+    transform var(--dur-press-in) var(--ease-out),
+    box-shadow var(--dur-press-in) var(--ease-out);
+}
+.primary[data-state="focus"] {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* ---- Variant · secondary (extruded pearl — the neomorphic workhorse) ------ */
+.secondary {
+  background: var(--surface-raised);
+  color: var(--accent);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--neo-raised-sm);
+}
+.secondary:hover,
+.secondary[data-state="hover"] {
+  /* MD rule: never add borders or gradients on state change — brightness +
+     a one-step elevation lift carries the hover. */
+  background: var(--surface-elevated);
+  box-shadow: var(--neo-raised-md);
+  transform: translateY(-1px);
+}
+.secondary:active,
+.secondary[data-state="active"] {
+  /* Core neomorphic press: shadow inversion + Apple 0.95 scale */
+  background: var(--surface-sunken);
+  box-shadow: var(--neo-inset-sm);
+  transform: scale(0.95);
+  transition:
+    transform var(--dur-press-in) var(--ease-out),
+    box-shadow var(--dur-press-in) var(--ease-out);
+}
+.secondary[data-state="focus"] {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* ---- Variant · ghost (flat, tint wash on hover) --------------------------- */
+.ghost {
+  background: transparent;
+  color: var(--accent);
+  box-shadow: none;
+}
+.ghost:hover,
+.ghost[data-state="hover"] {
+  background: var(--highlight-tint);
+}
+.ghost:active,
+.ghost[data-state="active"] {
+  background: var(--highlight-tint);
+  box-shadow: var(--neo-inset-xs);
+  transform: scale(0.95);
+  transition:
+    transform var(--dur-press-in) var(--ease-out),
+    box-shadow var(--dur-press-in) var(--ease-out);
+}
+.ghost[data-state="focus"] {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* ---- Variant · dark utility (MD button-dark-utility: tile-1, radius 8) ---- */
+.dark {
+  background: var(--surface-inverse);
+  color: var(--icon-stroke-on-dark);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--neo-raised-xs);
+}
+.dark:hover,
+.dark[data-state="hover"] {
+  background: var(--surface-inverse-2);
+  box-shadow: var(--neo-raised-sm);
+}
+.dark:active,
+.dark[data-state="active"] {
+  background: var(--surface-inverse-3);
+  box-shadow: var(--neo-inset-xs);
+  transform: scale(0.95);
+  transition:
+    transform var(--dur-press-in) var(--ease-out),
+    box-shadow var(--dur-press-in) var(--ease-out);
+}
+.dark[data-state="focus"] {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* ---- Variant · pearl capsule (MD #fafafc, radius 11) ---------------------- */
+.pearl {
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  border-radius: var(--radius-md);
+  box-shadow: var(--neo-raised-xs);
+}
+.pearl:hover,
+.pearl[data-state="hover"] {
+  box-shadow: var(--neo-raised-sm);
+  transform: translateY(-1px);
+}
+.pearl:active,
+.pearl[data-state="active"] {
+  background: var(--surface-sunken);
+  box-shadow: var(--neo-inset-xs);
+  transform: scale(0.95);
+  transition:
+    transform var(--dur-press-in) var(--ease-out),
+    box-shadow var(--dur-press-in) var(--ease-out);
+}
+.pearl[data-state="focus"] {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* ---- Disabled --------------------------------------------------------------
+   Shadows collapse (nothing un-pressed casts light), color desaturates to
+   40% — the MD's ink-muted-48 register — and interactions are removed. */
+.button:disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+  opacity: 0.4;
+  filter: saturate(0.55);
+  box-shadow: none;
+  transform: none;
+}

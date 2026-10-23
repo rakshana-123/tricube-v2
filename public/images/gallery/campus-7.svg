@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="750" viewBox="0 0 1200 750">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0B132B"/>
+      <stop offset="55%" stop-color="#0F172A"/>
+      <stop offset="100%" stop-color="#0F3D3E"/>
+    </linearGradient>
+    <linearGradient id="tealGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#2EA5A1"/>
+      <stop offset="100%" stop-color="#14B8A6"/>
+    </linearGradient>
+    <radialGradient id="glow1" cx="80%" cy="20%" r="50%">
+      <stop offset="0%" stop-color="#2EA5A1" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#2EA5A1" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow2" cx="15%" cy="85%" r="45%">
+      <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#38BDF8" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path d="M 48 0 L 0 0 0 48" fill="none" stroke="#ffffff" stroke-opacity="0.05" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="750" fill="url(#bg)"/>
+  <rect width="1200" height="750" fill="url(#grid)"/>
+  <circle cx="960" cy="150" r="420" fill="url(#glow1)"/>
+  <circle cx="200" cy="640" r="380" fill="url(#glow2)"/>
+
+  <!-- Decorative 3D isometric cards in right background -->
+  <g transform="translate(680, 130)">
+    <rect x="40" y="30" width="410" height="290" rx="22" fill="#1E293B" fill-opacity="0.6" stroke="#2EA5A1" stroke-opacity="0.35" stroke-width="2"/>
+    <rect x="0" y="0" width="420" height="310" rx="22" fill="#0F172A" fill-opacity="0.92" stroke="#2EA5A1" stroke-opacity="0.6" stroke-width="2"/>
+    <circle cx="28" cy="26" r="6" fill="#F43F5E"/>
+    <circle cx="48" cy="26" r="6" fill="#F59E0B"/>
+    <circle cx="68" cy="26" r="6" fill="#10B981"/>
+    <rect x="92" y="18" width="210" height="16" rx="8" fill="#1E293B"/>
+    <line x1="0" y1="50" x2="420" y2="50" stroke="#334155" stroke-width="1"/>
+    <rect x="28" y="76" width="160" height="18" rx="6" fill="#2EA5A1" fill-opacity="0.85"/>
+    <rect x="28" y="106" width="260" height="12" rx="6" fill="#475569"/>
+    <rect x="28" y="128" width="220" height="12" rx="6" fill="#334155"/>
+    <rect x="28" y="162" width="172" height="112" rx="14" fill="#1E293B" stroke="#334155" stroke-width="1"/>
+    <text x="48" y="198" font-family="sans-serif" font-size="13" font-weight="700" fill="#94A3B8">VERIFIED TRACK</text>
+    <text x="48" y="236" font-family="sans-serif" font-size="28" font-weight="800" fill="#2EA5A1">99.4%</text>
+    <text x="48" y="258" font-family="sans-serif" font-size="12" fill="#64748B">Lab Completion</text>
+
+    <rect x="216" y="162" width="176" height="112" rx="14" fill="#1E293B" stroke="#2EA5A1" stroke-opacity="0.4" stroke-width="1.5"/>
+    <text x="236" y="198" font-family="sans-serif" font-size="13" font-weight="700" fill="#94A3B8">STATUS</text>
+    <text x="236" y="234" font-family="sans-serif" font-size="20" font-weight="800" fill="#F8FAFC">94% PLACED</text>
+    <text x="236" y="258" font-family="sans-serif" font-size="12" fill="#2EA5A1">● TRI CUBE LMS</text>
+  </g>
+
+  <!-- Left Content & Code Terminal -->
+  <g>
+    <rect x="72" y="72" width="180" height="42" rx="21" fill="#2EA5A1" fill-opacity="0.18" stroke="#2EA5A1" stroke-width="1.5"/>
+    <circle cx="98" cy="93" r="5" fill="#2EA5A1"/>
+    <text x="114" y="99" font-family="sans-serif" font-size="15" font-weight="800" letter-spacing="1.5" fill="#5EEAD4">CAREER CELL</text>
+
+    <text x="72" y="168" font-family="sans-serif" font-size="40" font-weight="900" fill="#FFFFFF">Placement Mock Interview Panel</text>
+    <text x="72" y="206" font-family="sans-serif" font-size="19" font-weight="500" fill="#94A3B8">System design whiteboard and DSA technical round simulations</text>
+
+    <rect x="72" y="228" width="560" height="150" rx="16" fill="#090D16" fill-opacity="0.88" stroke="#334155" stroke-width="1.5"/>
+    
+    <text x="96" y="262" font-family="monospace" font-size="15" fill="#2EA5A1">LOCATION: '3rd Floor, Innovation Hub, Bengaluru'</text>
+  
+    <text x="96" y="292" font-family="monospace" font-size="15" fill="#E2E8F0">PROGRAM: 'Placement Mock Interview Panel'</text>
+  
+    <text x="96" y="322" font-family="monospace" font-size="15" fill="#94A3B8">COHORT_STATUS: 'Verified Campus Session'</text>
+  
+    <text x="96" y="352" font-family="monospace" font-size="15" fill="#E2E8F0">NETWORK: '120+ Hiring Tech Partners'</text>
+  
+  </g>
+
+  <!-- Bottom Bar -->
+  <rect x="72" y="610" width="1056" height="76" rx="20" fill="#0F172A" fill-opacity="0.9" stroke="#334155" stroke-width="1.5"/>
+  <circle cx="112" cy="648" r="18" fill="url(#tealGrad)"/>
+  <text x="103" y="654" font-family="sans-serif" font-size="14" font-weight="900" fill="#FFFFFF">TC</text>
+  <text x="144" y="644" font-family="sans-serif" font-size="17" font-weight="800" fill="#F8FAFC">TRI CUBE DIGITAL SOLUTIONS</text>
+  <text x="144" y="665" font-family="sans-serif" font-size="13" fill="#94A3B8">Mentor-Led Cohorts • Cloud Coding Labs • Verified QR Credentials</text>
+  <rect x="920" y="628" width="184" height="40" rx="20" fill="url(#tealGrad)"/>
+  <text x="954" y="653" font-family="sans-serif" font-size="14" font-weight="800" fill="#FFFFFF">EXPLORE TRACK →</text>
+</svg>

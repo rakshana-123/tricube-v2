@@ -104,9 +104,7 @@ export function SiteNavbar() {
               <span className="grid h-6 w-6 place-items-center rounded-full bg-[var(--gold-soft)] text-xs font-bold text-[var(--gold-dark)]">
                 {(user?.name || "?").trim().charAt(0).toUpperCase()}
               </span>
-              <span className="max-w-[100px] truncate">
-                {user?.name?.split(" ")[0] || "Account"}
-              </span>
+              <span className="max-w-[100px] truncate">{user?.name?.split(" ")[0] || "Account"}</span>
             </Link>
           ) : (
             <Link
@@ -116,7 +114,11 @@ export function SiteNavbar() {
               <LogIn className="h-4 w-4" /> Sign in
             </Link>
           )}
-          <button className="lg:hidden" onClick={() => setOpen((v) => !v)} aria-label="Toggle menu">
+          <button
+            className="lg:hidden"
+            onClick={() => setOpen((v) => !v)}
+            aria-label="Toggle menu"
+          >
             {open ? <X /> : <Menu />}
           </button>
         </div>

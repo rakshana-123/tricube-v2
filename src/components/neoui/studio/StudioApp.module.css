@@ -1,0 +1,229 @@
+/* Studio app chrome — layout-only styles; surfaces come from neoui tokens. */
+
+/* ---- Brand lockup in the frosted nav ------------------------------------- */
+.navLockup {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  min-width: 0;
+}
+.navLogo {
+  width: 30px;
+  height: 30px;
+  flex: none;
+  border-radius: 7px;
+  box-shadow: var(--neo-raised-xs);
+  object-fit: cover;
+}
+
+/* ---- Auth ------------------------------------------------------------------ */
+.authWrap {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding-block: var(--space-xxl);
+  /* respects the notch on standalone installs */
+  padding-top: max(var(--space-xxl), env(safe-area-inset-top));
+}
+.authCard {
+  width: min(420px, 100%);
+  overflow: hidden;
+}
+.authBanner {
+  display: block;
+  width: 100%;
+  height: 112px;
+  object-fit: cover;
+  object-position: center;
+  background: var(--brand-teal);
+}
+.authBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding: var(--space-lg);
+}
+.authLegal {
+  text-align: center;
+}
+
+.main {
+  padding-block: var(--space-xxl) 0;
+  padding-bottom: 170px; /* clears the floating tab dock */
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.tabDock {
+  position: fixed;
+  bottom: max(20px, env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 300;
+}
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 240;
+  background: transparent;
+}
+
+.settingsCard {
+  position: fixed;
+  top: calc(var(--nav-sub-height) + env(safe-area-inset-top, 0px) + var(--space-xs));
+  right: max(var(--space-lg), env(safe-area-inset-right, 0px));
+  z-index: 250;
+  width: min(320px, calc(100vw - var(--space-lg)));
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+/* ---- Home ------------------------------------------------------------------ */
+.statGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: var(--space-md);
+}
+.statCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+.statIcon {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-md);
+  color: var(--accent-bg);
+  background: var(--surface-raised);
+  box-shadow: var(--neo-raised-xs);
+}
+
+.continue {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+.progressWell {
+  height: 14px;
+  border-radius: var(--radius-pill);
+  background: rgba(0, 0, 0, 0.28);
+  box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+}
+.progressFill {
+  height: 100%;
+  border-radius: var(--radius-pill);
+  background: var(--accent-bg);
+  transition: width var(--dur-control) var(--ease-standard);
+}
+
+.sessions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+.sessionRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-md);
+  background: var(--surface-sunken);
+  box-shadow: var(--neo-inset-xs);
+}
+.dateBadge {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  min-height: 48px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-raised);
+  box-shadow: var(--neo-raised-xs);
+}
+.sessionText {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.liveDot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: var(--radius-pill);
+  background: var(--badge-teal); /* brand teal — live/badge accent */
+  margin-right: 5px;
+}
+
+/* ---- Browse ------------------------------------------------------------------ */
+.filterBar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+.chipRow {
+  display: flex;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+}
+.courseGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(255px, 1fr));
+  gap: var(--space-lg);
+}
+.courseCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  height: 100%;
+}
+.courseBody {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xxs);
+}
+.courseFooter {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-top: var(--space-sm);
+}
+.ratingChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: var(--accent-bg);
+}
+
+/* ---- Profile ------------------------------------------------------------------- */
+.profileHead {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+.avatarCircle {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-pill);
+  background: var(--surface-sunken);
+  box-shadow: var(--neo-inset-xs);
+  color: var(--accent-bg);
+}
+.signoutRow {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-xs);
+}

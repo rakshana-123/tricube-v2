@@ -1,15 +1,8 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import {
-  Loader2,
-  Receipt,
-  ExternalLink,
-  ArrowLeft,
-  RefreshCw,
-  BookOpen,
-  FileText,
-  Package,
-  LifeBuoy,
+  Loader2, Receipt, ExternalLink, ArrowLeft, RefreshCw,
+  BookOpen, FileText, Package, LifeBuoy,
 } from "lucide-react";
 import { PageHero } from "@/components/site/SectionHeading";
 import { getToken, getStoredUser } from "@/lib/auth";
@@ -32,7 +25,10 @@ type OrderItem = {
 
 export const Route = createFileRoute("/me/orders")({
   head: () => ({
-    meta: [{ title: "My orders — TRI CUBE" }, { name: "robots", content: "noindex" }],
+    meta: [
+      { title: "My orders — TRI CUBE" },
+      { name: "robots", content: "noindex" },
+    ],
   }),
   component: MyOrdersPage,
 });
@@ -88,11 +84,7 @@ function MyOrdersPage() {
     <>
       <PageHero
         eyebrow="Student dashboard"
-        title={
-          <>
-            Orders &amp; <span className="gold-text">payments</span>
-          </>
-        }
+        title={<>Orders &amp; <span className="gold-text">payments</span></>}
         subtitle="A complete history of everything you've purchased — courses, materials, bundles, and services."
       />
       <section className="mx-auto max-w-6xl px-6 py-10">
@@ -128,10 +120,7 @@ function MyOrdersPage() {
               ["service", "Services"],
             ] as const
           ).map(([k, label]) => {
-            const count =
-              k === "all"
-                ? (orders?.length ?? 0)
-                : (orders ?? []).filter((o) => o.kind === k).length;
+            const count = k === "all" ? orders?.length ?? 0 : (orders ?? []).filter((o) => o.kind === k).length;
             const active = filter === k;
             return (
               <button
@@ -231,8 +220,7 @@ function OrderCard({ order: o }: { order: OrderItem }) {
           )}
           {o.razorpayPaymentId && (
             <span>
-              Payment ID:{" "}
-              <span className="font-mono text-foreground/80">{o.razorpayPaymentId}</span>
+              Payment ID: <span className="font-mono text-foreground/80">{o.razorpayPaymentId}</span>
             </span>
           )}
         </div>
@@ -258,13 +246,7 @@ function KindIcon({ kind }: { kind: OrderItem["kind"] }) {
 }
 
 function kindLabel(k: OrderItem["kind"]) {
-  return k === "course"
-    ? "Course"
-    : k === "material"
-      ? "Material"
-      : k === "bundle"
-        ? "Bundle"
-        : "Service";
+  return k === "course" ? "Course" : k === "material" ? "Material" : k === "bundle" ? "Bundle" : "Service";
 }
 
 function StatusPill({ status }: { status: string }) {
@@ -273,17 +255,16 @@ function StatusPill({ status }: { status: string }) {
     s === "paid" || s === "delivered" || s === "completed"
       ? "bg-emerald-50 text-emerald-700 border-emerald-200"
       : s === "failed"
-        ? "bg-red-50 text-red-700 border-red-200"
-        : s === "refunded" || s === "partially_refunded"
-          ? "bg-slate-100 text-slate-700 border-slate-200"
-          : s === "in_review" || s === "in_progress"
-            ? "bg-sky-50 text-sky-700 border-sky-200"
-            : "bg-amber-50 text-amber-700 border-amber-200";
-  const label = s === "partially_refunded" ? "Partially refunded" : s.replace(/_/g, " ");
+      ? "bg-red-50 text-red-700 border-red-200"
+      : s === "refunded" || s === "partially_refunded"
+      ? "bg-slate-100 text-slate-700 border-slate-200"
+      : s === "in_review" || s === "in_progress"
+      ? "bg-sky-50 text-sky-700 border-sky-200"
+      : "bg-amber-50 text-amber-700 border-amber-200";
+  const label =
+    s === "partially_refunded" ? "Partially refunded" : s.replace(/_/g, " ");
   return (
-    <span
-      className={`rounded-full border px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${tone}`}
-    >
+    <span className={`rounded-full border px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${tone}`}>
       {label}
     </span>
   );

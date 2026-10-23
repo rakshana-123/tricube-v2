@@ -23,11 +23,7 @@ export const Route = createFileRoute("/admin")({
   head: () => ({
     meta: [
       { title: "Admin Dashboard — TRI CUBE" },
-      {
-        name: "description",
-        content:
-          "TRI CUBE admin dashboard for managing courses, services, materials, and service requests.",
-      },
+      { name: "description", content: "TRI CUBE admin dashboard for managing courses, services, materials, and service requests." },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -54,11 +50,7 @@ function AdminDashboardPage() {
     <BackendStatusProvider>
       <PageHero
         eyebrow="Admin dashboard"
-        title={
-          <>
-            TRI CUBE <span className="gold-text">Control Panel</span>
-          </>
-        }
+        title={<>TRI CUBE <span className="gold-text">Control Panel</span></>}
         subtitle="Manage your education website, LMS content, paid materials, and service requests from one place."
       />
       {authed ? <AdminTabs /> : null}
@@ -80,9 +72,7 @@ function DashboardGrid() {
             <div className="inline-flex items-center gap-2 rounded-full bg-[var(--gold-soft)] px-3 py-1 text-xs font-semibold text-[var(--gold-dark)]">
               <ShieldCheck className="h-4 w-4" /> Admin access active
             </div>
-            <h2 className="mt-4 text-2xl font-semibold tracking-tight">
-              Choose what you want to manage
-            </h2>
+            <h2 className="mt-4 text-2xl font-semibold tracking-tight">Choose what you want to manage</h2>
             <p className="mt-2 text-sm text-muted-foreground">
               For adding or editing courses, open Courses and use the New course button.
             </p>
@@ -146,32 +136,16 @@ function DashboardGrid() {
           <BarChart3 className="h-5 w-5 text-[var(--gold-dark)]" /> Quick flow
         </h3>
         <ol className="mt-4 grid gap-3 text-sm text-muted-foreground md:grid-cols-3">
-          <li className="rounded-xl border border-border p-4">
-            <b className="text-foreground">1.</b> Add course details and price.
-          </li>
-          <li className="rounded-xl border border-border p-4">
-            <b className="text-foreground">2.</b> Add modules and video URLs.
-          </li>
-          <li className="rounded-xl border border-border p-4">
-            <b className="text-foreground">3.</b> Publish so students can buy and watch.
-          </li>
+          <li className="rounded-xl border border-border p-4"><b className="text-foreground">1.</b> Add course details and price.</li>
+          <li className="rounded-xl border border-border p-4"><b className="text-foreground">2.</b> Add modules and video URLs.</li>
+          <li className="rounded-xl border border-border p-4"><b className="text-foreground">3.</b> Publish so students can buy and watch.</li>
         </ol>
       </div>
     </div>
   );
 }
 
-function AdminCard({
-  to,
-  icon,
-  title,
-  desc,
-}: {
-  to: string;
-  icon: ReactNode;
-  title: string;
-  desc: string;
-}) {
+function AdminCard({ to, icon, title, desc }: { to: string; icon: ReactNode; title: string; desc: string }) {
   return (
     <Link
       to={to}
@@ -182,9 +156,7 @@ function AdminCard({
       </div>
       <h3 className="mt-4 font-semibold tracking-tight">{title}</h3>
       <p className="mt-2 text-sm text-muted-foreground">{desc}</p>
-      <span className="mt-4 inline-flex text-sm font-semibold text-[var(--gold-dark)] group-hover:underline">
-        Open
-      </span>
+      <span className="mt-4 inline-flex text-sm font-semibold text-[var(--gold-dark)] group-hover:underline">Open</span>
     </Link>
   );
 }
@@ -216,34 +188,17 @@ function AdminLoginCard({ onSuccess }: { onSuccess: () => void }) {
         <LogIn className="h-5 w-5" />
       </div>
       <h2 className="text-xl font-semibold">Admin sign in</h2>
-      <p className="mt-1 text-sm text-muted-foreground">
-        Sign in with your seeded admin account to open the dashboard.
-      </p>
+      <p className="mt-1 text-sm text-muted-foreground">Sign in with your seeded admin account to open the dashboard.</p>
       <label className="mt-5 block text-sm">
         <span className="mb-1 block text-muted-foreground">Email</span>
-        <input
-          className="w-full rounded-lg border border-border bg-background px-3 py-2"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
+        <input className="w-full rounded-lg border border-border bg-background px-3 py-2" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
       </label>
       <label className="mt-3 block text-sm">
         <span className="mb-1 block text-muted-foreground">Password</span>
-        <input
-          className="w-full rounded-lg border border-border bg-background px-3 py-2"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
+        <input className="w-full rounded-lg border border-border bg-background px-3 py-2" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
       </label>
       {err && <p className="mt-3 text-sm text-red-500">{err}</p>}
-      <button
-        disabled={busy}
-        className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-[var(--gradient-gold)] px-4 py-2 font-semibold text-primary-foreground disabled:opacity-60"
-      >
+      <button disabled={busy} className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-[var(--gradient-gold)] px-4 py-2 font-semibold text-primary-foreground disabled:opacity-60">
         {busy ? "Signing in…" : "Open admin dashboard"}
       </button>
     </form>

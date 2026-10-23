@@ -1,0 +1,47 @@
+.card {
+  border-radius: var(--radius-lg); /* MD cards: 18px */
+  background: var(--surface-raised);
+  position: relative;
+  transition:
+    box-shadow var(--dur-control) var(--ease-standard),
+    transform var(--dur-press-out) var(--ease-spring),
+    background-color var(--dur-control) var(--ease-standard);
+}
+
+.pad-none { padding: 0; }
+.pad-sm { padding: var(--space-md); }
+.pad-md { padding: var(--space-lg); } /* MD card padding token: 24px */
+.pad-lg { padding: var(--space-xl); }
+
+.raised { box-shadow: var(--neo-raised-md); }
+.pearl {
+  background: var(--surface-elevated);
+  box-shadow: var(--neo-raised-sm);
+}
+.sunken {
+  background: var(--surface-sunken);
+  box-shadow: var(--neo-inset-sm);
+}
+.outlined {
+  background: var(--surface-elevated);
+  border: 1px solid var(--control-border);
+  box-shadow: var(--neo-raised-xs);
+}
+.dark {
+  background: var(--surface-inverse);
+  color: var(--text-on-inverse);
+  box-shadow: var(--neo-raised-md);
+}
+
+.card[data-interactive] { cursor: pointer; }
+.card[data-interactive]:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--neo-raised-lg);
+}
+.card[data-interactive]:active {
+  transform: translateY(0) scale(0.99);
+  box-shadow: var(--neo-inset-sm);
+  transition:
+    transform var(--dur-press-in) var(--ease-out),
+    box-shadow var(--dur-press-in) var(--ease-out);
+}

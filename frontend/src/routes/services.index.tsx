@@ -10,11 +10,7 @@ export const Route = createFileRoute("/services/")({
   head: () => ({
     meta: [
       { title: "Services — TRI CUBE Digital Solutions" },
-      {
-        name: "description",
-        content:
-          "Training, internships, projects and IT services — Python, MERN, Data Science, AI, Digital Marketing and more.",
-      },
+      { name: "description", content: "Training, internships, projects and IT services — Python, MERN, Data Science, AI, Digital Marketing and more." },
       { property: "og:title", content: "TRI CUBE Services" },
       { property: "og:description", content: "End-to-end training and IT services." },
     ],
@@ -26,30 +22,17 @@ function ServicesPage() {
   const [services, setServices] = useState<ServiceDTO[] | null>(null);
   useEffect(() => {
     let alive = true;
-    listServices().then((r) => {
-      if (alive) setServices(r);
-    });
-    return () => {
-      alive = false;
-    };
+    listServices().then((r) => { if (alive) setServices(r); });
+    return () => { alive = false; };
   }, []);
 
   return (
     <>
-      <PageHero
-        eyebrow="Services"
-        title={
-          <>
-            End-to-end <span className="gold-text">training & IT</span> services
-          </>
-        }
-        subtitle="From your first line of code to your first client project — one campus, one team."
-      />
+      <PageHero eyebrow="Services" title={<>End-to-end <span className="gold-text">training & IT</span> services</>} subtitle="From your first line of code to your first client project — one campus, one team." />
       <section className="mx-auto max-w-7xl px-6 py-20">
         {services && services.length === 0 && (
           <div className="rounded-2xl border border-dashed border-border p-12 text-center text-sm text-muted-foreground">
-            No services yet. An admin can add one from{" "}
-            <span className="font-medium">/admin/services</span>.
+            No services yet. An admin can add one from <span className="font-medium">/admin/services</span>.
           </div>
         )}
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -70,11 +53,7 @@ function ServicesPage() {
                 <div>
                   {img ? (
                     <div className="mb-4 aspect-[16/9] overflow-hidden rounded-xl bg-secondary">
-                      <img
-                        src={img}
-                        alt={s.title}
-                        className="h-full w-full object-cover transition group-hover:scale-[1.02]"
-                      />
+                      <img src={img} alt={s.title} className="h-full w-full object-cover transition group-hover:scale-[1.02]" />
                     </div>
                   ) : (
                     <div className="mb-4 grid aspect-[16/9] place-items-center rounded-xl bg-secondary/60 text-muted-foreground">
@@ -98,8 +77,7 @@ function ServicesPage() {
                     params={{ slug: s.slug }}
                     className="inline-flex items-center gap-1 rounded-full border border-border bg-background px-3 py-1 text-xs font-semibold shadow-sm transition group-hover:bg-[var(--gradient-gold)] group-hover:text-primary-foreground group-hover:border-transparent"
                   >
-                    ₹{(s.offerPrice ?? s.price).toLocaleString()}{" "}
-                    <ArrowRight className="h-3.5 w-3.5" />
+                    ₹{(s.offerPrice ?? s.price).toLocaleString()} <ArrowRight className="h-3.5 w-3.5" />
                   </Link>
                 </div>
               </motion.div>

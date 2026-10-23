@@ -1,0 +1,458 @@
+/* =============================================================================
+   Showcase chrome — presentational scaffolding for the component gallery.
+   (Not part of the shipped component library.)
+   ========================================================================== */
+
+.showcase {
+  min-height: 100dvh;
+}
+
+/* ---- Header ---------------------------------------------------------------- */
+.showcaseHeader {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  min-height: var(--nav-sub-height);
+  padding-inline: var(--space-lg);
+  padding-top: env(safe-area-inset-top);
+  backdrop-filter: var(--frosted-blur);
+  -webkit-backdrop-filter: var(--frosted-blur);
+  background: var(--frosted-bg);
+  box-shadow: 0 1px 0 var(--control-border);
+}
+.showcaseHeader .brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  margin-right: auto;
+  color: var(--text-primary);
+}
+.brandMark {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  background: var(--color-primary);
+  color: #fff;
+  box-shadow: var(--neo-raised-xs);
+}
+
+/* ---- Section scaffolding ---------------------------------------------------- */
+.section {
+  padding-block: var(--space-section);
+  scroll-margin-top: var(--nav-sub-height);
+}
+.section + .section {
+  border-top: 1px solid var(--divider, var(--control-border));
+}
+.sectionAlt {
+  background: var(--canvas-contrast);
+}
+.sectionHead {
+  max-width: 720px;
+  margin-bottom: var(--space-xxl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+.sectionIndex {
+  color: var(--accent);
+}
+.sectionDesc {
+  color: var(--text-secondary);
+}
+
+.subhead {
+  margin-top: var(--space-xxl);
+  margin-bottom: var(--space-md);
+}
+
+/* ---- State matrix ----------------------------------------------------------- */
+.matrixRow {
+  display: grid;
+  grid-template-columns: 140px repeat(5, minmax(110px, 1fr));
+  gap: var(--space-sm);
+  align-items: center;
+  margin-bottom: var(--space-md);
+}
+.matrixHeader {
+  color: var(--text-tertiary);
+}
+.matrixCell {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  min-height: 60px;
+  padding: var(--space-sm);
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--canvas) 92%, transparent);
+}
+@media (max-width: 1067px) {
+  .matrixRow {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .matrixHeader {
+    display: none;
+  }
+}
+
+/* ---- Swatches --------------------------------------------------------------- */
+.swatchGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: var(--space-md);
+}
+.swatchCard {
+  border-radius: var(--radius-md);
+  padding: var(--space-sm);
+  background: var(--surface-raised);
+  box-shadow: var(--neo-raised-xs);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+.swatchChip {
+  height: 64px;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--neo-inset-xs);
+}
+.swatchMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.contrastBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xxs);
+  align-self: flex-start;
+  padding: 2px var(--space-xs);
+  border-radius: var(--radius-xs);
+  font-size: 11px;
+  line-height: 1.4;
+}
+.contrastPass {
+  color: #1d7a34;
+  background: rgba(52, 199, 89, 0.16);
+}
+.contrastWarn {
+  color: #9a6b00;
+  background: rgba(255, 204, 0, 0.18);
+}
+[data-theme="dark"] .contrastPass {
+  color: #6fe08a;
+}
+[data-theme="dark"] .contrastWarn {
+  color: #ffd449;
+}
+
+/* ---- Spec tables ------------------------------------------------------------- */
+.specGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-md);
+}
+.typeRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-lg);
+  padding-block: var(--space-sm);
+}
+.typeRow + .typeRow {
+  border-top: 1px solid var(--divider, var(--control-border));
+}
+.typeSpec {
+  white-space: nowrap;
+  color: var(--text-tertiary);
+}
+
+/* ---- Elevation demo ----------------------------------------------------------- */
+.elevationRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xl);
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-xl) var(--space-lg);
+  border-radius: var(--radius-lg);
+  background: var(--canvas);
+}
+.elevationChip {
+  display: grid;
+  place-items: center;
+  width: 120px;
+  height: 84px;
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+}
+.spacingStack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+.spacingRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+.spacingBar {
+  height: 16px;
+  border-radius: var(--radius-xs);
+  background: var(--color-primary);
+  opacity: 0.85;
+}
+.radiusDemo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+}
+.radiusChip {
+  display: grid;
+  place-items: center;
+  width: 96px;
+  height: 96px;
+  background: var(--surface-raised);
+  box-shadow: var(--neo-raised-xs);
+}
+
+/* ---- Forms / controls layout -------------------------------------------------- */
+.controlStack {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-lg);
+}
+.controlGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  padding: var(--space-lg);
+  border-radius: var(--radius-lg);
+  background: var(--surface-raised);
+  box-shadow: var(--neo-raised-xs);
+}
+
+/* ---- Card gallery --------------------------------------------------------------- */
+.cardGallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--space-lg);
+}
+
+/* ---- Nav demo --------------------------------------------------------------------- */
+.navDemo {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--neo-raised-md);
+  background: var(--canvas);
+}
+.navDemoBody {
+  padding: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  align-items: flex-start;
+}
+.navScroll {
+  height: 90px;
+  overflow-y: auto;
+  border-radius: var(--radius-md);
+  box-shadow: var(--neo-inset-xs);
+  padding: var(--space-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xxs);
+  width: 100%;
+}
+.navScrollRow {
+  height: 22px;
+  border-radius: var(--radius-xs);
+  background: color-mix(in srgb, var(--text-primary) 7%, transparent);
+}
+.navScrollRow:nth-child(2n) {
+  width: 82%;
+}
+.navScrollRow:nth-child(3n) {
+  width: 64%;
+}
+
+/* ---- Motion playground --------------------------------------------------------------- */
+.padGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-lg);
+}
+.bigPad {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  min-height: 150px;
+  border: none;
+  border-radius: var(--radius-lg);
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  box-shadow: var(--neo-raised-md);
+  transition:
+    transform var(--dur-press-out) var(--ease-spring),
+    box-shadow var(--dur-press-out) var(--ease-standard),
+    background-color var(--dur-press-in) var(--ease-out);
+}
+.bigPad:hover {
+  box-shadow: var(--neo-raised-lg);
+  transform: translateY(-2px);
+}
+.bigPad:active {
+  transform: scale(0.96);
+  background: var(--surface-sunken);
+  box-shadow: var(--neo-inset-md);
+  transition:
+    transform var(--dur-press-in) var(--ease-out),
+    box-shadow var(--dur-press-in) var(--ease-out),
+    background-color var(--dur-press-in) var(--ease-out);
+}
+.hapticTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+.hapticTable th,
+.hapticTable td {
+  text-align: left;
+  padding: var(--space-xs) var(--space-sm);
+  border-bottom: 1px solid var(--divider, var(--control-border));
+}
+.hapticTable th {
+  color: var(--text-tertiary);
+  font-weight: 400;
+}
+
+/* ---- Layout / devices ------------------------------------------------------------ */
+.deviceRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xxl);
+  justify-content: center;
+  align-items: flex-start;
+}
+.device {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  align-items: center;
+}
+.deviceFrame {
+  position: relative;
+  border-radius: 44px;
+  padding: 12px;
+  background: var(--surface-raised);
+  box-shadow: var(--neo-raised-lg), inset 0 0 0 2px var(--control-border);
+}
+.deviceScreen {
+  position: relative;
+  width: 390px;
+  height: 720px;
+  border-radius: 34px;
+  overflow: hidden;
+  background: var(--canvas);
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, #000 22%, transparent);
+}
+.deviceTablet .deviceScreen {
+  width: 660px;
+  height: 760px;
+  border-radius: 28px;
+}
+.notch {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 126px;
+  height: 28px;
+  border-radius: 0 0 18px 18px;
+  background: #1d1d1f;
+  z-index: 10;
+}
+.homeIndicator {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 134px;
+  height: 5px;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--text-primary) 32%, transparent);
+  z-index: 10;
+}
+.deviceApp {
+  height: 100%;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  scrollbar-width: none;
+}
+.deviceApp::-webkit-scrollbar {
+  display: none;
+}
+
+/* Safe-area visualization strip */
+.safeStrip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--neo-inset-sm);
+}
+.safeCell {
+  padding: var(--space-md);
+  text-align: center;
+}
+.safeCell:nth-child(1) {
+  background: rgba(0, 113, 227, 0.12);
+}
+.safeCell:nth-child(2) {
+  background: rgba(0, 113, 227, 0.06);
+}
+.safeCell:nth-child(3) {
+  background: rgba(0, 113, 227, 0.12);
+}
+
+/* Grid collapse demo */
+.gridDemoTile {
+  display: grid;
+  place-items: center;
+  min-height: 84px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-raised);
+  box-shadow: var(--neo-raised-xs);
+}
+
+/* ---- Footer -------------------------------------------------------------------- */
+.showcaseFooter {
+  padding-block: var(--space-xxl);
+  border-top: 1px solid var(--divider, var(--control-border));
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xxs);
+  align-items: center;
+  text-align: center;
+}
+
+/* Syntax badge */
+.tokenBadge {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: var(--radius-xs);
+  background: var(--highlight-tint);
+  color: var(--accent);
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 11.5px;
+  line-height: 1.5;
+  vertical-align: baseline;
+  white-space: nowrap;
+}

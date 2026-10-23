@@ -1,22 +1,16 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useCallback, useEffect, useState } from "react";
-import {
-  BookOpen,
-  PlayCircle,
-  Clock,
-  GraduationCap,
-  Loader2,
-  ArrowRight,
-  CheckCircle2,
-  RefreshCw,
-} from "lucide-react";
+import { BookOpen, PlayCircle, Clock, GraduationCap, Loader2, ArrowRight, CheckCircle2, RefreshCw } from "lucide-react";
 import { PageHero } from "@/components/site/SectionHeading";
 import { getToken, useAuth } from "@/lib/auth";
 import { API_BASE } from "@/lib/payments";
 
 export const Route = createFileRoute("/me/courses")({
   head: () => ({
-    meta: [{ title: "My courses — TRI CUBE" }, { name: "robots", content: "noindex" }],
+    meta: [
+      { title: "My courses — TRI CUBE" },
+      { name: "robots", content: "noindex" },
+    ],
   }),
   component: MyCoursesPage,
 });
@@ -55,8 +49,7 @@ function MyCoursesPage() {
   const load = useCallback(async (opts: { silent?: boolean } = {}) => {
     const token = getToken();
     if (!token) return;
-    if (opts.silent) setRefreshing(true);
-    else setLoading(true);
+    if (opts.silent) setRefreshing(true); else setLoading(true);
     setErr(null);
     try {
       const r = await fetch(`${API_BASE}/api/courses/me/enrolled`, {
@@ -82,9 +75,7 @@ function MyCoursesPage() {
     }
     load();
     const onFocus = () => load({ silent: true });
-    const onVisible = () => {
-      if (document.visibilityState === "visible") load({ silent: true });
-    };
+    const onVisible = () => { if (document.visibilityState === "visible") load({ silent: true }); };
     const onPageShow = () => load({ silent: true });
     window.addEventListener("focus", onFocus);
     document.addEventListener("visibilitychange", onVisible);
@@ -108,11 +99,7 @@ function MyCoursesPage() {
     <>
       <PageHero
         eyebrow="Learner dashboard"
-        title={
-          <>
-            My <span className="gold-text">courses</span>
-          </>
-        }
+        title={<>My <span className="gold-text">courses</span></>}
         subtitle="Continue where you left off. Track progress across every module and jump straight into the next video."
       />
       <section className="mx-auto max-w-6xl px-6 pb-16">
@@ -137,9 +124,7 @@ function MyCoursesPage() {
           <EmptyState />
         ) : (
           <div className="grid gap-5 md:grid-cols-2">
-            {courses.map((c) => (
-              <CourseCard key={c.id} course={c} />
-            ))}
+            {courses.map((c) => <CourseCard key={c.id} course={c} />)}
           </div>
         )}
       </section>
@@ -153,12 +138,7 @@ function CourseCard({ course: c }: { course: EnrolledCourse }) {
     <article className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition hover:shadow-md">
       <div className="relative aspect-[16/9] w-full overflow-hidden bg-muted">
         {c.thumbnailUrl ? (
-          <img
-            src={c.thumbnailUrl}
-            alt={c.title}
-            className="h-full w-full object-cover transition group-hover:scale-[1.02]"
-            loading="lazy"
-          />
+          <img src={c.thumbnailUrl} alt={c.title} className="h-full w-full object-cover transition group-hover:scale-[1.02]" loading="lazy" />
         ) : (
           <div className="flex h-full w-full items-center justify-center text-muted-foreground">
             <GraduationCap className="h-10 w-10" />
@@ -176,16 +156,12 @@ function CourseCard({ course: c }: { course: EnrolledCourse }) {
       <div className="flex flex-1 flex-col gap-3 p-5">
         <div>
           <h3 className="line-clamp-2 text-lg font-semibold leading-snug">{c.title}</h3>
-          <p className="mt-1 text-xs text-muted-foreground">
-            By {c.trainer} · {c.duration}
-          </p>
+          <p className="mt-1 text-xs text-muted-foreground">By {c.trainer} · {c.duration}</p>
         </div>
 
         <div>
           <div className="mb-1.5 flex items-center justify-between text-xs text-muted-foreground">
-            <span>
-              {c.completedVideos} / {c.totalVideos} lessons
-            </span>
+            <span>{c.completedVideos} / {c.totalVideos} lessons</span>
             <span className="font-semibold text-foreground">{c.percent}%</span>
           </div>
           <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
@@ -201,9 +177,7 @@ function CourseCard({ course: c }: { course: EnrolledCourse }) {
             <div className="mb-0.5 flex items-center gap-1.5 text-muted-foreground">
               <PlayCircle className="h-3.5 w-3.5" />
               <span>{c.completedVideos > 0 ? "Up next" : "Start here"}</span>
-              {c.nextVideo.moduleTitle && (
-                <span className="text-muted-foreground/70">· {c.nextVideo.moduleTitle}</span>
-              )}
+              {c.nextVideo.moduleTitle && <span className="text-muted-foreground/70">· {c.nextVideo.moduleTitle}</span>}
             </div>
             <div className="flex items-center justify-between gap-3">
               <p className="line-clamp-1 font-medium text-foreground">{c.nextVideo.title}</p>
@@ -222,9 +196,7 @@ function CourseCard({ course: c }: { course: EnrolledCourse }) {
 
         <div className="mt-auto flex items-center justify-between pt-1">
           <span className="text-[11px] text-muted-foreground">
-            {c.lastActivityAt
-              ? `Last watched ${timeAgo(c.lastActivityAt)}`
-              : `Enrolled ${timeAgo(c.enrolledAt)}`}
+            {c.lastActivityAt ? `Last watched ${timeAgo(c.lastActivityAt)}` : `Enrolled ${timeAgo(c.enrolledAt)}`}
           </span>
           <Link
             to="/courses/$slug"
@@ -249,8 +221,7 @@ function EmptyState() {
       <div>
         <h2 className="text-lg font-semibold">No enrolled courses yet</h2>
         <p className="mx-auto mt-1 max-w-sm text-sm text-muted-foreground">
-          Browse our catalog to find a course that fits your goals. Your progress will appear here
-          once you enroll.
+          Browse our catalog to find a course that fits your goals. Your progress will appear here once you enroll.
         </p>
       </div>
       <Link

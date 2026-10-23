@@ -7,7 +7,10 @@ import { adminFetch, getAdminToken } from "@/lib/services-api";
 
 export const Route = createFileRoute("/admin/audit")({
   head: () => ({
-    meta: [{ title: "Admin Audit — TRI CUBE" }, { name: "robots", content: "noindex" }],
+    meta: [
+      { title: "Admin Audit — TRI CUBE" },
+      { name: "robots", content: "noindex" },
+    ],
   }),
   component: AuditPage,
 });
@@ -65,13 +68,9 @@ function AuditPage() {
     try {
       const token = getAdminToken();
       if (!token) throw new Error("Sign in as an admin to view the audit log.");
-      const r = await adminFetch(
-        "/api/admin/activity",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        },
-        "Failed to load audit log",
-      );
+      const r = await adminFetch("/api/admin/activity", {
+        headers: { Authorization: `Bearer ${token}` },
+      }, "Failed to load audit log");
       const j = await r.json();
       setLogs(j.logs || []);
     } catch (e: any) {
@@ -90,7 +89,13 @@ function AuditPage() {
     return logs.filter((l) => {
       if (cat !== "all" && classify(l.action) !== cat) return false;
       if (!needle) return true;
-      const hay = [l.action, l.meta || "", l.user?.email || "", l.user?.name || "", l.ip || ""]
+      const hay = [
+        l.action,
+        l.meta || "",
+        l.user?.email || "",
+        l.user?.name || "",
+        l.ip || "",
+      ]
         .join(" ")
         .toLowerCase();
       return hay.includes(needle);
@@ -98,14 +103,7 @@ function AuditPage() {
   }, [logs, cat, q]);
 
   const counts = useMemo(() => {
-    const c: Record<Category, number> = {
-      all: logs.length,
-      create: 0,
-      edit: 0,
-      delete: 0,
-      publish: 0,
-      upload: 0,
-    };
+    const c: Record<Category, number> = { all: logs.length, create: 0, edit: 0, delete: 0, publish: 0, upload: 0 };
     for (const l of logs) {
       const k = classify(l.action);
       if (k !== "all") c[k] += 1;
@@ -117,11 +115,7 @@ function AuditPage() {
     <>
       <PageHero
         eyebrow="Admin audit"
-        title={
-          <>
-            Recent <span className="gold-text">admin activity</span>
-          </>
-        }
+        title={<>Recent <span className="gold-text">admin activity</span></>}
         subtitle="Every create, edit, delete, publish, and upload action performed by admins, with who did it and when."
       />
       <AdminTabs />
@@ -140,9 +134,7 @@ function AuditPage() {
               >
                 <Filter className="h-3 w-3" />
                 {c.label}
-                <span className="rounded-full bg-background/60 px-1.5 text-[10px]">
-                  {counts[c.key]}
-                </span>
+                <span className="rounded-full bg-background/60 px-1.5 text-[10px]">{counts[c.key]}</span>
               </button>
             ))}
           </div>
@@ -166,9 +158,7 @@ function AuditPage() {
         </div>
 
         {err && (
-          <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-            {err}
-          </div>
+          <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{err}</div>
         )}
 
         <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
@@ -180,9 +170,7 @@ function AuditPage() {
             <div>When</div>
           </div>
           {loading && !logs.length ? (
-            <div className="px-4 py-10 text-center text-sm text-muted-foreground">
-              Loading audit log…
-            </div>
+            <div className="px-4 py-10 text-center text-sm text-muted-foreground">Loading audit log…</div>
           ) : filtered.length === 0 ? (
             <div className="flex flex-col items-center gap-2 px-4 py-14 text-center text-sm text-muted-foreground">
               <ScrollText className="h-6 w-6" />
@@ -197,25 +185,19 @@ function AuditPage() {
                   className="grid grid-cols-[110px_1fr_180px_140px_160px] gap-3 border-b border-border/60 px-4 py-3 text-sm last:border-b-0"
                 >
                   <div>
-                    <span
-                      className={`inline-flex rounded-full px-2 py-0.5 text-[11px] font-semibold uppercase ${CAT_STYLES[k]}`}
-                    >
+                    <span className={`inline-flex rounded-full px-2 py-0.5 text-[11px] font-semibold uppercase ${CAT_STYLES[k]}`}>
                       {k === "all" ? "action" : k}
                     </span>
                   </div>
                   <div className="min-w-0">
                     <div className="truncate font-mono text-xs text-foreground">{l.action}</div>
                     {l.meta && (
-                      <div className="mt-1 line-clamp-2 break-all text-[11px] text-muted-foreground">
-                        {l.meta}
-                      </div>
+                      <div className="mt-1 line-clamp-2 break-all text-[11px] text-muted-foreground">{l.meta}</div>
                     )}
                   </div>
                   <div className="min-w-0">
                     <div className="truncate font-medium">{l.user?.name || "—"}</div>
-                    <div className="truncate text-xs text-muted-foreground">
-                      {l.user?.email || `#${l.user?.id ?? "?"}`}
-                    </div>
+                    <div className="truncate text-xs text-muted-foreground">{l.user?.email || `#${l.user?.id ?? "?"}`}</div>
                   </div>
                   <div className="truncate text-xs text-muted-foreground">{l.ip || "—"}</div>
                   <div className="text-xs text-muted-foreground">
@@ -228,8 +210,7 @@ function AuditPage() {
         </div>
 
         <p className="mt-4 text-xs text-muted-foreground">
-          Showing the last 200 admin actions. Passwords, tokens, and OTPs are automatically
-          redacted.
+          Showing the last 200 admin actions. Passwords, tokens, and OTPs are automatically redacted.
         </p>
       </section>
     </>
