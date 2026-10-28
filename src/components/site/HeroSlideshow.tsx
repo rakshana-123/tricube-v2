@@ -206,18 +206,18 @@ export function HeroSlideshow() {
       onMouseLeave={() => setIsPaused(false)}
       className="relative w-full min-h-[calc(100dvh-72px)] lg:h-[calc(100dvh-78px)] lg:max-h-[calc(100dvh-78px)] overflow-hidden bg-[#FFFFFF] select-none"
     >
-      {/* Subtle warm radial glow matching the reference canvas */}
+      {/* Right-Side Full-View Artwork (Desktop) — seamlessly connected to the left canvas */}
       <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0"
+        className="hidden lg:flex pointer-events-none absolute inset-y-0 right-0 w-[60%] xl:w-[62%] h-full items-center justify-end overflow-hidden"
         style={{
-          background:
-            'radial-gradient(circle at 72% 50%, rgba(224, 154, 59, 0.10) 0%, rgba(255, 255, 255, 0) 62%)',
+          maskImage:
+            'linear-gradient(to right, transparent 0%, black 14%, black 100%), linear-gradient(to bottom, transparent 0%, black 7%, black 96%, transparent 100%)',
+          maskComposite: 'intersect',
+          WebkitMaskImage:
+            'linear-gradient(to right, transparent 0%, black 14%, black 100%), linear-gradient(to bottom, transparent 0%, black 7%, black 96%, transparent 100%)',
+          WebkitMaskComposite: 'source-in',
         }}
-      />
-
-      {/* Right-Side Full-View Artwork (Desktop) — fits 100% inside the single page without clipping */}
-      <div className="hidden lg:flex pointer-events-none absolute inset-y-0 right-0 w-[58%] xl:w-[60%] h-full items-center justify-end overflow-hidden">
+      >
         <AnimatePresence mode="wait">
           <motion.img
             key={activeSlide.id}
@@ -232,10 +232,14 @@ export function HeroSlideshow() {
           />
         </AnimatePresence>
 
-        {/* Smooth white blend on the left edge of the artwork */}
+        {/* Smooth white blend on the left & top edges of the artwork */}
         <div
           aria-hidden="true"
-          className="absolute inset-y-0 left-0 w-16 xl:w-24 bg-gradient-to-r from-[#FFFFFF] via-[#FFFFFF]/65 to-transparent"
+          className="absolute inset-y-0 left-0 w-28 xl:w-36 bg-gradient-to-r from-[#FFFFFF] via-[#FFFFFF]/90 to-transparent"
+        />
+        <div
+          aria-hidden="true"
+          className="absolute inset-x-0 top-0 h-12 bg-gradient-to-b from-[#FFFFFF] via-[#FFFFFF]/80 to-transparent"
         />
       </div>
 

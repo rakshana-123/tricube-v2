@@ -257,6 +257,34 @@
   will-change: transform;
 }
 
+@keyframes marquee-vertical-up {
+  0% {
+    transform: translate3d(0, 0%, 0);
+  }
+  100% {
+    transform: translate3d(0, -50%, 0);
+  }
+}
+
+@keyframes marquee-vertical-down {
+  0% {
+    transform: translate3d(0, -50%, 0);
+  }
+  100% {
+    transform: translate3d(0, 0%, 0);
+  }
+}
+
+@utility animate-marquee-up {
+  animation: marquee-vertical-up 26s linear infinite;
+  will-change: transform;
+}
+
+@utility animate-marquee-down {
+  animation: marquee-vertical-down 26s linear infinite;
+  will-change: transform;
+}
+
 @utility input {
   width: 100%;
   border-radius: 0.5rem;
