@@ -11,8 +11,10 @@ if (!fs.existsSync(assetsDir)) {
 
 const assetFiles = fs.readdirSync(assetsDir);
 
-// Find main entry JS (index-<hash>.js) and all CSS bundles
-const entryJs = assetFiles.find((f) => /^index-[A-Za-z0-9_-]+\.js$/.test(f));
+// Find main entry JS (client-<hash>.js or index-<hash>.js) and all CSS bundles
+const entryJs =
+  assetFiles.find((f) => /^client-[A-Za-z0-9_-]+\.js$/.test(f)) ||
+  assetFiles.find((f) => /^index-[A-Za-z0-9_-]+\.js$/.test(f));
 const cssFiles = assetFiles.filter((f) => f.endsWith(".css"));
 
 if (!entryJs) {
