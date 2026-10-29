@@ -14,6 +14,7 @@ import {
   UserCheck,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { SpotlightCard } from "@/components/react-bits/SpotlightCard";
 import { PaymentRetry } from "@/components/site/PaymentRetry";
 import { getStoredUser } from "@/lib/auth";
 import { API_BASE, startPayment } from "@/lib/payments";
@@ -40,12 +41,12 @@ export const Route = createFileRoute("/services/$slug")({
   }),
   component: ServiceDetail,
   notFoundComponent: () => (
-    <div className="neo-surface min-h-[65vh] grid place-items-center px-6 py-24">
-      <div className="neo-extruded max-w-md w-full p-10 text-center">
+    <div className="min-h-[65vh] grid place-items-center bg-white px-6 py-24 dark:bg-zinc-950">
+      <div className="max-w-md w-full rounded-3xl border border-zinc-200 bg-white p-10 text-center shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
         <h1 className="font-display text-3xl font-extrabold">Service not found</h1>
         <Link
           to="/services"
-          className="neo-cta-gold mt-6 inline-flex items-center gap-2 px-6 py-3 text-sm font-extrabold"
+          className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#E09A3B] px-6 py-3 text-sm font-bold text-white"
         >
           <ArrowLeft className="h-4 w-4" /> Back to services
         </Link>
@@ -53,8 +54,8 @@ export const Route = createFileRoute("/services/$slug")({
     </div>
   ),
   errorComponent: ({ error }) => (
-    <div className="neo-surface min-h-[65vh] grid place-items-center px-6 py-24">
-      <div className="neo-extruded max-w-md w-full p-10 text-center">
+    <div className="min-h-[65vh] grid place-items-center bg-white px-6 py-24 dark:bg-zinc-950">
+      <div className="max-w-md w-full rounded-3xl border border-zinc-200 bg-white p-10 text-center shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
         <h1 className="font-display text-2xl font-extrabold">Something went wrong</h1>
         <p className="mt-2 text-sm text-muted-foreground">
           {String(error?.message || error)}
@@ -183,9 +184,9 @@ function ServiceDetail() {
 
   if (loading) {
     return (
-      <div className="neo-surface min-h-[65vh] grid place-items-center px-6 py-24">
-        <div className="neo-extruded px-8 py-6 text-sm font-semibold text-zinc-600 dark:text-zinc-300">
-          Loading sculpted service workspace…
+      <div className="min-h-[65vh] grid place-items-center bg-white px-6 py-24 dark:bg-zinc-950">
+        <div className="rounded-2xl border border-zinc-200 bg-[#FAFAFC] px-8 py-5 text-sm font-semibold text-zinc-600 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300">
+          Loading service details…
         </div>
       </div>
     );
@@ -193,12 +194,12 @@ function ServiceDetail() {
 
   if (!svc) {
     return (
-      <div className="neo-surface min-h-[65vh] grid place-items-center px-6 py-24">
-        <div className="neo-extruded max-w-md w-full p-10 text-center">
+      <div className="min-h-[65vh] grid place-items-center bg-white px-6 py-24 dark:bg-zinc-950">
+        <div className="max-w-md w-full rounded-3xl border border-zinc-200 bg-white p-10 text-center shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
           <h1 className="font-display text-3xl font-extrabold">Service not found</h1>
           <Link
             to="/services"
-            className="neo-cta-gold mt-6 inline-flex items-center gap-2 px-6 py-3 text-sm font-extrabold"
+            className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#E09A3B] px-6 py-3 text-sm font-bold text-white"
           >
             <ArrowLeft className="h-4 w-4" /> Back to services
           </Link>
@@ -213,49 +214,45 @@ function ServiceDetail() {
   const sections = parseSections(svc.sections);
 
   return (
-    <div className="neo-surface text-zinc-900 dark:text-zinc-100 pb-20">
-      {/* Sculpted Neomorphic Service Header */}
-      <section className="mx-auto max-w-6xl px-5 sm:px-8 pt-10 pb-8">
-        <motion.div
-          initial={prefersReduced ? false : { opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-          className="neo-extruded relative overflow-hidden p-7 sm:p-10"
-        >
-          <div
-            aria-hidden="true"
-            className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-[#E09A3B] via-[#F4BA63] to-transparent"
-          />
+    <div className="bg-[#FFFFFF] text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100 pb-20">
+      {/* Clean Modern Header */}
+      <section className="border-b border-zinc-100 bg-gradient-to-b from-[#FAFAFC] to-[#FFFFFF] pt-10 pb-12 dark:border-zinc-800/80 dark:from-zinc-900/50 dark:to-zinc-950">
+        <div className="mx-auto max-w-6xl px-6 sm:px-8">
+          <motion.div
+            initial={prefersReduced ? false : { opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <Link
+                to="/services"
+                className="inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-4 py-2 text-xs font-bold text-zinc-700 hover:border-[#E09A3B] hover:text-[#E09A3B] dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200 transition-colors"
+              >
+                <ArrowLeft className="h-3.5 w-3.5 text-[#E09A3B]" />
+                <span>All Services</span>
+              </Link>
 
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <Link
-              to="/services"
-              className="neo-orb inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-extrabold text-zinc-700 hover:text-[#C87E20] dark:text-zinc-200 transition-colors"
-            >
-              <ArrowLeft className="h-3.5 w-3.5 text-[#E09A3B]" />
-              <span>All Services</span>
-            </Link>
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-[#FDF3E6] border border-[#E09A3B]/25 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-[#E09A3B]">
+                <Sparkles className="h-3.5 w-3.5" />
+                {isResumeReview ? "Resume Review · ₹99" : "Service Request"}
+              </span>
+            </div>
 
-            <span className="neo-inset inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-extrabold uppercase tracking-wider text-[#C87E20] dark:text-[#F0A847]">
-              <Sparkles className="h-3.5 w-3.5 text-[#E09A3B]" />
-              {isResumeReview ? "Resume Review · ₹99" : "Service Request"}
-            </span>
-          </div>
-
-          <h1 className="font-display mt-6 text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-50">
-            {svc.title}
-          </h1>
-          <p className="mt-3 max-w-2xl text-sm sm:text-base leading-relaxed text-zinc-600 dark:text-zinc-400">
-            {isResumeReview
-              ? "Pay ₹99, upload your resume, and get a detailed line-by-line review from our expert — emailed to you in 3–4 working days."
-              : "Pay securely first, share your requirements or brief, and our engineering team reviews and delivers straight to your email."}
-          </p>
-        </motion.div>
+            <h1 className="font-display mt-6 text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[#081226] dark:text-zinc-50">
+              {svc.title}
+            </h1>
+            <p className="mt-3 max-w-2xl text-sm sm:text-base leading-relaxed text-zinc-600 dark:text-zinc-400">
+              {isResumeReview
+                ? "Pay ₹99, upload your resume, and get a detailed line-by-line review from our expert — emailed to you in 3–4 working days."
+                : "Pay securely first, share your requirements or brief, and our engineering team reviews and delivers straight to your email."}
+            </p>
+          </motion.div>
+        </div>
       </section>
 
       {isResumeReview && (
-        <section className="mx-auto max-w-6xl px-5 sm:px-8 pb-4">
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <section className="mx-auto max-w-6xl px-6 sm:px-8 pt-8">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {[
               { icon: CreditCard, title: "1. Pay ₹99", body: "Secure Razorpay checkout." },
               { icon: FileUp, title: "2. Upload resume", body: "PDF or DOCX, up to 10 MB." },
@@ -272,13 +269,13 @@ function ServiceDetail() {
             ].map((s, idx) => (
               <motion.div
                 key={s.title}
-                initial={prefersReduced ? false : { opacity: 0, y: 24 }}
+                initial={prefersReduced ? false : { opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: false, amount: 0.2 }}
-                transition={{ duration: 0.45, delay: idx * 0.07 }}
-                className="neo-extruded neo-extruded-interactive flex gap-3.5 p-5"
+                transition={{ duration: 0.45, delay: idx * 0.06 }}
+                className="flex gap-3.5 rounded-2xl border border-zinc-200/80 bg-[#FAFAFC] p-4 dark:border-zinc-800 dark:bg-zinc-900"
               >
-                <div className="neo-inset grid h-11 w-11 shrink-0 place-items-center rounded-xl text-[#E09A3B]">
+                <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#FDF3E6] text-[#E09A3B] dark:bg-[#E09A3B]/15">
                   <s.icon className="h-5 w-5" />
                 </div>
                 <div>
@@ -293,74 +290,82 @@ function ServiceDetail() {
         </section>
       )}
 
-      {/* Main Split Workspace: Sculpted Summary Card + Neomorphic Form */}
-      <section className="mx-auto grid max-w-6xl gap-8 px-5 sm:px-8 py-8 md:grid-cols-[1fr_1.22fr] items-start">
+      {/* Main Split Workspace */}
+      <section className="mx-auto grid max-w-6xl gap-8 px-6 sm:px-8 py-10 md:grid-cols-[1fr_1.22fr] items-start">
         <motion.aside
-          initial={prefersReduced ? false : { opacity: 0, x: -28 }}
-          whileInView={{ opacity: 1, x: 0 }}
+          initial={prefersReduced ? false : { opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: false, amount: 0.2 }}
-          transition={{ duration: 0.58, ease: [0.22, 1, 0.36, 1] }}
-          className="neo-extruded p-6 sm:p-7"
+          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
         >
-          {img && (
-            <div className="mb-5 neo-inset p-2.5">
-              <div className="aspect-[16/9] overflow-hidden rounded-xl">
+          <SpotlightCard
+            theme="light"
+            spotlightColor="#E09A3B"
+            intensity={0.18}
+            borderGlow={0.8}
+            spotlightSize={260}
+            className="!p-6 sm:!p-7 dark:![background-color:#18181b]"
+          >
+            {img && (
+              <div className="mb-5 aspect-[16/9] overflow-hidden rounded-2xl border border-zinc-200/70 bg-zinc-100 dark:border-zinc-800">
                 <img src={img} alt={svc.title} className="h-full w-full object-cover" />
               </div>
-            </div>
-          )}
+            )}
 
-          <h2 className="font-display text-xl font-extrabold">{svc.title}</h2>
-          <p className="mt-1.5 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
-            <Calendar className="h-3.5 w-3.5 text-[#E09A3B]" />
-            Duration · {svc.duration}
-          </p>
-
-          <ul className="mt-5 space-y-2.5 text-sm">
-            {features.map((f: string) => (
-              <li key={f} className="flex items-center gap-2.5 font-medium">
-                <CheckCircle2 className="h-4 w-4 shrink-0 text-[#E09A3B]" />
-                <span>{f}</span>
-              </li>
-            ))}
-          </ul>
-
-          <div className="mt-6 neo-inset p-4">
-            <div className="text-[11px] font-bold uppercase tracking-wider text-zinc-400">
-              All-Inclusive Service Fee
-            </div>
-            <div className="mt-1 flex items-end gap-2.5">
-              <div className="font-display text-3xl font-extrabold gold-text">
-                ₹{priceOffer.toLocaleString()}
-              </div>
-              {svc.price > priceOffer && (
-                <div className="pb-1 text-xs font-semibold text-zinc-400 line-through">
-                  ₹{svc.price.toLocaleString()}
-                </div>
-              )}
-            </div>
-          </div>
-
-          {isResumeReview && (
-            <p className="mt-4 neo-inset flex items-center gap-2 px-3.5 py-2.5 text-xs font-medium">
-              <Clock className="h-3.5 w-3.5 text-[#E09A3B] shrink-0" />
-              Expected delivery: <b className="ml-1 font-extrabold">{expected}</b>
+            <h2 className="font-display text-xl font-extrabold text-[#081226] dark:text-white">
+              {svc.title}
+            </h2>
+            <p className="mt-1.5 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+              <Calendar className="h-3.5 w-3.5 text-[#E09A3B]" />
+              Duration · {svc.duration}
             </p>
-          )}
 
-          <p className="mt-4 flex items-center gap-2 text-xs font-medium text-zinc-500 dark:text-zinc-400">
-            <Lock className="h-3.5 w-3.5 text-[#E09A3B] shrink-0" />
-            Secure Razorpay checkout · UPI, cards, netbanking
-          </p>
+            <ul className="mt-5 space-y-2.5 text-sm">
+              {features.map((f: string) => (
+                <li key={f} className="flex items-center gap-2.5 font-medium">
+                  <CheckCircle2 className="h-4 w-4 shrink-0 text-[#E09A3B]" />
+                  <span>{f}</span>
+                </li>
+              ))}
+            </ul>
+
+            <div className="mt-6 rounded-2xl border border-zinc-100 bg-[#FAFAFC] p-4 dark:border-zinc-800 dark:bg-zinc-900">
+              <div className="text-[11px] font-bold uppercase tracking-wider text-zinc-400">
+                All-Inclusive Service Fee
+              </div>
+              <div className="mt-1 flex items-end gap-2.5">
+                <div className="font-display text-3xl font-extrabold text-[#081226] dark:text-white">
+                  ₹{priceOffer.toLocaleString()}
+                </div>
+                {svc.price > priceOffer && (
+                  <div className="pb-1 text-xs font-semibold text-zinc-400 line-through">
+                    ₹{svc.price.toLocaleString()}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {isResumeReview && (
+              <p className="mt-4 flex items-center gap-2 rounded-xl border border-zinc-200/70 bg-[#FAFAFC] px-3.5 py-2.5 text-xs font-medium dark:border-zinc-800 dark:bg-zinc-900">
+                <Clock className="h-3.5 w-3.5 text-[#E09A3B] shrink-0" />
+                Expected delivery: <b className="ml-1 font-extrabold">{expected}</b>
+              </p>
+            )}
+
+            <p className="mt-4 flex items-center gap-2 text-xs font-medium text-zinc-500 dark:text-zinc-400">
+              <Lock className="h-3.5 w-3.5 text-[#E09A3B] shrink-0" />
+              Secure Razorpay checkout · UPI, cards, netbanking
+            </p>
+          </SpotlightCard>
         </motion.aside>
 
         {done ? (
           <motion.div
-            initial={{ opacity: 0, scale: 0.96 }}
+            initial={{ opacity: 0, scale: 0.97 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="neo-extruded p-8 sm:p-10 text-center"
+            className="rounded-3xl border border-zinc-200/80 bg-white p-8 sm:p-10 text-center shadow-[0_12px_36px_-16px_rgba(15,23,42,0.1)] dark:border-zinc-800 dark:bg-zinc-900"
           >
-            <div className="neo-cta-gold mx-auto grid h-16 w-16 place-items-center rounded-full">
+            <div className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-[#E09A3B] text-white shadow-[0_10px_24px_-6px_rgba(224,154,59,0.5)]">
               <CheckCircle2 className="h-8 w-8" />
             </div>
             <h3 className="font-display mt-5 text-2xl font-extrabold">
@@ -386,7 +391,7 @@ function ServiceDetail() {
             </p>
             <Link
               to="/services"
-              className="neo-cta-gold mt-7 inline-flex px-6 py-3 text-sm font-extrabold"
+              className="mt-7 inline-flex rounded-full bg-[#E09A3B] px-6 py-3 text-sm font-bold text-white shadow-[0_10px_24px_-6px_rgba(224,154,59,0.5)] hover:bg-[#cf892b]"
             >
               Browse more services
             </Link>
@@ -394,13 +399,13 @@ function ServiceDetail() {
         ) : (
           <motion.form
             onSubmit={handleSubmit}
-            initial={prefersReduced ? false : { opacity: 0, x: 28 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={prefersReduced ? false : { opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: false, amount: 0.2 }}
-            transition={{ duration: 0.58, delay: 0.06, ease: [0.22, 1, 0.36, 1] }}
-            className="neo-extruded p-6 sm:p-8"
+            transition={{ duration: 0.55, delay: 0.06, ease: [0.22, 1, 0.36, 1] }}
+            className="rounded-3xl border border-zinc-200/80 bg-white p-6 sm:p-8 shadow-[0_1px_2px_rgba(15,23,42,0.03),0_16px_40px_-20px_rgba(15,23,42,0.1)] dark:border-zinc-800 dark:bg-zinc-900"
           >
-            <h3 className="font-display text-xl font-extrabold">
+            <h3 className="font-display text-xl font-extrabold text-[#081226] dark:text-white">
               {isResumeReview ? "Your details & resume" : "Your details"}
             </h3>
             <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
@@ -471,7 +476,7 @@ function ServiceDetail() {
                   : "Attach file (resume, brief, references — max 10 MB)"
               }
             >
-              <label className="neo-inset flex cursor-pointer items-center gap-3 px-4 py-3.5 text-sm font-medium transition-colors hover:border-[#E09A3B]/50">
+              <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-dashed border-zinc-300 bg-[#FAFAFC] px-4 py-3.5 text-sm font-medium transition-colors hover:border-[#E09A3B] hover:bg-[#FDF3E6]/40 dark:border-zinc-700 dark:bg-zinc-950">
                 <Upload className="h-4 w-4 shrink-0 text-[#E09A3B]" />
                 <span className="flex-1 truncate text-zinc-700 dark:text-zinc-300">
                   {form.file?.name ||
@@ -506,7 +511,7 @@ function ServiceDetail() {
 
             <button
               disabled={submitting}
-              className="neo-cta-gold mt-7 inline-flex w-full items-center justify-center gap-2 px-6 py-3.5 text-sm font-extrabold disabled:opacity-60 cursor-pointer"
+              className="mt-7 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#E09A3B] px-6 py-3.5 text-sm font-bold text-white shadow-[0_12px_28px_-6px_rgba(224,154,59,0.55)] transition-all hover:bg-[#cf892b] disabled:opacity-60 cursor-pointer"
             >
               {submitting
                 ? "Opening secure checkout…"
@@ -531,7 +536,7 @@ function ServiceDetail() {
       </section>
 
       {sections.length > 0 && (
-        <section className="mx-auto max-w-6xl px-5 sm:px-8 pt-6 pb-8">
+        <section className="mx-auto max-w-6xl px-6 sm:px-8 pt-6 pb-8">
           <div className="space-y-10">
             {sections.map((s, i) => (
               <SectionBlock key={i} section={s} />
@@ -569,8 +574,11 @@ function SectionBlock({ section }: { section: ServiceSection }) {
           )}
           <ol className="grid gap-4 md:grid-cols-2">
             {section.items.map((it, i) => (
-              <li key={i} className="neo-extruded flex gap-3.5 p-5">
-                <span className="neo-cta-gold grid h-8 w-8 shrink-0 place-items-center rounded-full text-sm font-extrabold">
+              <li
+                key={i}
+                className="flex gap-3.5 rounded-2xl border border-zinc-200/80 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900"
+              >
+                <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-[#E09A3B] text-sm font-bold text-white">
                   {i + 1}
                 </span>
                 <div>
@@ -598,7 +606,7 @@ function SectionBlock({ section }: { section: ServiceSection }) {
             {section.items.map((t, i) => (
               <li
                 key={i}
-                className="neo-inset flex items-start gap-2.5 px-4 py-3.5 text-sm font-medium"
+                className="flex items-start gap-2.5 rounded-xl border border-zinc-200/70 bg-[#FAFAFC] px-4 py-3.5 text-sm font-medium dark:border-zinc-800 dark:bg-zinc-900"
               >
                 <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#E09A3B]" />
                 <span>{t}</span>
@@ -617,7 +625,10 @@ function SectionBlock({ section }: { section: ServiceSection }) {
           )}
           <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4">
             {section.items.map((h, i) => (
-              <div key={i} className="neo-extruded p-5">
+              <div
+                key={i}
+                className="rounded-2xl border border-zinc-200/80 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900"
+              >
                 <div className="font-display text-2xl font-extrabold gold-text">
                   {h.value}
                 </div>
@@ -637,7 +648,7 @@ function SectionBlock({ section }: { section: ServiceSection }) {
               {section.title}
             </h3>
           )}
-          <div className="neo-extruded divide-y divide-zinc-200/60 dark:divide-zinc-800/80 overflow-hidden">
+          <div className="divide-y divide-zinc-200/80 rounded-2xl border border-zinc-200/80 bg-white overflow-hidden dark:divide-zinc-800 dark:border-zinc-800 dark:bg-zinc-900">
             {section.items.map((f, i) => (
               <details key={i} className="group px-5 py-4">
                 <summary className="cursor-pointer list-none text-sm font-bold">
@@ -651,7 +662,7 @@ function SectionBlock({ section }: { section: ServiceSection }) {
       );
     case "cta":
       return (
-        <div className="neo-extruded flex items-center gap-3.5 p-5">
+        <div className="flex items-center gap-3.5 rounded-2xl border border-[#E09A3B]/30 bg-[#FDF3E6]/60 p-5 dark:bg-[#E09A3B]/10">
           <Sparkles className="h-5 w-5 shrink-0 text-[#E09A3B]" />
           <p className="text-sm font-bold">{section.text}</p>
         </div>
@@ -660,7 +671,7 @@ function SectionBlock({ section }: { section: ServiceSection }) {
 }
 
 const inputCls =
-  "neo-inset w-full px-4 py-2.5 text-sm font-medium outline-none focus:ring-2 focus:ring-[#E09A3B]/45";
+  "w-full rounded-xl border border-zinc-200 bg-[#FAFAFC] px-4 py-2.5 text-sm font-medium outline-none transition-all focus:border-[#E09A3B] focus:bg-white focus:ring-2 focus:ring-[#E09A3B]/20 dark:border-zinc-800 dark:bg-zinc-950 dark:focus:bg-zinc-900";
 
 function Field({
   label,
@@ -671,7 +682,7 @@ function Field({
 }) {
   return (
     <label className="mt-4 block text-sm">
-      <span className="mb-1.5 block text-[11px] font-extrabold uppercase tracking-[0.16em] text-zinc-500 dark:text-zinc-400">
+      <span className="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.16em] text-zinc-500 dark:text-zinc-400">
         {label}
       </span>
       {children}

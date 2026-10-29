@@ -10,6 +10,7 @@ import {
 import {
   ArrowDown,
   ArrowRight,
+  ArrowUpRight,
   Briefcase,
   Calendar,
   CheckCircle2,
@@ -27,7 +28,10 @@ import {
   X,
   Zap,
 } from "lucide-react";
-import { useEffect, useMemo, useRef, useState, type MouseEvent } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Magnet } from "@/components/react-bits/Magnet";
+import { ScrollVelocity } from "@/components/react-bits/ScrollVelocity";
+import { SpotlightCard } from "@/components/react-bits/SpotlightCard";
 import {
   absoluteMedia,
   listServices,
@@ -106,28 +110,28 @@ const CORE_DOMAINS: {
 const DELIVERY_STEPS = [
   {
     step: "01",
-    code: "STEP 01 // SELECT",
+    code: "STEP 01",
     title: "Pick Your Track or Scope",
     body: "Choose from 22+ fixed-price training cohorts, career services, and IT deliverables — or open a custom request.",
     icon: Layers,
   },
   {
     step: "02",
-    code: "STEP 02 // ONBOARD",
+    code: "STEP 02",
     title: "Secure Checkout & Brief",
     body: "Complete instant Razorpay checkout (UPI, cards, netbanking) and attach your resume, project brief, or target role.",
     icon: ShieldCheck,
   },
   {
     step: "03",
-    code: "STEP 03 // EXECUTE",
+    code: "STEP 03",
     title: "Architect & Mentor Execution",
     body: "Senior engineers review your submission line-by-line, lead live coding sprints, or build your production software.",
     icon: Code2,
   },
   {
     step: "04",
-    code: "STEP 04 // DELIVER",
+    code: "STEP 04",
     title: "Verified Delivery & Support",
     body: "Receive deliverables straight to your inbox with QR-verifiable credentials, mentor notes, and follow-up support.",
     icon: Zap,
@@ -167,7 +171,6 @@ function ServicesPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const prefersReduced = useReducedMotion();
 
-  // Global page scroll progress bar
   const { scrollYProgress: pageProgress } = useScroll();
   const smoothPageProgress = useSpring(pageProgress, {
     stiffness: 120,
@@ -189,7 +192,10 @@ function ServicesPage() {
     if (domain) setActiveDomain(domain);
     const el = document.getElementById("services-catalogue");
     if (el) {
-      el.scrollIntoView({ behavior: prefersReduced ? "auto" : "smooth", block: "start" });
+      el.scrollIntoView({
+        behavior: prefersReduced ? "auto" : "smooth",
+        block: "start",
+      });
     }
   };
 
@@ -240,22 +246,23 @@ function ServicesPage() {
       const matchesDomain = activeDomain === "All" || domain === activeDomain;
       if (!matchesDomain) return false;
       if (!q) return true;
-      const hay = `${svc.title} ${svc.description || ""} ${svc.features || ""} ${svc.duration} ${domain}`.toLowerCase();
+      const hay =
+        `${svc.title} ${svc.description || ""} ${svc.features || ""} ${svc.duration} ${domain}`.toLowerCase();
       return hay.includes(q);
     });
   }, [enrichedServices, activeDomain, searchQuery]);
 
   return (
-    <div className="relative neo-surface text-zinc-900 selection:bg-[#E09A3B]/20 selection:text-[#E09A3B] dark:text-zinc-100">
-      {/* Sticky Scroll-Progress Telemetry Bar */}
+    <div className="relative bg-[#FFFFFF] text-zinc-900 selection:bg-[#E09A3B]/20 selection:text-[#E09A3B] dark:bg-zinc-950 dark:text-zinc-100">
+      {/* Sticky Scroll-Progress Bar */}
       <motion.div
         aria-hidden="true"
         style={{ scaleX: smoothPageProgress }}
-        className="fixed top-[72px] lg:top-[78px] left-0 right-0 z-40 h-[3px] origin-left bg-gradient-to-r from-[#E09A3B] via-[#F4BA63] to-[#C87E20] shadow-[0_2px_10px_rgba(224,154,59,0.55)]"
+        className="fixed top-[72px] lg:top-[78px] left-0 right-0 z-40 h-[2.5px] origin-left bg-gradient-to-r from-[#E09A3B] via-[#F4BA63] to-[#C87E20]"
       />
 
       {/* =====================================================================
-          1. FULL-SCREEN HERO ARTWORK STAGE (Scroll-Linked Parallax & Hotspots)
+          1. FULL-SCREEN HERO SECTION (Refined Smaller Right Artwork Proportion)
          ===================================================================== */}
       <FullScreenServicesHero
         totalCount={enrichedServices.length || 22}
@@ -263,7 +270,30 @@ function ServicesPage() {
       />
 
       {/* =====================================================================
-          2. ASYMMETRIC NEOMORPHIC ARCHITECTURE & FLAGSHIP SPOTLIGHT CONSOLE
+          2. KINETIC SCROLL-VELOCITY TICKER RIBBON
+         ===================================================================== */}
+      <div className="w-full py-5 border-y border-zinc-100 bg-[#FAFAFC] dark:bg-zinc-900/50 dark:border-zinc-800/80 overflow-hidden">
+        <ScrollVelocity
+          texts={[
+            "LIVE COHORT TRAINING • ₹99 EXPERT RESUME REVIEW • CLIENT SPRINT INTERNSHIPS •",
+            "CUSTOM WEB & MOBILE APPS • APPLIED AI & DATA SCIENCE • VERIFIED QR CREDENTIALS •",
+          ]}
+          velocity={55}
+          fontSize={26}
+          fontWeight={800}
+          color="#E09A3B"
+          skewWithVelocity={8}
+          scaleWithVelocity={0.08}
+          outlineAlternate
+          fadeEdges
+          pauseOnHover
+          draggable
+          gap={26}
+        />
+      </div>
+
+      {/* =====================================================================
+          3. 4-DOMAIN STUDIO MATRIX & FLAGSHIP FAST-TRACK SPOTLIGHT
          ===================================================================== */}
       <FlagshipArchitectureBento
         flagship={flagshipService}
@@ -272,48 +302,48 @@ function ServicesPage() {
       />
 
       {/* =====================================================================
-          3. RECESSED FILTER CONSOLE & TACTILE NEOMORPHIC SERVICE CARDS GRID
+          4. INTERACTIVE SERVICE CATALOGUE & PROXIMITY SPOTLIGHT CARDS
          ===================================================================== */}
       <section
         id="services-catalogue"
-        className="scroll-mt-24 mx-auto max-w-7xl px-5 sm:px-8 lg:px-12 py-16 lg:py-24"
+        className="scroll-mt-24 mx-auto max-w-7xl px-6 sm:px-10 lg:px-14 py-16 lg:py-24"
       >
         {/* Section Heading */}
         <motion.div
-          initial={prefersReduced ? false : { opacity: 0, y: 32 }}
+          initial={prefersReduced ? false : { opacity: 0, y: 26 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: false, amount: 0.25 }}
-          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
           className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between"
         >
           <div className="max-w-2xl">
-            <span className="neo-orb inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-extrabold uppercase tracking-[0.18em] text-[#C87E20] dark:text-[#F0A847]">
-              <Sparkles className="h-3.5 w-3.5 text-[#E09A3B]" />
+            <span className="inline-flex items-center gap-2 rounded-full bg-[#FDF3E6] border border-[#E09A3B]/25 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-[#E09A3B]">
+              <Sparkles className="h-3.5 w-3.5" />
               Service Catalogue
             </span>
-            <h2 className="font-display mt-4 text-3xl sm:text-4xl lg:text-[2.75rem] font-extrabold tracking-tight leading-[1.1] text-zinc-900 dark:text-zinc-50">
-              Sculpted around your{" "}
-              <span className="gold-text">career & product</span> roadmap.
+            <h2 className="font-display mt-4 text-3xl sm:text-4xl lg:text-[2.7rem] font-extrabold tracking-tight leading-[1.1] text-[#081226] dark:text-zinc-50">
+              Engineered around your{" "}
+              <span className="gold-text">career &amp; product</span> roadmap.
             </h2>
           </div>
 
           <p className="max-w-md text-sm sm:text-[15px] leading-relaxed text-zinc-600 dark:text-zinc-400">
-            Filter by engineering domain or search directly. Every card displays
-            transparent turnaround times and instant online onboarding.
+            Filter by engineering domain or search directly. Hover any card to
+            inspect deliverables, turnaround times, and instant onboarding.
           </p>
         </motion.div>
 
-        {/* Recessed Neomorphic Control Console: Search + Category Track */}
+        {/* Clean Modern Filter & Search Bar */}
         <motion.div
-          initial={prefersReduced ? false : { opacity: 0, y: 24 }}
+          initial={prefersReduced ? false : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: false, amount: 0.2 }}
-          transition={{ duration: 0.55, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-10 neo-extruded p-3.5 sm:p-5"
+          transition={{ duration: 0.5, delay: 0.06, ease: [0.22, 1, 0.36, 1] }}
+          className="mt-10 rounded-2xl border border-zinc-200/80 bg-[#FAFAFC] p-3 sm:p-4 dark:border-zinc-800 dark:bg-zinc-900/70"
         >
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-            {/* Concave Search Input Well */}
-            <div className="neo-inset relative flex items-center px-4 py-2.5 lg:w-[330px] xl:w-[370px] shrink-0">
+          <div className="flex flex-col gap-3.5 lg:flex-row lg:items-center lg:justify-between">
+            {/* Search Input */}
+            <div className="relative flex items-center rounded-xl border border-zinc-200/90 bg-white px-4 py-2.5 lg:w-[320px] xl:w-[360px] shrink-0 transition-all focus-within:border-[#E09A3B] focus-within:ring-2 focus-within:ring-[#E09A3B]/20 dark:border-zinc-800 dark:bg-zinc-950">
               <Search className="h-4 w-4 text-[#E09A3B] shrink-0" />
               <input
                 type="text"
@@ -335,11 +365,11 @@ function ServicesPage() {
               )}
             </div>
 
-            {/* Concave Category Switcher Track with Shared-Layout Spring Pill */}
+            {/* Category Filter Tabs with Shared-Layout Spring Morph */}
             <div
               role="tablist"
               aria-label="Service categories"
-              className="neo-inset flex items-center gap-1.5 overflow-x-auto p-1.5 no-scrollbar"
+              className="flex items-center gap-1.5 overflow-x-auto rounded-xl border border-zinc-200/80 bg-white p-1.5 dark:border-zinc-800 dark:bg-zinc-950"
             >
               {filterTabs.map((tab) => {
                 const isActive = activeDomain === tab;
@@ -351,7 +381,7 @@ function ServicesPage() {
                     type="button"
                     aria-selected={isActive}
                     onClick={() => setActiveDomain(tab)}
-                    className={`relative shrink-0 rounded-xl px-3.5 py-2 text-xs sm:text-[13px] font-bold transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E09A3B] ${
+                    className={`relative shrink-0 rounded-lg px-3.5 py-2 text-xs sm:text-[13px] font-bold transition-colors duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E09A3B] ${
                       isActive
                         ? "text-white"
                         : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
@@ -359,13 +389,13 @@ function ServicesPage() {
                   >
                     {isActive && (
                       <motion.span
-                        layoutId="neoActiveServiceTab"
+                        layoutId="serviceTabActiveIndicator"
                         transition={{
                           type: "spring",
-                          stiffness: 380,
-                          damping: 30,
+                          stiffness: 400,
+                          damping: 32,
                         }}
-                        className="absolute inset-0 rounded-xl bg-gradient-to-r from-[#EA9F3D] to-[#C87E20] shadow-[4px_6px_14px_rgba(200,126,32,0.38),-2px_-2px_8px_rgba(255,255,255,0.6)]"
+                        className="absolute inset-0 rounded-lg bg-[#081226] dark:bg-[#E09A3B]"
                       />
                     )}
                     <span className="relative z-10 inline-flex items-center gap-1.5">
@@ -373,8 +403,8 @@ function ServicesPage() {
                       <span
                         className={`font-mono-tech rounded-full px-1.5 py-0.5 text-[10px] ${
                           isActive
-                            ? "bg-white/25 text-white"
-                            : "bg-black/[0.05] text-zinc-500 dark:bg-white/[0.06] dark:text-zinc-400"
+                            ? "bg-white/20 text-white dark:bg-black/25"
+                            : "bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400"
                         }`}
                       >
                         {count}
@@ -387,16 +417,19 @@ function ServicesPage() {
           </div>
         </motion.div>
 
-        {/* Loading State: Sculpted Neomorphic Skeletons */}
+        {/* Loading Skeletons */}
         {services === null && (
-          <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {Array.from({ length: 6 }).map((_, idx) => (
-              <div key={idx} className="neo-extruded p-6 animate-pulse">
-                <div className="neo-inset aspect-[16/10] w-full mb-5" />
-                <div className="h-4 w-24 rounded-full bg-zinc-300/60 dark:bg-zinc-700/60" />
-                <div className="mt-3 h-6 w-3/4 rounded-xl bg-zinc-300/70 dark:bg-zinc-700/70" />
-                <div className="mt-3 h-4 w-full rounded-lg bg-zinc-300/50 dark:bg-zinc-700/50" />
-                <div className="mt-6 neo-inset h-14 w-full" />
+              <div
+                key={idx}
+                className="rounded-3xl border border-zinc-200/80 bg-white p-6 animate-pulse dark:border-zinc-800 dark:bg-zinc-900"
+              >
+                <div className="aspect-[16/10] w-full rounded-2xl bg-zinc-100 dark:bg-zinc-800 mb-5" />
+                <div className="h-4 w-24 rounded-full bg-zinc-100 dark:bg-zinc-800" />
+                <div className="mt-3 h-6 w-3/4 rounded-xl bg-zinc-100 dark:bg-zinc-800" />
+                <div className="mt-3 h-4 w-full rounded-lg bg-zinc-100 dark:bg-zinc-800" />
+                <div className="mt-6 h-12 w-full rounded-xl bg-zinc-100 dark:bg-zinc-800" />
               </div>
             ))}
           </div>
@@ -405,12 +438,12 @@ function ServicesPage() {
         {/* Empty / No Match State */}
         {services !== null && filteredServices.length === 0 && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.97 }}
+            initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="mt-12 neo-extruded p-12 text-center"
+            className="mt-10 rounded-3xl border border-dashed border-zinc-300 bg-[#FAFAFC] p-12 text-center dark:border-zinc-800 dark:bg-zinc-900"
           >
-            <div className="neo-orb mx-auto grid h-14 w-14 place-items-center rounded-2xl text-[#E09A3B]">
-              <Search className="h-6 w-6" />
+            <div className="mx-auto grid h-12 w-12 place-items-center rounded-2xl bg-[#FDF3E6] text-[#E09A3B]">
+              <Search className="h-5 w-5" />
             </div>
             <h3 className="font-display mt-4 text-xl font-extrabold text-zinc-900 dark:text-zinc-100">
               {services.length === 0
@@ -435,7 +468,7 @@ function ServicesPage() {
                       setActiveDomain("All");
                       setSearchQuery("");
                     }}
-                    className="font-bold text-[#E09A3B] underline underline-offset-4"
+                    className="font-bold text-[#E09A3B] underline underline-offset-4 cursor-pointer"
                   >
                     All Services
                   </button>
@@ -446,15 +479,15 @@ function ServicesPage() {
           </motion.div>
         )}
 
-        {/* Sculpted Neomorphic Service Cards Grid */}
+        {/* Interactive Proximity Spotlight Service Cards Grid */}
         {services !== null && filteredServices.length > 0 && (
           <motion.div
             layout
-            className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3"
+            className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
           >
             <AnimatePresence mode="popLayout">
               {filteredServices.map(({ svc, domain, serial }, index) => (
-                <ServiceNeomorphicCard
+                <ServiceSpotlightCard
                   key={svc.slug}
                   service={svc}
                   domain={domain}
@@ -468,55 +501,61 @@ function ServicesPage() {
       </section>
 
       {/* =====================================================================
-          4. SCROLL-DRIVEN 4-STEP EXECUTION PIPELINE
+          5. SCROLL-DRIVEN 4-STEP EXECUTION PIPELINE
          ===================================================================== */}
       <DeliveryPipelineSection />
 
       {/* =====================================================================
-          5. BESPOKE ENTERPRISE & CUSTOM PROJECT CONSOLE
+          6. BESPOKE ENTERPRISE & CUSTOM PROJECT BANNER
          ===================================================================== */}
-      <section className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12 pb-24 pt-6">
+      <section className="mx-auto max-w-7xl px-6 sm:px-10 lg:px-14 pb-24 pt-6">
         <motion.div
-          initial={prefersReduced ? false : { opacity: 0, y: 40, scale: 0.98 }}
-          whileInView={{ opacity: 1, y: 0, scale: 1 }}
+          initial={prefersReduced ? false : { opacity: 0, y: 32 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: false, amount: 0.25 }}
-          transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-          className="neo-extruded relative overflow-hidden p-8 sm:p-12 lg:p-14"
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          className="relative overflow-hidden rounded-3xl bg-[#081226] px-8 py-12 sm:px-12 lg:px-16 lg:py-14 text-white shadow-[0_24px_60px_-20px_rgba(8,18,38,0.35)]"
         >
-          {/* Top specular amber bar */}
+          {/* Ambient radial gold & teal accents */}
           <div
             aria-hidden="true"
-            className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-[#E09A3B] via-[#F5C274] to-transparent"
+            className="pointer-events-none absolute -top-28 -right-24 h-80 w-80 rounded-full bg-[#E09A3B]/20 blur-3xl"
+          />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -bottom-28 -left-24 h-72 w-72 rounded-full bg-teal-500/10 blur-3xl"
           />
 
-          <div className="grid items-center gap-10 lg:grid-cols-12">
+          <div className="relative z-10 grid items-center gap-8 lg:grid-cols-12">
             <div className="lg:col-span-8">
-              <span className="neo-orb inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-extrabold uppercase tracking-[0.18em] text-[#C87E20] dark:text-[#F0A847]">
+              <span className="inline-flex items-center gap-2 rounded-full bg-[#E09A3B]/15 border border-[#E09A3B]/35 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-[#F4BA63]">
                 <Briefcase className="h-3.5 w-3.5 text-[#E09A3B]" />
-                Bespoke Engineering & Custom Scope
+                Bespoke Engineering &amp; Custom Scope
               </span>
-              <h2 className="font-display mt-4 text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-50">
+              <h2 className="font-display mt-4 text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-white">
                 Need a custom SaaS build, corporate cohort, or specialized capstone?
               </h2>
-              <p className="mt-3 max-w-2xl text-sm sm:text-base leading-relaxed text-zinc-600 dark:text-zinc-400">
+              <p className="mt-3 max-w-2xl text-sm sm:text-base leading-relaxed text-slate-300">
                 Share your architecture brief, reference links, or team upskilling
                 goals. Our engineering leads scope deliverables, milestones, and
                 timelines within 24 working hours.
               </p>
             </div>
 
-            <div className="lg:col-span-4 flex flex-col sm:flex-row lg:flex-col gap-4 lg:items-end">
-              <Link
-                to="/services/$slug"
-                params={{ slug: "custom-request" }}
-                className="neo-cta-gold inline-flex w-full sm:w-auto lg:w-full items-center justify-center gap-2.5 px-7 py-4 text-sm font-extrabold"
-              >
-                <span>Submit Custom Request</span>
-                <ArrowRight className="h-4 w-4" />
-              </Link>
+            <div className="lg:col-span-4 flex flex-col sm:flex-row lg:flex-col gap-3.5 lg:items-end">
+              <Magnet padding={50} magnetStrength={3.5} maxOffset={8}>
+                <Link
+                  to="/services/$slug"
+                  params={{ slug: "custom-request" }}
+                  className="inline-flex w-full sm:w-auto items-center justify-center gap-2.5 rounded-full bg-[#E09A3B] px-7 py-3.5 text-sm font-bold text-white shadow-[0_12px_28px_-6px_rgba(224,154,59,0.55)] transition-all hover:bg-[#cf892b]"
+                >
+                  <span>Submit Custom Request</span>
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              </Magnet>
               <Link
                 to="/contact"
-                className="neo-cta-porcelain inline-flex w-full sm:w-auto lg:w-full items-center justify-center gap-2 px-7 py-3.5 text-sm font-extrabold"
+                className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-full border border-white/25 bg-white/5 px-7 py-3.5 text-sm font-bold text-white backdrop-blur-sm transition-all hover:border-[#E09A3B] hover:bg-white/10"
               >
                 <span>Talk to Engineering Team</span>
               </Link>
@@ -529,9 +568,10 @@ function ServicesPage() {
 }
 
 /* ============================================================================
-   1. FULL-SCREEN HERO ARTWORK STAGE
-   Displays "End-to-End Training and IT Services.png" edge-to-edge full screen
-   with scroll-scrubbed parallax depth & interactive CTA hotspots.
+   1. FULL-SCREEN HERO SECTION
+   Full-viewport single-screen hero matching Home HeroSlideshow layout,
+   with slightly reduced right-side artwork scale (78-80% height inside 50-52%
+   width) for balanced, airy visual proportion.
    ============================================================================ */
 function FullScreenServicesHero({
   totalCount,
@@ -554,121 +594,211 @@ function FullScreenServicesHero({
     restDelta: 0.001,
   });
 
-  const stageScale = useTransform(smoothScroll, [0, 1], [1, 0.94]);
-  const stageY = useTransform(smoothScroll, [0, 1], [0, 68]);
-  const stageOpacity = useTransform(smoothScroll, [0, 0.85, 1], [1, 0.86, 0.68]);
-  const cueOpacity = useTransform(smoothScroll, [0, 0.35], [1, 0]);
+  const copyY = useTransform(smoothScroll, [0, 1], [0, -32]);
+  const copyOpacity = useTransform(smoothScroll, [0, 0.85], [1, 0.25]);
+  const artworkY = useTransform(smoothScroll, [0, 1], [0, 36]);
+  const artworkScale = useTransform(smoothScroll, [0, 1], [1, 0.96]);
 
   return (
     <section
       ref={heroRef}
-      aria-label="End-to-end training and IT services hero"
-      className="relative w-full min-h-[calc(100svh-72px)] lg:min-h-[calc(100dvh-78px)] bg-[#FEFEFE] flex flex-col justify-between overflow-hidden"
+      aria-label="TRI CUBE End-to-End Training and IT Services Hero"
+      className="relative w-full min-h-[calc(100dvh-72px)] lg:h-[calc(100dvh-78px)] lg:max-h-[calc(100dvh-78px)] overflow-hidden bg-[#FFFFFF] select-none"
     >
-      {/* Accessible semantic heading for SEO and screen readers */}
-      <h1 className="sr-only">
-        End-to-end training &amp; IT services — From your first line of code to your
-        first client project, one campus, one team.
-      </h1>
-
-      {/* Full-Screen Responsive Artwork Container */}
+      {/* Right-Side Full-Screen Hero Artwork — slightly reduced scale for balanced breathing room */}
       <motion.div
-        initial={prefersReduced ? false : { opacity: 0, scale: 1.02 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
-        style={
-          prefersReduced
-            ? undefined
-            : {
-                scale: stageScale,
-                y: stageY,
-                opacity: stageOpacity,
-              }
-        }
-        className="relative w-full flex-1 flex items-center justify-center will-change-transform"
+        style={{
+          ...(prefersReduced ? {} : { y: artworkY, scale: artworkScale }),
+          maskImage:
+            "linear-gradient(to right, transparent 0%, black 12%, black 100%), linear-gradient(to bottom, transparent 0%, black 5%, black 96%, transparent 100%)",
+          maskComposite: "intersect",
+          WebkitMaskImage:
+            "linear-gradient(to right, transparent 0%, black 12%, black 100%), linear-gradient(to bottom, transparent 0%, black 5%, black 96%, transparent 100%)",
+          WebkitMaskComposite: "source-in",
+        }}
+        className="hidden lg:flex pointer-events-none absolute inset-y-0 right-0 w-[50%] xl:w-[52%] h-full items-center justify-end pr-6 xl:pr-14 overflow-hidden will-change-transform"
       >
-        <div className="relative w-full max-w-[1920px] aspect-[1671/941] mx-auto select-none">
-          <img
-            src="/images/services/end-to-end-training-it-services.png"
-            alt="End-to-end training and IT services — TRI CUBE Digital Solutions"
-            className="h-full w-full object-contain"
-            fetchPriority="high"
-            draggable={false}
-          />
+        <motion.img
+          src="/images/services/services-hero-artwork.png"
+          alt="End-to-end training and IT services — TRI CUBE engineer at workspace"
+          initial={prefersReduced ? false : { opacity: 0, scale: 0.96, x: 20 }}
+          animate={
+            prefersReduced
+              ? { opacity: 1 }
+              : {
+                  opacity: 1,
+                  scale: 1,
+                  x: 0,
+                  y: [-5, 5, -5],
+                }
+          }
+          transition={{
+            opacity: { duration: 0.55, ease: [0.22, 1, 0.36, 1] },
+            scale: { duration: 0.55, ease: [0.22, 1, 0.36, 1] },
+            x: { duration: 0.55, ease: [0.22, 1, 0.36, 1] },
+            y: { duration: 6.5, repeat: Infinity, ease: "easeInOut" },
+          }}
+          className="h-[76%] xl:h-[79%] w-auto max-w-full object-contain object-right"
+          fetchPriority="high"
+          draggable={false}
+        />
 
-          {/* Interactive Hotspot 1: Mapped over "Explore services ->" button in artwork */}
-          <button
-            type="button"
-            onClick={onExploreClick}
-            aria-label="Explore services"
-            title="Explore services"
-            className="hidden sm:block absolute left-[4.15%] top-[74.6%] w-[19.3%] h-[8.2%] rounded-full cursor-pointer transition-all duration-300 hover:ring-4 hover:ring-[#E09A3B]/35 hover:shadow-[0_12px_28px_rgba(224,154,59,0.38)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#E09A3B]"
-          />
-
-          {/* Interactive Hotspot 2: Mapped over "Get in touch ->" button in artwork */}
-          <Link
-            to="/contact"
-            aria-label="Get in touch"
-            title="Get in touch"
-            className="hidden sm:block absolute left-[24.4%] top-[74.6%] w-[17.9%] h-[8.2%] rounded-full cursor-pointer transition-all duration-300 hover:bg-[#E09A3B]/[0.08] hover:ring-4 hover:ring-[#E09A3B]/30 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#E09A3B]"
-          />
-        </div>
+        {/* Soft white blend on the left edge */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-y-0 left-0 w-20 xl:w-28 bg-gradient-to-r from-[#FFFFFF] via-[#FFFFFF]/85 to-transparent"
+        />
       </motion.div>
 
-      {/* Mobile-Only Tactile Command Panel (fills portrait viewport cleanly below 16:9 banner) */}
-      <div className="sm:hidden px-5 pb-8 pt-4 bg-gradient-to-b from-[#FEFEFE] to-[var(--neo-canvas)]">
-        <div className="neo-extruded p-5 space-y-4">
-          <div className="flex flex-wrap gap-2">
-            {["22+ Tracks", "Mentor-Led", "Verified Delivery"].map((chip) => (
-              <span
-                key={chip}
-                className="neo-inset px-3 py-1 text-[11px] font-bold text-zinc-700"
-              >
-                {chip}
-              </span>
-            ))}
-          </div>
-          <div className="grid grid-cols-1 gap-3">
-            <button
-              type="button"
-              onClick={onExploreClick}
-              className="neo-cta-gold inline-flex items-center justify-center gap-2 py-3.5 text-sm font-extrabold"
-            >
-              <span>Explore {totalCount}+ Services</span>
-              <ArrowDown className="h-4 w-4" />
-            </button>
-            <Link
-              to="/contact"
-              className="neo-cta-porcelain inline-flex items-center justify-center gap-2 py-3 text-sm font-extrabold"
-            >
-              <span>Get in Touch</span>
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-        </div>
-      </div>
-
-      {/* Desktop Bottom Seam Blend + Floating Neomorphic Scroll Cue */}
-      <div className="hidden sm:flex relative z-10 w-full flex-col items-center pb-5 pt-2 bg-gradient-to-b from-transparent via-[#FEFEFE]/80 to-[var(--neo-canvas)]">
-        <motion.button
-          type="button"
-          onClick={onExploreClick}
-          style={prefersReduced ? undefined : { opacity: cueOpacity }}
-          animate={prefersReduced ? undefined : { y: [0, 5, 0] }}
-          transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
-          className="neo-orb inline-flex items-center gap-2.5 rounded-full px-5 py-2 text-xs font-extrabold tracking-wide text-zinc-700 hover:text-[#C87E20] cursor-pointer"
+      {/* Main Single-Screen Content Container */}
+      <div className="relative z-10 flex h-full w-full flex-col justify-between px-6 sm:px-10 lg:px-16 xl:px-20 py-4 sm:py-5 lg:py-[2.6dvh]">
+        {/* Left Column Copy + Staggered Entrance + Magnetic CTAs */}
+        <motion.div
+          style={prefersReduced ? undefined : { y: copyY, opacity: copyOpacity }}
+          initial="hidden"
+          animate="visible"
+          variants={{
+            hidden: {},
+            visible: {
+              transition: { staggerChildren: 0.08, delayChildren: 0.05 },
+            },
+          }}
+          className="my-auto w-full lg:max-w-[49%] xl:max-w-[47%]"
         >
-          <span className="h-2 w-2 rounded-full bg-[#E09A3B] animate-ping" />
-          <span>Scroll to Explore {totalCount}+ Sculpted Services</span>
-          <ArrowDown className="h-3.5 w-3.5 text-[#E09A3B]" />
-        </motion.button>
+          <div className="flex flex-col items-start">
+            {/* Eyebrow Pill Badge */}
+            <motion.div
+              variants={{
+                hidden: { opacity: 0, y: 14 },
+                visible: {
+                  opacity: 1,
+                  y: 0,
+                  transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] },
+                },
+              }}
+              className="inline-flex items-center gap-2.5 rounded-full bg-[#FDF3E6] border border-[#E09A3B]/25 px-4 py-1.5 mb-[1.6dvh]"
+            >
+              <span className="h-2 w-2 rounded-full bg-[#E09A3B]" />
+              <span className="text-[11px] xl:text-[12px] font-bold uppercase tracking-[0.2em] text-[#E09A3B]">
+                Services
+              </span>
+            </motion.div>
+
+            {/* Main Display Heading */}
+            <motion.h1
+              variants={{
+                hidden: { opacity: 0, y: 18 },
+                visible: {
+                  opacity: 1,
+                  y: 0,
+                  transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
+                },
+              }}
+              className="font-display font-extrabold tracking-[-0.032em] text-[#081226] leading-[1.05] text-[clamp(2.35rem,4.1vw,4rem)]"
+            >
+              <span className="block">End-to-end</span>
+              <span className="block text-[#E09A3B] mt-0.5">training &amp;</span>
+              <span className="block text-[#E09A3B] mt-0.5">IT services.</span>
+            </motion.h1>
+
+            {/* Subtitle / Description */}
+            <motion.p
+              variants={{
+                hidden: { opacity: 0, y: 16 },
+                visible: {
+                  opacity: 1,
+                  y: 0,
+                  transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
+                },
+              }}
+              className="mt-[1.6dvh] max-w-[520px] text-[clamp(0.92rem,1.02vw,1.06rem)] leading-[1.55] text-[#4A5568] font-normal"
+            >
+              From your first line of code to your first client project — one
+              campus, one team.
+            </motion.p>
+
+            {/* Action Buttons */}
+            <motion.div
+              variants={{
+                hidden: { opacity: 0, y: 16 },
+                visible: {
+                  opacity: 1,
+                  y: 0,
+                  transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
+                },
+              }}
+              className="mt-[2.4dvh] flex flex-wrap items-center gap-3.5 sm:gap-4"
+            >
+              <Magnet padding={55} magnetStrength={3.5} maxOffset={9}>
+                <button
+                  type="button"
+                  onClick={onExploreClick}
+                  className="inline-flex items-center justify-center gap-2.5 rounded-full bg-[#E09A3B] px-7 sm:px-8 py-3 sm:py-3.5 text-[0.92rem] sm:text-[0.98rem] font-bold text-[#FFFFFF] shadow-[0_12px_28px_-6px_rgba(224,154,59,0.55)] transition-all duration-200 hover:bg-[#cf892b] cursor-pointer"
+                >
+                  <span>Explore services</span>
+                  <ArrowRight className="h-4 w-4" strokeWidth={2.5} />
+                </button>
+              </Magnet>
+
+              <Link
+                to="/contact"
+                className="inline-flex items-center justify-center gap-2 rounded-full border-[1.75px] border-[#E09A3B] bg-[#FFFFFF] px-7 sm:px-8 py-3 sm:py-3.5 text-[0.92rem] sm:text-[0.98rem] font-bold text-[#E09A3B] transition-all duration-200 hover:bg-[#FDF3E6] hover:-translate-y-0.5"
+              >
+                <span>Get in touch</span>
+                <ArrowRight className="h-4 w-4" strokeWidth={2.5} />
+              </Link>
+            </motion.div>
+          </div>
+
+          {/* Mobile / Tablet Artwork Preview — compact & well-proportioned */}
+          <div className="mt-6 block lg:hidden w-full max-w-sm mx-auto overflow-hidden rounded-2xl border border-[#E09A3B]/20 bg-[#FFFFFF] p-2 shadow-sm">
+            <img
+              src="/images/services/services-hero-artwork.png"
+              alt="End-to-end training and IT services — TRI CUBE engineer at workspace"
+              className="w-full max-h-[280px] object-contain mx-auto"
+            />
+          </div>
+        </motion.div>
+
+        {/* Bottom Bar: Student Avatars Rating (Left) + Scroll Cue (Right) */}
+        <div className="relative z-20 mt-4 lg:mt-0 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center">
+              <img
+                src="/hero/student-avatars.png"
+                alt="4,200+ TRI CUBE students"
+                className="h-9 sm:h-10 w-auto object-contain"
+              />
+              <span className="-ml-2 inline-flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full border-2 border-[#FFFFFF] bg-[#F1F5F9] text-xs sm:text-sm font-bold text-[#475569] shadow-sm">
+                +
+              </span>
+            </div>
+            <p className="text-[0.88rem] sm:text-[0.95rem] text-[#64748B]">
+              <strong className="font-bold text-[#0F172A]">4.9/5</strong> from
+              4,200+ students
+            </p>
+          </div>
+
+          <motion.button
+            type="button"
+            onClick={onExploreClick}
+            animate={prefersReduced ? undefined : { y: [0, 4, 0] }}
+            transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+            className="hidden sm:inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-4 py-1.5 text-xs font-bold text-[#475569] hover:border-[#E09A3B] hover:text-[#E09A3B] transition-colors cursor-pointer"
+          >
+            <span className="h-1.5 w-1.5 rounded-full bg-[#E09A3B]" />
+            <span>{totalCount}+ Services Below</span>
+            <ArrowDown className="h-3.5 w-3.5 text-[#E09A3B]" />
+          </motion.button>
+        </div>
       </div>
     </section>
   );
 }
 
 /* ============================================================================
-   2. ASYMMETRIC NEOMORPHIC ARCHITECTURE & FLAGSHIP SPOTLIGHT BENTO
+   3. 4-DOMAIN STUDIO MATRIX & FLAGSHIP FAST-TRACK SPOTLIGHT BENTO
+   Clean modern editorial cards with SpotlightCard cursor-beam border glow.
    ============================================================================ */
 function FlagshipArchitectureBento({
   flagship,
@@ -682,33 +812,32 @@ function FlagshipArchitectureBento({
   const prefersReduced = useReducedMotion();
 
   return (
-    <section className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12 pt-14 pb-6">
-      <div className="grid gap-8 lg:grid-cols-12 items-stretch">
-        {/* Left 7 Cols: 4-Vertical Neomorphic Architecture Matrix */}
+    <section className="mx-auto max-w-7xl px-6 sm:px-10 lg:px-14 pt-16 pb-4">
+      <div className="grid gap-6 lg:grid-cols-12 items-stretch">
+        {/* Left 7 Cols: 4-Vertical Studio Matrix */}
         <motion.div
-          initial={prefersReduced ? false : { opacity: 0, x: -32 }}
-          whileInView={{ opacity: 1, x: 0 }}
+          initial={prefersReduced ? false : { opacity: 0, y: 28 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: false, amount: 0.2 }}
-          transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-          className="lg:col-span-7 neo-extruded p-6 sm:p-8 lg:p-9 flex flex-col justify-between"
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          className="lg:col-span-7 rounded-3xl border border-zinc-200/80 bg-[#FAFAFC] p-6 sm:p-8 lg:p-9 flex flex-col justify-between dark:border-zinc-800 dark:bg-zinc-900/60"
         >
           <div>
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <span className="font-mono-tech text-[11px] font-bold uppercase tracking-[0.2em] text-[#C87E20] dark:text-[#F0A847]">
-                ARCHITECTURE // 04 SERVICE PILLARS
+              <span className="font-mono-tech text-[11px] font-bold uppercase tracking-[0.2em] text-[#E09A3B]">
+                STUDIO ECOSYSTEM // 04 PILLARS
               </span>
-              <span className="neo-inset px-3 py-1 text-[11px] font-bold text-zinc-600 dark:text-zinc-300">
+              <span className="rounded-full border border-zinc-200 bg-white px-3 py-1 text-[11px] font-semibold text-zinc-600 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300">
                 One Campus · One Engineering Team
               </span>
             </div>
 
-            <h2 className="font-display mt-3 text-2xl sm:text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-50">
+            <h2 className="font-display mt-3 text-2xl sm:text-3xl font-extrabold tracking-tight text-[#081226] dark:text-zinc-50">
               Four Integrated Studios.{" "}
               <span className="gold-text">Zero Handoff Friction.</span>
             </h2>
             <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-              Select any vertical below to jump straight into its dedicated service
-              modules.
+              Select any vertical below to filter its dedicated service tracks.
             </p>
           </div>
 
@@ -721,7 +850,7 @@ function FlagshipArchitectureBento({
                   key={d.key}
                   type="button"
                   onClick={() => onSelectDomain(d.key)}
-                  initial={prefersReduced ? false : { opacity: 0, y: 20 }}
+                  initial={prefersReduced ? false : { opacity: 0, y: 18 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: false, amount: 0.2 }}
                   transition={{
@@ -729,19 +858,27 @@ function FlagshipArchitectureBento({
                     delay: idx * 0.07,
                     ease: [0.22, 1, 0.36, 1],
                   }}
-                  whileHover={prefersReduced ? undefined : { y: -4 }}
-                  whileTap={prefersReduced ? undefined : { scale: 0.98 }}
-                  className="group neo-inset p-4 sm:p-5 text-left transition-all duration-300 hover:border-[#E09A3B]/45 cursor-pointer"
+                  whileHover={
+                    prefersReduced
+                      ? undefined
+                      : {
+                          y: -4,
+                          transition: { type: "spring", stiffness: 360, damping: 24 },
+                        }
+                  }
+                  whileTap={prefersReduced ? undefined : { scale: 0.985 }}
+                  className="group relative rounded-2xl border border-zinc-200/90 bg-white p-5 text-left shadow-[0_1px_2px_rgba(15,23,42,0.03)] transition-colors duration-200 hover:border-[#E09A3B]/60 hover:shadow-[0_14px_30px_-14px_rgba(224,154,59,0.22)] cursor-pointer dark:border-zinc-800 dark:bg-zinc-950"
                 >
                   <div className="flex items-center justify-between gap-2">
-                    <div className="neo-orb grid h-10 w-10 place-items-center rounded-xl text-[#E09A3B] group-hover:scale-105 transition-transform">
+                    <div className="grid h-10 w-10 place-items-center rounded-xl bg-[#FDF3E6] text-[#E09A3B] transition-transform duration-300 group-hover:scale-110 group-hover:bg-[#E09A3B] group-hover:text-white dark:bg-[#E09A3B]/15">
                       <Icon className="h-5 w-5" />
                     </div>
-                    <span className="font-mono-tech text-[10px] font-bold tracking-widest text-zinc-400 group-hover:text-[#E09A3B] transition-colors">
+                    <span className="font-mono-tech inline-flex items-center gap-1 text-[10px] font-bold tracking-widest text-zinc-400 group-hover:text-[#E09A3B] transition-colors">
                       {count > 0 ? `${count} TRACKS` : d.code}
+                      <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                     </span>
                   </div>
-                  <h3 className="font-display mt-3.5 text-base font-extrabold text-zinc-900 group-hover:text-[#C87E20] dark:text-zinc-100 dark:group-hover:text-[#F0A847] transition-colors">
+                  <h3 className="font-display mt-3.5 text-base font-extrabold text-[#081226] group-hover:text-[#E09A3B] dark:text-zinc-100 transition-colors">
                     {d.title}
                   </h3>
                   <p className="mt-1 text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">
@@ -753,101 +890,104 @@ function FlagshipArchitectureBento({
           </div>
         </motion.div>
 
-        {/* Right 5 Cols: Flagship Express Spotlight Console */}
+        {/* Right 5 Cols: Flagship Express Spotlight Card */}
         {flagship && (
           <motion.div
-            initial={prefersReduced ? false : { opacity: 0, x: 32 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={prefersReduced ? false : { opacity: 0, y: 28 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: false, amount: 0.2 }}
-            transition={{ duration: 0.65, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
-            className="lg:col-span-5 neo-extruded neo-extruded-interactive relative overflow-hidden p-6 sm:p-8 flex flex-col justify-between"
+            transition={{ duration: 0.6, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+            className="lg:col-span-5 flex"
           >
-            {/* Top gold accent */}
-            <div
-              aria-hidden="true"
-              className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-[#E09A3B] via-[#F4BC68] to-[#C87E20]"
-            />
-
-            <div>
-              <div className="flex items-center justify-between gap-3">
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-[#E09A3B]/15 border border-[#E09A3B]/35 px-3.5 py-1 text-[11px] font-extrabold uppercase tracking-wider text-[#C87E20] dark:text-[#F0A847]">
-                  <Zap className="h-3.5 w-3.5 text-[#E09A3B]" />
-                  Flagship Fast-Track
-                </span>
-                {flagship.svc.price > (flagship.svc.offerPrice ?? flagship.svc.price) && (
-                  <span className="font-mono-tech rounded-full bg-emerald-500/15 border border-emerald-500/30 px-3 py-1 text-[11px] font-extrabold text-emerald-700 dark:text-emerald-400">
-                    SAVE{" "}
-                    {Math.round(
-                      ((flagship.svc.price -
-                        (flagship.svc.offerPrice ?? flagship.svc.price)) /
-                        flagship.svc.price) *
-                        100
-                    )}
-                    %
-                  </span>
-                )}
-              </div>
-
-              {/* Recessed Media Bezel */}
-              {absoluteMedia(flagship.svc.imageUrl) && (
-                <div className="mt-5 neo-inset p-2.5">
-                  <div className="aspect-[16/9] overflow-hidden rounded-xl">
-                    <img
-                      src={absoluteMedia(flagship.svc.imageUrl)}
-                      alt={flagship.svc.title}
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
-                </div>
-              )}
-
-              <h3 className="font-display mt-5 text-2xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-50">
-                {flagship.svc.title}
-              </h3>
-
-              <ul className="mt-4 space-y-2">
-                {splitFeatures(flagship.svc.features)
-                  .slice(0, 3)
-                  .map((feat) => (
-                    <li
-                      key={feat}
-                      className="flex items-center gap-2.5 text-xs sm:text-sm font-medium text-zinc-600 dark:text-zinc-300"
-                    >
-                      <CheckCircle2 className="h-4 w-4 shrink-0 text-[#E09A3B]" />
-                      <span>{feat}</span>
-                    </li>
-                  ))}
-              </ul>
-            </div>
-
-            {/* Sunken Pricing & Instant Booking Dock */}
-            <div className="mt-7 neo-inset p-4 flex flex-wrap items-center justify-between gap-4">
+            <SpotlightCard
+              theme="light"
+              spotlightColor="#E09A3B"
+              intensity={0.22}
+              borderGlow={0.9}
+              spotlightSize={320}
+              proximity={100}
+              className="w-full !p-6 sm:!p-8 flex flex-col justify-between dark:![background-color:#18181b]"
+            >
               <div>
-                <div className="text-[11px] font-bold uppercase tracking-wider text-zinc-400">
-                  Turnaround · {flagship.svc.duration}
-                </div>
-                <div className="mt-0.5 flex items-baseline gap-2">
-                  <span className="font-display text-3xl font-extrabold gold-text">
-                    ₹{(flagship.svc.offerPrice ?? flagship.svc.price).toLocaleString()}
+                <div className="flex items-center justify-between gap-3">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-[#FDF3E6] border border-[#E09A3B]/30 px-3.5 py-1 text-[11px] font-extrabold uppercase tracking-wider text-[#E09A3B]">
+                    <Zap className="h-3.5 w-3.5" />
+                    Flagship Fast-Track
                   </span>
                   {flagship.svc.price >
                     (flagship.svc.offerPrice ?? flagship.svc.price) && (
-                    <span className="text-xs font-semibold text-zinc-400 line-through">
-                      ₹{flagship.svc.price.toLocaleString()}
+                    <span className="font-mono-tech rounded-full bg-emerald-50 border border-emerald-200 px-3 py-1 text-[11px] font-extrabold text-emerald-700 dark:bg-emerald-950/50 dark:border-emerald-800 dark:text-emerald-400">
+                      SAVE{" "}
+                      {Math.round(
+                        ((flagship.svc.price -
+                          (flagship.svc.offerPrice ?? flagship.svc.price)) /
+                          flagship.svc.price) *
+                          100
+                      )}
+                      %
                     </span>
                   )}
                 </div>
+
+                {absoluteMedia(flagship.svc.imageUrl) && (
+                  <div className="mt-5 aspect-[16/9] overflow-hidden rounded-2xl border border-zinc-200/70 bg-zinc-100 dark:border-zinc-800">
+                    <img
+                      src={absoluteMedia(flagship.svc.imageUrl)}
+                      alt={flagship.svc.title}
+                      className="h-full w-full object-cover transition-transform duration-500 hover:scale-[1.03]"
+                    />
+                  </div>
+                )}
+
+                <h3 className="font-display mt-5 text-2xl font-extrabold tracking-tight text-[#081226] dark:text-zinc-50">
+                  {flagship.svc.title}
+                </h3>
+
+                <ul className="mt-4 space-y-2">
+                  {splitFeatures(flagship.svc.features)
+                    .slice(0, 3)
+                    .map((feat) => (
+                      <li
+                        key={feat}
+                        className="flex items-center gap-2.5 text-xs sm:text-sm font-medium text-zinc-600 dark:text-zinc-300"
+                      >
+                        <CheckCircle2 className="h-4 w-4 shrink-0 text-[#E09A3B]" />
+                        <span>{feat}</span>
+                      </li>
+                    ))}
+                </ul>
               </div>
 
-              <Link
-                to="/services/$slug"
-                params={{ slug: flagship.svc.slug }}
-                className="neo-cta-gold inline-flex items-center gap-2 px-6 py-3 text-xs sm:text-sm font-extrabold"
-              >
-                <span>Start Now</span>
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            </div>
+              <div className="mt-7 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-zinc-100 bg-[#FAFAFC] p-4 dark:border-zinc-800 dark:bg-zinc-900">
+                <div>
+                  <div className="text-[11px] font-bold uppercase tracking-wider text-zinc-400">
+                    Turnaround · {flagship.svc.duration}
+                  </div>
+                  <div className="mt-0.5 flex items-baseline gap-2">
+                    <span className="font-display text-3xl font-extrabold text-[#081226] dark:text-white">
+                      ₹{(flagship.svc.offerPrice ?? flagship.svc.price).toLocaleString()}
+                    </span>
+                    {flagship.svc.price >
+                      (flagship.svc.offerPrice ?? flagship.svc.price) && (
+                      <span className="text-xs font-semibold text-zinc-400 line-through">
+                        ₹{flagship.svc.price.toLocaleString()}
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                <Magnet padding={45} magnetStrength={3.5} maxOffset={7}>
+                  <Link
+                    to="/services/$slug"
+                    params={{ slug: flagship.svc.slug }}
+                    className="inline-flex items-center gap-2 rounded-full bg-[#E09A3B] px-6 py-3 text-xs sm:text-sm font-bold text-white shadow-[0_10px_24px_-6px_rgba(224,154,59,0.5)] transition-all hover:bg-[#cf892b]"
+                  >
+                    <span>Start Now</span>
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+                </Magnet>
+              </div>
+            </SpotlightCard>
           </motion.div>
         )}
       </div>
@@ -856,11 +996,11 @@ function FlagshipArchitectureBento({
 }
 
 /* ============================================================================
-   3. SCULPTED TACTILE NEOMORPHIC SERVICE CARD
-   Features multi-layered dual-directional shadows, recessed media bezel,
-   cursor-tracking warm gold specular sheen, and Framer Motion scroll triggers.
+   4. SERVICE SPOTLIGHT CARD
+   Clean editorial card with proximity-reactive SpotlightCard border beam,
+   blur-to-crisp scroll reveal, and spring elevation hover choreography.
    ============================================================================ */
-function ServiceNeomorphicCard({
+function ServiceSpotlightCard({
   service,
   domain,
   serial,
@@ -871,7 +1011,6 @@ function ServiceNeomorphicCard({
   serial: string;
   index: number;
 }) {
-  const cardRef = useRef<HTMLElement | null>(null);
   const prefersReduced = useReducedMotion();
 
   const rating = (service.rating ?? 4.9).toFixed(1);
@@ -884,80 +1023,72 @@ function ServiceNeomorphicCard({
     ? Math.round(((service.price - offerPrice) / service.price) * 100)
     : 0;
 
-  const handleMouseMove = (e: MouseEvent<HTMLElement>) => {
-    const el = cardRef.current;
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    el.style.setProperty("--spot-x", `${e.clientX - rect.left}px`);
-    el.style.setProperty("--spot-y", `${e.clientY - rect.top}px`);
-  };
-
   return (
     <motion.article
-      ref={cardRef}
       layout="position"
-      onMouseMove={handleMouseMove}
-      initial={prefersReduced ? false : { opacity: 0, y: 42, scale: 0.95 }}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.94, transition: { duration: 0.2 } }}
+      initial={
+        prefersReduced
+          ? false
+          : { opacity: 0, y: 32, scale: 0.97, filter: "blur(5px)" }
+      }
+      whileInView={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
+      exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.18 } }}
       viewport={{ once: false, amount: 0.14 }}
       transition={{
-        duration: 0.58,
-        delay: (index % 3) * 0.08,
+        duration: 0.52,
+        delay: (index % 3) * 0.07,
         ease: [0.22, 1, 0.36, 1],
       }}
       whileHover={
         prefersReduced
           ? undefined
           : {
-              y: -8,
-              transition: { type: "spring", stiffness: 320, damping: 22 },
+              y: -7,
+              transition: { type: "spring", stiffness: 340, damping: 24 },
             }
       }
-      className="group neo-extruded neo-extruded-interactive relative flex flex-col justify-between overflow-hidden p-5 sm:p-6 will-change-transform"
+      className="group h-full will-change-transform"
     >
-      {/* Pointer-following warm gold specular sheen */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-        style={{
-          background:
-            "radial-gradient(380px circle at var(--spot-x, 50%) var(--spot-y, 0%), rgba(224, 154, 59, 0.13), transparent 70%)",
-        }}
-      />
+      <SpotlightCard
+        theme="light"
+        spotlightColor="#E09A3B"
+        intensity={0.2}
+        borderGlow={0.85}
+        spotlightSize={270}
+        proximity={85}
+        className="h-full !p-5 sm:!p-6 flex flex-col justify-between dark:![background-color:#18181b]"
+      >
+        <div>
+          {/* Top Metadata Row */}
+          <div className="mb-3.5 flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2 min-w-0">
+              <span className="font-mono-tech text-[11px] font-bold text-[#E09A3B]">
+                #{serial}
+              </span>
+              <span className="h-1 w-1 rounded-full bg-zinc-300 dark:bg-zinc-700" />
+              <span className="truncate text-[11px] font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+                {domain}
+              </span>
+            </div>
 
-      <div className="relative z-10">
-        {/* Top Hardware Telemetry Header */}
-        <div className="mb-4 flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2 min-w-0">
-            <span className="font-mono-tech text-[11px] font-bold text-[#E09A3B]">
-              #{serial}
-            </span>
-            <span className="h-1 w-1 rounded-full bg-zinc-300 dark:bg-zinc-600" />
-            <span className="truncate text-[11px] font-extrabold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
-              {domain}
+            <span className="inline-flex shrink-0 items-center gap-1 rounded-full border border-zinc-200/80 bg-[#FAFAFC] px-2.5 py-0.5 text-xs font-bold text-zinc-800 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100">
+              <Star className="h-3 w-3 fill-[#E09A3B] text-[#E09A3B]" />
+              {rating}
             </span>
           </div>
 
-          <span className="neo-orb inline-flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-xs font-extrabold text-zinc-800 dark:text-zinc-100">
-            <Star className="h-3 w-3 fill-[#E09A3B] text-[#E09A3B]" />
-            {rating}
-          </span>
-        </div>
-
-        {/* Recessed Concave Media Bezel */}
-        <Link
-          to="/services/$slug"
-          params={{ slug: service.slug }}
-          className="block neo-inset p-2.5 transition-transform duration-300"
-        >
-          <div className="relative aspect-[16/10] overflow-hidden rounded-xl bg-zinc-900/5 dark:bg-zinc-950">
+          {/* Media Preview Frame */}
+          <Link
+            to="/services/$slug"
+            params={{ slug: service.slug }}
+            className="block relative aspect-[16/10] overflow-hidden rounded-2xl border border-zinc-200/70 bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-950"
+          >
             {img ? (
               <img
                 src={img}
                 alt={service.title}
                 loading="lazy"
-                className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
+                className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.05]"
               />
             ) : (
               <div className="grid h-full w-full place-items-center text-zinc-400">
@@ -966,84 +1097,83 @@ function ServiceNeomorphicCard({
             )}
 
             {discountPct > 0 && (
-              <span className="font-mono-tech absolute top-2.5 right-2.5 rounded-full bg-zinc-950/80 backdrop-blur-md border border-[#E09A3B]/45 px-2.5 py-0.5 text-[10px] font-extrabold tracking-wider text-[#F4BA63] shadow-md">
+              <span className="font-mono-tech absolute top-2.5 right-2.5 rounded-full bg-[#081226]/85 backdrop-blur-md border border-[#E09A3B]/40 px-2.5 py-0.5 text-[10px] font-extrabold tracking-wider text-[#F4BA63]">
                 {discountPct}% OFF
               </span>
             )}
-          </div>
-        </Link>
-
-        {/* Card Title & Summary */}
-        <div className="mt-5">
-          <Link
-            to="/services/$slug"
-            params={{ slug: service.slug }}
-            className="block focus-visible:outline-none"
-          >
-            <h3 className="font-display text-lg sm:text-[19px] font-extrabold leading-snug tracking-tight text-zinc-900 transition-colors group-hover:text-[#C87E20] dark:text-zinc-50 dark:group-hover:text-[#F0A847]">
-              {service.title}
-            </h3>
           </Link>
 
-          {desc && (
-            <p className="mt-2 text-xs sm:text-sm leading-relaxed text-zinc-600 line-clamp-2 dark:text-zinc-400">
-              {desc}
-            </p>
+          {/* Title & Description */}
+          <div className="mt-4">
+            <Link
+              to="/services/$slug"
+              params={{ slug: service.slug }}
+              className="block focus-visible:outline-none"
+            >
+              <h3 className="font-display text-lg font-extrabold leading-snug tracking-tight text-[#081226] transition-colors group-hover:text-[#E09A3B] dark:text-zinc-50">
+                {service.title}
+              </h3>
+            </Link>
+
+            {desc && (
+              <p className="mt-1.5 text-xs sm:text-sm leading-relaxed text-zinc-600 line-clamp-2 dark:text-zinc-400">
+                {desc}
+              </p>
+            )}
+          </div>
+
+          {/* Feature Pills */}
+          {features.length > 0 && (
+            <div className="mt-4 flex flex-wrap gap-1.5">
+              {features.slice(0, 3).map((feat) => (
+                <span
+                  key={feat}
+                  className="inline-flex items-center gap-1 rounded-lg border border-zinc-200/80 bg-[#FAFAFC] px-2.5 py-1 text-[11px] font-medium text-zinc-700 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300"
+                >
+                  <CheckCircle2 className="h-3 w-3 shrink-0 text-[#E09A3B]" />
+                  <span className="truncate max-w-[190px]">{feat}</span>
+                </span>
+              ))}
+            </div>
           )}
         </div>
 
-        {/* Tactile Deliverable Feature Chips */}
-        {features.length > 0 && (
-          <div className="mt-4 flex flex-wrap gap-1.5">
-            {features.slice(0, 3).map((feat) => (
-              <span
-                key={feat}
-                className="inline-flex items-center gap-1 rounded-lg bg-white/65 dark:bg-white/[0.04] border border-white/80 dark:border-white/[0.07] px-2.5 py-1 text-[11px] font-semibold text-zinc-700 dark:text-zinc-300 shadow-[2px_2px_5px_rgba(160,175,198,0.28),-2px_-2px_5px_rgba(255,255,255,0.8)] dark:shadow-none"
-              >
-                <CheckCircle2 className="h-3 w-3 shrink-0 text-[#E09A3B]" />
-                <span className="truncate max-w-[190px]">{feat}</span>
-              </span>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Recessed Bottom Pricing & Action Dock */}
-      <div className="relative z-10 mt-6 neo-inset px-4 py-3 flex items-center justify-between gap-3">
-        <div className="min-w-0">
-          <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-zinc-500 dark:text-zinc-400">
-            <Calendar className="h-3 w-3 text-[#E09A3B] shrink-0" />
-            <span className="truncate">{service.duration}</span>
-          </span>
-          <div className="mt-0.5 flex items-baseline gap-1.5">
-            <span className="font-display text-lg sm:text-xl font-extrabold text-zinc-900 dark:text-zinc-50">
-              ₹{offerPrice.toLocaleString()}
+        {/* Bottom Pricing & CTA Row */}
+        <div className="mt-6 flex items-center justify-between gap-3 border-t border-zinc-100 pt-4 dark:border-zinc-800">
+          <div className="min-w-0">
+            <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-zinc-500 dark:text-zinc-400">
+              <Calendar className="h-3 w-3 text-[#E09A3B] shrink-0" />
+              <span className="truncate">{service.duration}</span>
             </span>
-            {hasDiscount && (
-              <span className="text-[11px] font-semibold text-zinc-400 line-through">
-                ₹{service.price.toLocaleString()}
+            <div className="mt-0.5 flex items-baseline gap-1.5">
+              <span className="font-display text-lg sm:text-xl font-extrabold text-[#081226] dark:text-zinc-50">
+                ₹{offerPrice.toLocaleString()}
               </span>
-            )}
+              {hasDiscount && (
+                <span className="text-[11px] font-medium text-zinc-400 line-through">
+                  ₹{service.price.toLocaleString()}
+                </span>
+              )}
+            </div>
           </div>
-        </div>
 
-        <Link
-          to="/services/$slug"
-          params={{ slug: service.slug }}
-          className="neo-cta-gold shrink-0 inline-flex items-center gap-1.5 px-4 py-2.5 text-xs font-extrabold"
-        >
-          <span>Explore</span>
-          <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
-        </Link>
-      </div>
+          <Link
+            to="/services/$slug"
+            params={{ slug: service.slug }}
+            className="shrink-0 inline-flex items-center gap-1.5 rounded-full bg-[#081226] px-4 py-2.5 text-xs font-bold text-white transition-all duration-200 group-hover:bg-[#E09A3B] group-hover:shadow-[0_8px_20px_-6px_rgba(224,154,59,0.55)] dark:bg-zinc-800"
+          >
+            <span>Explore</span>
+            <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
+          </Link>
+        </div>
+      </SpotlightCard>
     </motion.article>
   );
 }
 
 /* ============================================================================
-   4. SCROLL-DRIVEN 4-STEP DELIVERY PIPELINE
-   Links scroll position to an illuminated amber-gold progress spine across 4
-   extruded neomorphic execution pods.
+   5. SCROLL-DRIVEN 4-STEP DELIVERY PIPELINE
+   Clean architectural timeline with live scroll-linked gold progress line.
    ============================================================================ */
 function DeliveryPipelineSection() {
   const sectionRef = useRef<HTMLElement | null>(null);
@@ -1063,81 +1193,87 @@ function DeliveryPipelineSection() {
   return (
     <section
       ref={sectionRef}
-      className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12 py-16 lg:py-20"
+      className="border-t border-zinc-100 bg-[#FAFAFC] py-16 lg:py-22 dark:border-zinc-800/80 dark:bg-zinc-900/40"
     >
-      <motion.div
-        initial={prefersReduced ? false : { opacity: 0, y: 28 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: false, amount: 0.25 }}
-        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        className="text-center max-w-2xl mx-auto"
-      >
-        <span className="neo-orb inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-extrabold uppercase tracking-[0.18em] text-[#C87E20] dark:text-[#F0A847]">
-          <ShieldCheck className="h-3.5 w-3.5 text-[#E09A3B]" />
-          Execution Protocol
-        </span>
-        <h2 className="font-display mt-4 text-3xl sm:text-4xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-50">
-          From Checkout to <span className="gold-text">Production Delivery</span>
-        </h2>
-        <p className="mt-3 text-sm sm:text-base text-zinc-600 dark:text-zinc-400">
-          Every cohort seat, resume review, and software engagement follows a
-          transparent four-stage pipeline.
-        </p>
-      </motion.div>
-
-      <div className="relative mt-14">
-        {/* Desktop Recessed Connector Track + Scroll-Driven Gold Beam */}
-        <div
-          aria-hidden="true"
-          className="hidden lg:block absolute top-11 left-[10%] right-[10%] h-2.5 rounded-full neo-inset overflow-hidden"
+      <div className="mx-auto max-w-7xl px-6 sm:px-10 lg:px-14">
+        <motion.div
+          initial={prefersReduced ? false : { opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false, amount: 0.25 }}
+          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+          className="text-center max-w-2xl mx-auto"
         >
-          <motion.div
-            style={prefersReduced ? undefined : { scaleX: smoothLine }}
-            className="h-full w-full origin-left rounded-full bg-gradient-to-r from-[#E09A3B] via-[#F4BC68] to-[#C87E20] shadow-[0_0_16px_rgba(224,154,59,0.65)]"
-          />
-        </div>
+          <span className="inline-flex items-center gap-2 rounded-full bg-[#FDF3E6] border border-[#E09A3B]/25 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-[#E09A3B]">
+            <ShieldCheck className="h-3.5 w-3.5" />
+            Execution Protocol
+          </span>
+          <h2 className="font-display mt-4 text-3xl sm:text-4xl font-extrabold tracking-tight text-[#081226] dark:text-zinc-50">
+            From Checkout to{" "}
+            <span className="gold-text">Production Delivery</span>
+          </h2>
+          <p className="mt-3 text-sm sm:text-base text-zinc-600 dark:text-zinc-400">
+            Every cohort seat, resume review, and software engagement follows a
+            transparent four-stage pipeline.
+          </p>
+        </motion.div>
 
-        <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-4">
-          {DELIVERY_STEPS.map((item, idx) => {
-            const Icon = item.icon;
-            return (
-              <motion.div
-                key={item.step}
-                initial={prefersReduced ? false : { opacity: 0, y: 36, scale: 0.96 }}
-                whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                viewport={{ once: false, amount: 0.2 }}
-                transition={{
-                  duration: 0.55,
-                  delay: idx * 0.1,
-                  ease: [0.22, 1, 0.36, 1],
-                }}
-                whileHover={prefersReduced ? undefined : { y: -6 }}
-                className="relative flex flex-col items-start"
-              >
-                {/* Extruded Step Node Orb */}
-                <div className="relative z-10 mb-5 flex items-center gap-3 lg:mx-auto">
-                  <div className="neo-extruded grid h-20 w-20 place-items-center rounded-3xl">
-                    <div className="neo-inset grid h-12 w-12 place-items-center rounded-2xl text-[#E09A3B]">
-                      <Icon className="h-5 w-5" />
-                    </div>
+        <div className="relative mt-14">
+          {/* Desktop Scroll-Linked Connector Line */}
+          <div
+            aria-hidden="true"
+            className="hidden lg:block absolute top-7 left-[12%] right-[12%] h-[2px] rounded-full bg-zinc-200 overflow-hidden dark:bg-zinc-800"
+          >
+            <motion.div
+              style={prefersReduced ? undefined : { scaleX: smoothLine }}
+              className="h-full w-full origin-left bg-gradient-to-r from-[#E09A3B] via-[#F4BC68] to-[#C87E20]"
+            />
+          </div>
+
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {DELIVERY_STEPS.map((item, idx) => {
+              const Icon = item.icon;
+              return (
+                <motion.div
+                  key={item.step}
+                  initial={prefersReduced ? false : { opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: false, amount: 0.2 }}
+                  transition={{
+                    duration: 0.5,
+                    delay: idx * 0.09,
+                    ease: [0.22, 1, 0.36, 1],
+                  }}
+                  whileHover={
+                    prefersReduced
+                      ? undefined
+                      : {
+                          y: -5,
+                          transition: { type: "spring", stiffness: 350, damping: 24 },
+                        }
+                  }
+                  className="group relative flex flex-col items-start lg:items-center"
+                >
+                  {/* Step Circle Node */}
+                  <div className="relative z-10 mb-5 grid h-14 w-14 place-items-center rounded-2xl border border-zinc-200 bg-white text-[#E09A3B] shadow-sm transition-all duration-300 group-hover:border-[#E09A3B] group-hover:bg-[#E09A3B] group-hover:text-white dark:border-zinc-800 dark:bg-zinc-950">
+                    <Icon className="h-5 w-5" />
                   </div>
-                </div>
 
-                {/* Extruded Step Card */}
-                <div className="neo-extruded neo-extruded-interactive w-full flex-1 p-6">
-                  <span className="font-mono-tech text-[10px] font-extrabold tracking-[0.2em] text-[#E09A3B]">
-                    {item.code}
-                  </span>
-                  <h3 className="font-display mt-2 text-lg font-extrabold text-zinc-900 dark:text-zinc-100">
-                    {item.title}
-                  </h3>
-                  <p className="mt-2 text-xs sm:text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
-                    {item.body}
-                  </p>
-                </div>
-              </motion.div>
-            );
-          })}
+                  {/* Step Card */}
+                  <div className="w-full flex-1 rounded-2xl border border-zinc-200/80 bg-white p-6 shadow-[0_1px_2px_rgba(15,23,42,0.03)] transition-all duration-300 group-hover:border-[#E09A3B]/45 group-hover:shadow-[0_16px_32px_-16px_rgba(224,154,59,0.2)] dark:border-zinc-800 dark:bg-zinc-950">
+                    <span className="font-mono-tech text-[10px] font-extrabold tracking-[0.2em] text-[#E09A3B]">
+                      {item.code}
+                    </span>
+                    <h3 className="font-display mt-2 text-lg font-extrabold text-[#081226] dark:text-zinc-100">
+                      {item.title}
+                    </h3>
+                    <p className="mt-2 text-xs sm:text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+                      {item.body}
+                    </p>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>
