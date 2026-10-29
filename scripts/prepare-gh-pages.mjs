@@ -66,6 +66,9 @@ const html = `<!DOCTYPE html>
     <link rel="icon" href="./tricube-logo-32.png" type="image/png" sizes="32x32" />
     <link rel="icon" href="./tricube-logo-192.png" type="image/png" sizes="192x192" />
     <link rel="apple-touch-icon" href="./tricube-logo-192.png" sizes="192x192" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" />
 ${cssLinks}
   </head>
   <body>
