@@ -10,17 +10,12 @@ import {
 import {
   ArrowDown,
   ArrowRight,
-  ArrowUpRight,
   Briefcase,
   Calendar,
   CheckCircle2,
   Code2,
-  Cpu,
-  FileCheck2,
-  GraduationCap,
   Image as ImageIcon,
   Layers,
-  Rocket,
   Search,
   ShieldCheck,
   Sparkles,
@@ -28,7 +23,7 @@ import {
   X,
   Zap,
 } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Magnet } from "@/components/react-bits/Magnet";
 import { ScrollVelocity } from "@/components/react-bits/ScrollVelocity";
 import { SpotlightCard } from "@/components/react-bits/SpotlightCard";
@@ -63,49 +58,94 @@ export const Route = createFileRoute("/services/")({
   component: ServicesPage,
 });
 
-type DomainKey =
-  | "All"
-  | "Training & Cohorts"
-  | "IT & App Solutions"
-  | "Career & Resume"
-  | "Projects & Internships";
+const STAGE_W = 1920;
+const STAGE_H = 1080;
 
-const CORE_DOMAINS: {
-  key: Exclude<DomainKey, "All">;
-  code: string;
+type StudioCardTarget =
+  | { kind: "courses" }
+  | { kind: "service"; slug: string };
+
+type StudioStageCardSpec = {
+  id: string;
   title: string;
-  tagline: string;
-  icon: typeof GraduationCap;
-}[] = [
+  ariaLabel: string;
+  imageSrc: string;
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  btn: { x: number; y: number; w: number; h: number };
+  target: StudioCardTarget;
+};
+
+const STUDIO_STAGE_CARDS: StudioStageCardSpec[] = [
   {
-    key: "Training & Cohorts",
-    code: "01 // ACADEMY",
+    id: "cohort-studios",
     title: "Cohort Engineering Studios",
-    tagline: "Python, MERN, Java Full Stack, Data Science, AI, SQL & BI.",
-    icon: GraduationCap,
+    ariaLabel:
+      "Cohort Engineering Studios — Python, MERN, Java Full Stack, Data Science, AI, SQL & BI. Open Courses page",
+    imageSrc: "/images/services/studios/studio-card-1.png",
+    x: 94,
+    y: 516,
+    w: 423,
+    h: 303,
+    btn: { x: 33, y: 225, w: 61, h: 61 },
+    target: { kind: "courses" },
   },
   {
-    key: "IT & App Solutions",
-    code: "02 // ENTERPRISE",
+    id: "custom-it-delivery",
     title: "Custom Web, App & IT Delivery",
-    tagline: "Production websites, iOS/Android apps & bespoke digital builds.",
-    icon: Cpu,
+    ariaLabel:
+      "Custom Web, App & IT Delivery — Production websites, iOS/Android apps & bespoke digital builds. Open Website & IT Delivery page",
+    imageSrc: "/images/services/studios/studio-card-2.png",
+    x: 535,
+    y: 516,
+    w: 415,
+    h: 303,
+    btn: { x: 34, y: 225, w: 62, h: 61 },
+    target: { kind: "service", slug: "web-dev" },
   },
   {
-    key: "Career & Resume",
-    code: "03 // ACCELERATOR",
+    id: "career-readiness",
     title: "ATS Resume & Career Readiness",
-    tagline: "₹99 expert resume reviews, LinkedIn setups & placement prep.",
-    icon: FileCheck2,
+    ariaLabel:
+      "ATS Resume & Career Readiness — Expert resume writing, LinkedIn setups & placement prep. Open ATS Resume & Career Readiness page",
+    imageSrc: "/images/services/studios/studio-card-3.png",
+    x: 968,
+    y: 516,
+    w: 417,
+    h: 303,
+    btn: { x: 34, y: 226, w: 62, h: 60 },
+    target: { kind: "service", slug: "resume-writing" },
   },
   {
-    key: "Projects & Internships",
-    code: "04 // LAUNCHPAD",
+    id: "internships-capstones",
     title: "Client Internships & Capstones",
-    tagline: "Agile sprint internships, IoT hardware labs & final-year builds.",
-    icon: Rocket,
+    ariaLabel:
+      "Client Internships & Capstones — Agile sprint internships, IoT hardware labs & final-year builds. Open Client Internship Program page",
+    imageSrc: "/images/services/studios/studio-card-4.png",
+    x: 1403,
+    y: 516,
+    w: 431,
+    h: 303,
+    btn: { x: 37, y: 226, w: 62, h: 61 },
+    target: { kind: "service", slug: "internship" },
   },
 ];
+
+const FLAGSHIP_STAGE_CARD = {
+  id: "flagship-resume-review",
+  title: "Resume Review by Expert — ₹99",
+  ariaLabel:
+    "Flagship Fast-Track Save 80% — Resume Review by Expert for ₹99. Start Now",
+  imageSrc: "/images/services/studios/studio-card-5-flagship.png",
+  x: 94,
+  y: 837,
+  w: 1731,
+  h: 203,
+  btn: { x: 1325, y: 107, w: 314, h: 62 },
+  slug: "resume-review",
+} as const;
 
 const DELIVERY_STEPS = [
   {
@@ -231,15 +271,6 @@ function ServicesPage() {
     return counts;
   }, [enrichedServices]);
 
-  const flagshipService = useMemo(() => {
-    if (!enrichedServices.length) return null;
-    return (
-      enrichedServices.find((x) => x.svc.featured) ||
-      enrichedServices.find((x) => x.svc.slug === "resume-review") ||
-      enrichedServices[0]
-    );
-  }, [enrichedServices]);
-
   const filteredServices = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
     return enrichedServices.filter(({ svc, domain }) => {
@@ -270,7 +301,12 @@ function ServicesPage() {
       />
 
       {/* =====================================================================
-          2. KINETIC SCROLL-VELOCITY TICKER RIBBON
+          2. SECOND DESKTOP PAGE — INTERACTIVE FOUR INTEGRATED STUDIOS STAGE
+         ===================================================================== */}
+      <FourStudiosInteractiveStage />
+
+      {/* =====================================================================
+          3. KINETIC SCROLL-VELOCITY TICKER RIBBON
          ===================================================================== */}
       <div className="w-full py-5 border-y border-zinc-100 bg-[#FAFAFC] dark:bg-zinc-900/50 dark:border-zinc-800/80 overflow-hidden">
         <ScrollVelocity
@@ -291,15 +327,6 @@ function ServicesPage() {
           gap={26}
         />
       </div>
-
-      {/* =====================================================================
-          3. 4-DOMAIN STUDIO MATRIX & FLAGSHIP FAST-TRACK SPOTLIGHT
-         ===================================================================== */}
-      <FlagshipArchitectureBento
-        flagship={flagshipService}
-        domainCounts={domainCounts}
-        onSelectDomain={(domain) => scrollToCatalogue(domain)}
-      />
 
       {/* =====================================================================
           4. INTERACTIVE SERVICE CATALOGUE & PROXIMITY SPOTLIGHT CARDS
@@ -797,199 +824,274 @@ function FullScreenServicesHero({
 }
 
 /* ============================================================================
-   3. 4-DOMAIN STUDIO MATRIX & FLAGSHIP FAST-TRACK SPOTLIGHT BENTO
-   Clean modern editorial cards with SpotlightCard cursor-beam border glow.
+   2. SECOND DESKTOP PAGE — FOUR INTEGRATED STUDIOS INTERACTIVE IMAGE STAGE
+   Displays the exact Four Integrated Studios artwork fitted to desktop page
+   size (calc(100dvh - 78px)), with all 5 cards and their action buttons
+   independently animated and wired to redirect to their respective pages.
    ============================================================================ */
-function FlagshipArchitectureBento({
-  flagship,
-  domainCounts,
-  onSelectDomain,
+function StudioCardLink({
+  target,
+  ariaLabel,
+  className,
+  children,
 }: {
-  flagship: { svc: ServiceDTO; domain: string; serial: string } | null;
-  domainCounts: Record<string, number>;
-  onSelectDomain: (domain: string) => void;
+  target: StudioCardTarget;
+  ariaLabel: string;
+  className?: string;
+  children: ReactNode;
 }) {
+  if (target.kind === "courses") {
+    return (
+      <Link to="/courses" aria-label={ariaLabel} className={className}>
+        {children}
+      </Link>
+    );
+  }
+  return (
+    <Link
+      to="/services/$slug"
+      params={{ slug: target.slug }}
+      aria-label={ariaLabel}
+      className={className}
+    >
+      {children}
+    </Link>
+  );
+}
+
+function FourStudiosInteractiveStage() {
   const prefersReduced = useReducedMotion();
 
   return (
-    <section className="mx-auto max-w-7xl px-6 sm:px-10 lg:px-14 pt-16 pb-4">
-      <div className="grid gap-6 lg:grid-cols-12 items-stretch">
-        {/* Left 7 Cols: 4-Vertical Studio Matrix */}
-        <motion.div
-          initial={prefersReduced ? false : { opacity: 0, y: 28 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, amount: 0.2 }}
-          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          className="lg:col-span-7 rounded-3xl border border-zinc-200/80 bg-[#FAFAFC] p-6 sm:p-8 lg:p-9 flex flex-col justify-between dark:border-zinc-800 dark:bg-zinc-900/60"
-        >
-          <div>
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <span className="font-mono-tech text-[11px] font-bold uppercase tracking-[0.2em] text-[#E09A3B]">
-                STUDIO ECOSYSTEM // 04 PILLARS
-              </span>
-              <span className="rounded-full border border-zinc-200 bg-white px-3 py-1 text-[11px] font-semibold text-zinc-600 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300">
-                One Campus · One Engineering Team
-              </span>
-            </div>
+    <section
+      id="four-studios-stage"
+      aria-label="Four Integrated Studios and Resume Review Fast-Track"
+      className="relative w-full aspect-[1920/1080] scroll-mt-[72px] lg:scroll-mt-[78px] overflow-hidden select-none"
+    >
+      {/* Exact 1920 × 1080 (16:9) Full HD Stage — preserves 100% undistorted reference UI */}
+      <div className="relative h-full w-full">
+        {/* Exact 1920 × 1080 Original Artwork Backdrop (untouched design & clean card beds) */}
+        <img
+          src="/images/services/studios/four-studios-stage-bg.png"
+          alt="One Campus · One Engineering Team — Four Integrated Studios. Zero Handoff Friction."
+          width={1920}
+          height={1080}
+          decoding="async"
+          className="block h-full w-full object-cover pointer-events-none"
+          draggable={false}
+        />
 
-            <h2 className="font-display mt-3 text-2xl sm:text-3xl font-extrabold tracking-tight text-[#081226] dark:text-zinc-50">
-              Four Integrated Studios.{" "}
-              <span className="gold-text">Zero Handoff Friction.</span>
-            </h2>
-            <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-              Select any vertical below to filter its dedicated service tracks.
-            </p>
-          </div>
+        {/* 4 Exact Sliced Interactive Animated Domain Studio Cards */}
+        {STUDIO_STAGE_CARDS.map((card, idx) => {
+          const leftPct = `${(card.x / STAGE_W) * 100}%`;
+          const topPct = `${(card.y / STAGE_H) * 100}%`;
+          const widthPct = `${(card.w / STAGE_W) * 100}%`;
+          const heightPct = `${(card.h / STAGE_H) * 100}%`;
 
-          <div className="mt-7 grid gap-4 sm:grid-cols-2">
-            {CORE_DOMAINS.map((d, idx) => {
-              const Icon = d.icon;
-              const count = domainCounts[d.key] ?? 0;
-              return (
-                <motion.button
-                  key={d.key}
-                  type="button"
-                  onClick={() => onSelectDomain(d.key)}
-                  initial={prefersReduced ? false : { opacity: 0, y: 18 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: false, amount: 0.2 }}
-                  transition={{
-                    duration: 0.45,
-                    delay: idx * 0.07,
-                    ease: [0.22, 1, 0.36, 1],
-                  }}
-                  whileHover={
-                    prefersReduced
-                      ? undefined
-                      : {
-                          y: -4,
-                          transition: { type: "spring", stiffness: 360, damping: 24 },
-                        }
-                  }
-                  whileTap={prefersReduced ? undefined : { scale: 0.985 }}
-                  className="group relative rounded-2xl border border-zinc-200/90 bg-white p-5 text-left shadow-[0_1px_2px_rgba(15,23,42,0.03)] transition-colors duration-200 hover:border-[#E09A3B]/60 hover:shadow-[0_14px_30px_-14px_rgba(224,154,59,0.22)] cursor-pointer dark:border-zinc-800 dark:bg-zinc-950"
-                >
-                  <div className="flex items-center justify-between gap-2">
-                    <div className="grid h-10 w-10 place-items-center rounded-xl bg-[#FDF3E6] text-[#E09A3B] transition-transform duration-300 group-hover:scale-110 group-hover:bg-[#E09A3B] group-hover:text-white dark:bg-[#E09A3B]/15">
-                      <Icon className="h-5 w-5" />
-                    </div>
-                    <span className="font-mono-tech inline-flex items-center gap-1 text-[10px] font-bold tracking-widest text-zinc-400 group-hover:text-[#E09A3B] transition-colors">
-                      {count > 0 ? `${count} TRACKS` : d.code}
-                      <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                    </span>
-                  </div>
-                  <h3 className="font-display mt-3.5 text-base font-extrabold text-[#081226] group-hover:text-[#E09A3B] dark:text-zinc-100 transition-colors">
-                    {d.title}
-                  </h3>
-                  <p className="mt-1 text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">
-                    {d.tagline}
-                  </p>
-                </motion.button>
-              );
-            })}
-          </div>
-        </motion.div>
+          const btnLeftPct = `${(card.btn.x / card.w) * 100}%`;
+          const btnTopPct = `${(card.btn.y / card.h) * 100}%`;
+          const btnWidthPct = `${(card.btn.w / card.w) * 100}%`;
+          const btnHeightPct = `${(card.btn.h / card.h) * 100}%`;
 
-        {/* Right 5 Cols: Flagship Express Spotlight Card */}
-        {flagship && (
-          <motion.div
-            initial={prefersReduced ? false : { opacity: 0, y: 28 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, amount: 0.2 }}
-            transition={{ duration: 0.6, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
-            className="lg:col-span-5 flex"
-          >
-            <SpotlightCard
-              theme="light"
-              spotlightColor="#E09A3B"
-              intensity={0.22}
-              borderGlow={0.9}
-              spotlightSize={320}
-              proximity={100}
-              className="w-full !p-6 sm:!p-8 flex flex-col justify-between dark:![background-color:#18181b]"
+          return (
+            <motion.div
+              key={card.id}
+              style={{
+                left: leftPct,
+                top: topPct,
+                width: widthPct,
+                height: heightPct,
+              }}
+              initial={
+                prefersReduced ? false : { opacity: 0, y: 26, scale: 0.95 }
+              }
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: false, amount: 0.18 }}
+              transition={{
+                type: "spring",
+                stiffness: 250,
+                damping: 22,
+                delay: 0.06 + idx * 0.075,
+              }}
+              whileHover={
+                prefersReduced
+                  ? undefined
+                  : {
+                      y: -10,
+                      scale: 1.03,
+                      zIndex: 30,
+                      transition: {
+                        type: "spring",
+                        stiffness: 360,
+                        damping: 22,
+                      },
+                    }
+              }
+              whileTap={prefersReduced ? undefined : { scale: 0.985 }}
+              className="group absolute z-10 will-change-transform"
             >
-              <div>
-                <div className="flex items-center justify-between gap-3">
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-[#FDF3E6] border border-[#E09A3B]/30 px-3.5 py-1 text-[11px] font-extrabold uppercase tracking-wider text-[#E09A3B]">
-                    <Zap className="h-3.5 w-3.5" />
-                    Flagship Fast-Track
-                  </span>
-                  {flagship.svc.price >
-                    (flagship.svc.offerPrice ?? flagship.svc.price) && (
-                    <span className="font-mono-tech rounded-full bg-emerald-50 border border-emerald-200 px-3 py-1 text-[11px] font-extrabold text-emerald-700 dark:bg-emerald-950/50 dark:border-emerald-800 dark:text-emerald-400">
-                      SAVE{" "}
-                      {Math.round(
-                        ((flagship.svc.price -
-                          (flagship.svc.offerPrice ?? flagship.svc.price)) /
-                          flagship.svc.price) *
-                          100
-                      )}
-                      %
-                    </span>
-                  )}
-                </div>
+              <StudioCardLink
+                target={card.target}
+                ariaLabel={card.ariaLabel}
+                className="relative block h-full w-full rounded-[1.2vw] cursor-pointer focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#EA580C]/60"
+              >
+                <img
+                  src={card.imageSrc}
+                  alt={card.title}
+                  draggable={false}
+                  className="block h-full w-full object-fill transition-[filter] duration-300 group-hover:drop-shadow-[0_22px_28px_rgba(234,88,12,0.28)]"
+                />
 
-                {absoluteMedia(flagship.svc.imageUrl) && (
-                  <div className="mt-5 aspect-[16/9] overflow-hidden rounded-2xl border border-zinc-200/70 bg-zinc-100 dark:border-zinc-800">
-                    <img
-                      src={absoluteMedia(flagship.svc.imageUrl)}
-                      alt={flagship.svc.title}
-                      className="h-full w-full object-cover transition-transform duration-500 hover:scale-[1.03]"
+                {/* Diagonal Specular Light Sweep on Hover */}
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-0 overflow-hidden rounded-[1.15vw]"
+                >
+                  <span className="absolute inset-y-0 -left-1/2 w-1/2 -skew-x-12 bg-gradient-to-r from-transparent via-white/55 to-transparent opacity-0 transition-all duration-700 ease-out group-hover:left-[130%] group-hover:opacity-100" />
+                </span>
+
+                {/* Interactive Animated Circular Arrow Button */}
+                <span
+                  style={{
+                    left: btnLeftPct,
+                    top: btnTopPct,
+                    width: btnWidthPct,
+                    height: btnHeightPct,
+                  }}
+                  className="absolute block rounded-full"
+                >
+                  {!prefersReduced && (
+                    <motion.span
+                      aria-hidden="true"
+                      animate={{
+                        scale: [1, 1.24, 1],
+                        opacity: [0.42, 0, 0.42],
+                      }}
+                      transition={{
+                        duration: 2.4,
+                        repeat: Infinity,
+                        delay: idx * 0.35,
+                        ease: "easeInOut",
+                      }}
+                      className="pointer-events-none absolute inset-0 rounded-full border-2 border-[#EA580C]"
                     />
-                  </div>
-                )}
+                  )}
 
-                <h3 className="font-display mt-5 text-2xl font-extrabold tracking-tight text-[#081226] dark:text-zinc-50">
-                  {flagship.svc.title}
-                </h3>
+                  <span className="relative block h-full w-full rounded-full transition-all duration-300 ease-out group-hover:scale-110 hover:!scale-[1.18] group-hover:drop-shadow-[0_8px_16px_rgba(234,88,12,0.48)]">
+                    <img
+                      src="/images/services/studios/studio-btn-circle.png"
+                      alt=""
+                      aria-hidden="true"
+                      draggable={false}
+                      className="block h-full w-full object-fill"
+                    />
+                  </span>
+                </span>
+              </StudioCardLink>
+            </motion.div>
+          );
+        })}
 
-                <ul className="mt-4 space-y-2">
-                  {splitFeatures(flagship.svc.features)
-                    .slice(0, 3)
-                    .map((feat) => (
-                      <li
-                        key={feat}
-                        className="flex items-center gap-2.5 text-xs sm:text-sm font-medium text-zinc-600 dark:text-zinc-300"
-                      >
-                        <CheckCircle2 className="h-4 w-4 shrink-0 text-[#E09A3B]" />
-                        <span>{feat}</span>
-                      </li>
-                    ))}
-                </ul>
-              </div>
+        {/* 5th Bottom Flagship Fast-Track Card (Resume Review by Expert · ₹99 · Start Now →) */}
+        <motion.div
+          style={{
+            left: `${(FLAGSHIP_STAGE_CARD.x / STAGE_W) * 100}%`,
+            top: `${(FLAGSHIP_STAGE_CARD.y / STAGE_H) * 100}%`,
+            width: `${(FLAGSHIP_STAGE_CARD.w / STAGE_W) * 100}%`,
+            height: `${(FLAGSHIP_STAGE_CARD.h / STAGE_H) * 100}%`,
+          }}
+          initial={
+            prefersReduced ? false : { opacity: 0, y: 22, scale: 0.975 }
+          }
+          whileInView={{ opacity: 1, y: 0, scale: 1 }}
+          viewport={{ once: false, amount: 0.2 }}
+          transition={{
+            type: "spring",
+            stiffness: 240,
+            damping: 23,
+            delay: 0.34,
+          }}
+          whileHover={
+            prefersReduced
+              ? undefined
+              : {
+                  y: -7,
+                  scale: 1.014,
+                  zIndex: 30,
+                  transition: {
+                    type: "spring",
+                    stiffness: 340,
+                    damping: 24,
+                  },
+                }
+          }
+          whileTap={prefersReduced ? undefined : { scale: 0.992 }}
+          className="group absolute z-10 will-change-transform"
+        >
+          <Link
+            to="/services/$slug"
+            params={{ slug: FLAGSHIP_STAGE_CARD.slug }}
+            aria-label={FLAGSHIP_STAGE_CARD.ariaLabel}
+            className="relative block h-full w-full rounded-[1.25vw] cursor-pointer focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#EA580C]/60"
+          >
+            <img
+              src={FLAGSHIP_STAGE_CARD.imageSrc}
+              alt={FLAGSHIP_STAGE_CARD.title}
+              draggable={false}
+              className="block h-full w-full object-fill transition-[filter] duration-300 group-hover:drop-shadow-[0_22px_30px_rgba(234,88,12,0.26)]"
+            />
 
-              <div className="mt-7 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-zinc-100 bg-[#FAFAFC] p-4 dark:border-zinc-800 dark:bg-zinc-900">
-                <div>
-                  <div className="text-[11px] font-bold uppercase tracking-wider text-zinc-400">
-                    Turnaround · {flagship.svc.duration}
-                  </div>
-                  <div className="mt-0.5 flex items-baseline gap-2">
-                    <span className="font-display text-3xl font-extrabold text-[#081226] dark:text-white">
-                      ₹{(flagship.svc.offerPrice ?? flagship.svc.price).toLocaleString()}
-                    </span>
-                    {flagship.svc.price >
-                      (flagship.svc.offerPrice ?? flagship.svc.price) && (
-                      <span className="text-xs font-semibold text-zinc-400 line-through">
-                        ₹{flagship.svc.price.toLocaleString()}
-                      </span>
-                    )}
-                  </div>
-                </div>
+            {/* Diagonal Specular Light Sweep across Banner */}
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 overflow-hidden rounded-[1.2vw]"
+            >
+              <span className="absolute inset-y-0 -left-1/3 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/50 to-transparent opacity-0 transition-all duration-700 ease-out group-hover:left-[125%] group-hover:opacity-100" />
+            </span>
 
-                <Magnet padding={45} magnetStrength={3.5} maxOffset={7}>
-                  <Link
-                    to="/services/$slug"
-                    params={{ slug: flagship.svc.slug }}
-                    className="inline-flex items-center gap-2 rounded-full bg-[#E09A3B] px-6 py-3 text-xs sm:text-sm font-bold text-white shadow-[0_10px_24px_-6px_rgba(224,154,59,0.5)] transition-all hover:bg-[#cf892b]"
-                  >
-                    <span>Start Now</span>
-                    <ArrowRight className="h-4 w-4" />
-                  </Link>
-                </Magnet>
-              </div>
-            </SpotlightCard>
-          </motion.div>
-        )}
+            {/* Interactive Animated "Start Now →" Pill Button */}
+            <span
+              style={{
+                left: `${(FLAGSHIP_STAGE_CARD.btn.x / FLAGSHIP_STAGE_CARD.w) * 100}%`,
+                top: `${(FLAGSHIP_STAGE_CARD.btn.y / FLAGSHIP_STAGE_CARD.h) * 100}%`,
+                width: `${(FLAGSHIP_STAGE_CARD.btn.w / FLAGSHIP_STAGE_CARD.w) * 100}%`,
+                height: `${(FLAGSHIP_STAGE_CARD.btn.h / FLAGSHIP_STAGE_CARD.h) * 100}%`,
+              }}
+              className="absolute block rounded-full"
+            >
+              {!prefersReduced && (
+                <motion.span
+                  aria-hidden="true"
+                  animate={{
+                    scaleX: [1, 1.07, 1],
+                    scaleY: [1, 1.22, 1],
+                    opacity: [0.45, 0, 0.45],
+                  }}
+                  transition={{
+                    duration: 2.3,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                  className="pointer-events-none absolute inset-0 rounded-full border-2 border-[#EA580C]"
+                />
+              )}
+
+              <span className="relative block h-full w-full overflow-hidden rounded-full transition-all duration-300 ease-out group-hover:scale-[1.055] hover:!scale-[1.09] group-hover:drop-shadow-[0_10px_22px_rgba(234,88,12,0.5)]">
+                <img
+                  src="/images/services/studios/studio-btn-start-now.png"
+                  alt=""
+                  aria-hidden="true"
+                  draggable={false}
+                  className="block h-full w-full object-fill"
+                />
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/2 -skew-x-12 bg-gradient-to-r from-transparent via-white/45 to-transparent opacity-0 transition-all duration-500 ease-out group-hover:left-[135%] group-hover:opacity-100"
+                />
+              </span>
+            </span>
+          </Link>
+        </motion.div>
       </div>
     </section>
   );
