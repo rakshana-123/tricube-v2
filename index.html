@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TRI CUBE Digital Solutions — Premium IT Training & LMS</title>
+    <meta name="description" content="Live cohort training, real internships, verified certificates. Learn Python, MERN, Data Science, AI and more at TRI CUBE." />
+    <script>
+      (function () {
+        var l = window.location;
+        if (!l.hostname.includes("github.io")) return;
+        var isProject = l.pathname === "/tricube-v2" || l.pathname.indexOf("/tricube-v2/") === 0;
+        var base = isProject ? "/tricube-v2/" : "/";
+        if (l.pathname !== base && l.pathname !== base + "index.html") {
+          var rest = isProject ? l.pathname.slice("/tricube-v2".length) : l.pathname;
+          rest = rest.replace(/^\/+|\/+$/g, "");
+          var targetHash = l.hash && l.hash.length > 1 ? l.hash : (rest ? "#/" + rest + l.search : "#/");
+          l.replace(l.origin + base + targetHash);
+        }
+      })();
+    </script>
+    <link rel="icon" href="./tricube-logo-32.png" type="image/png" sizes="32x32" />
+    <link rel="icon" href="./tricube-logo-192.png" type="image/png" sizes="192x192" />
+    <link rel="apple-touch-icon" href="./tricube-logo-192.png" sizes="192x192" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" />
+    <link rel="stylesheet" href="./assets/styles-G8W4eCOJ.css" />
+    <link rel="stylesheet" href="./assets/index-CwjT73lE.css" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="./assets/index-C192ynq5.js"></script>
+  </body>
+</html>

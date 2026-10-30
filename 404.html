@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Redirecting — TRI CUBE Digital Solutions</title>
+    <script>
+      (function () {
+        var l = window.location;
+        var isProject = l.pathname === "/tricube-v2" || l.pathname.indexOf("/tricube-v2/") === 0;
+        var base = isProject ? "/tricube-v2/" : "/";
+        var rest = isProject ? l.pathname.slice("/tricube-v2".length) : l.pathname;
+        rest = rest.replace(/^\/+|\/+$/g, "");
+        var targetHash = l.hash && l.hash.length > 1 ? l.hash : (rest ? "#/" + rest + l.search : "#/");
+        l.replace(l.origin + base + targetHash);
+      })();
+    </script>
+  </head>
+  <body></body>
+</html>
