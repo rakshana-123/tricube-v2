@@ -13,4 +13,24 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
+  vite: {
+    environments: {
+      client: {
+        build: {
+          rolldownOptions: {
+            output: {
+              // Consolidate 100+ tiny icon/route micro-chunks into cohesive bundles
+              // so GitHub Pages / Fastly CDN never drops concurrent chunk bursts with 503.
+              manualChunks(moduleId: string) {
+                if (moduleId.includes("pdfjs-dist")) return "pdf";
+                if (moduleId.includes("node_modules")) return "vendor";
+                if (moduleId.includes("/src/") || moduleId.includes("\\src\\")) return "app";
+                return undefined;
+              },
+            },
+          },
+        },
+      },
+    },
+  },
 });

@@ -38,12 +38,45 @@ function NotFoundComponent() {
   );
 }
 
+function isChunkLoadError(error: unknown): boolean {
+  const msg = String((error as { message?: string })?.message || error || "").toLowerCase();
+  return (
+    msg.includes("failed to fetch dynamically imported module") ||
+    msg.includes("importing a module script failed") ||
+    msg.includes("error loading dynamically imported module") ||
+    msg.includes("unable to preload css") ||
+    msg.includes("chunkloaderror")
+  );
+}
+
+function reloadFreshBundle() {
+  if (typeof window === "undefined") return;
+  const url = new URL(window.location.href);
+  url.searchParams.set("_v", String(Date.now()));
+  window.location.replace(url.toString());
+}
+
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const router = useRouter();
+  const chunkError = isChunkLoadError(error);
+
   useEffect(() => {
+    if (chunkError && typeof window !== "undefined") {
+      try {
+        const key = "tricube_chunk_reload_at";
+        const last = Number(sessionStorage.getItem(key) || "0");
+        if (Date.now() - last > 15_000) {
+          sessionStorage.setItem(key, String(Date.now()));
+          reloadFreshBundle();
+          return;
+        }
+      } catch {
+        // Ignore storage errors
+      }
+    }
     reportLovableError(error, { boundary: "tanstack_root_error_component" });
-  }, [error]);
+  }, [chunkError, error]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
@@ -57,6 +90,10 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
             onClick={() => {
+              if (chunkError) {
+                reloadFreshBundle();
+                return;
+              }
               router.invalidate();
               reset();
             }}
@@ -64,12 +101,12 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
           >
             Try again
           </button>
-          <a
-            href="/"
+          <Link
+            to="/"
             className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
           >
             Go home
-          </a>
+          </Link>
         </div>
       </div>
     </div>

@@ -22,14 +22,15 @@ if (!entryJs) {
   process.exit(1);
 }
 
-// 1. Rewrite root-relative static asset paths and Vite preload base inside JS/CSS bundles
+// 1. Rewrite root-relative static asset paths (ONLY real static asset folders/files,
+//    never TanStack Router route paths like "/materials" or "/materials/$slug").
 const ASSET_PREFIX_RE =
-  /(["'`])\/(assets|hero|images|learners|lms|materials|showcase|tricube-logo-)/g;
+  /(["'`])\/(assets\/|hero\/|images\/|learners\/|lms\/|materials\/sample\.pdf|showcase\/|tricube-logo-)/g;
 
 for (const file of assetFiles) {
   if (!file.endsWith(".js") && !file.endsWith(".css")) continue;
   const filePath = path.join(assetsDir, file);
-  let content = fs.readFileSync(filePath, "utf8");
+  const content = fs.readFileSync(filePath, "utf8");
   let updated = content.replace(ASSET_PREFIX_RE, "$1./$2");
 
   if (file.endsWith(".js")) {
@@ -56,13 +57,31 @@ const cssLinks = cssFiles
   .map((css) => `    <link rel="stylesheet" href="./assets/${css}" />`)
   .join("\n");
 
-const html = `<!DOCTYPE html>
+// Normalize direct non-hash deep links on GitHub Pages (e.g. /services or /tricube-v2/services/web-dev)
+// into hash URLs (/#/services or /tricube-v2/#/services/web-dev) before loading relative ./assets/...
+const pathNormalizerScript = `    <script>
+      (function () {
+        var l = window.location;
+        if (!l.hostname.includes("github.io")) return;
+        var isProject = l.pathname === "/tricube-v2" || l.pathname.indexOf("/tricube-v2/") === 0;
+        var base = isProject ? "/tricube-v2/" : "/";
+        if (l.pathname !== base && l.pathname !== base + "index.html") {
+          var rest = isProject ? l.pathname.slice("/tricube-v2".length) : l.pathname;
+          rest = rest.replace(/^\\/+|\\/+$/g, "");
+          var targetHash = l.hash && l.hash.length > 1 ? l.hash : (rest ? "#/" + rest + l.search : "#/");
+          l.replace(l.origin + base + targetHash);
+        }
+      })();
+    </script>`;
+
+const indexHtml = `<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>TRI CUBE Digital Solutions — Premium IT Training & LMS</title>
     <meta name="description" content="Live cohort training, real internships, verified certificates. Learn Python, MERN, Data Science, AI and more at TRI CUBE." />
+${pathNormalizerScript}
     <link rel="icon" href="./tricube-logo-32.png" type="image/png" sizes="32x32" />
     <link rel="icon" href="./tricube-logo-192.png" type="image/png" sizes="192x192" />
     <link rel="apple-touch-icon" href="./tricube-logo-192.png" sizes="192x192" />
@@ -78,8 +97,32 @@ ${cssLinks}
 </html>
 `;
 
-fs.writeFileSync(path.join(publicDir, "index.html"), html, "utf8");
-fs.writeFileSync(path.join(publicDir, "404.html"), html, "utf8");
+// Dedicated lightweight 404.html SPA redirector so nested paths (e.g. /services/web-dev)
+// immediately redirect to /#/services/web-dev without failing on relative ./assets/* 404s.
+const notFoundHtml = `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Redirecting — TRI CUBE Digital Solutions</title>
+    <script>
+      (function () {
+        var l = window.location;
+        var isProject = l.pathname === "/tricube-v2" || l.pathname.indexOf("/tricube-v2/") === 0;
+        var base = isProject ? "/tricube-v2/" : "/";
+        var rest = isProject ? l.pathname.slice("/tricube-v2".length) : l.pathname;
+        rest = rest.replace(/^\\/+|\\/+$/g, "");
+        var targetHash = l.hash && l.hash.length > 1 ? l.hash : (rest ? "#/" + rest + l.search : "#/");
+        l.replace(l.origin + base + targetHash);
+      })();
+    </script>
+  </head>
+  <body></body>
+</html>
+`;
+
+fs.writeFileSync(path.join(publicDir, "index.html"), indexHtml, "utf8");
+fs.writeFileSync(path.join(publicDir, "404.html"), notFoundHtml, "utf8");
 fs.writeFileSync(path.join(publicDir, ".nojekyll"), "", "utf8");
 
 console.log(`Prepared GitHub Pages static bundle in ${publicDir}`);
