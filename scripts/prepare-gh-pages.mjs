@@ -33,10 +33,10 @@ for (const file of assetFiles) {
   let updated = content.replace(ASSET_PREFIX_RE, "$1./$2");
 
   if (file.endsWith(".js")) {
-    // Fix Vite preload helper URL prefix when hosted on GitHub Pages (/tricube-v2/)
+    // Fix Vite preload helper URL prefix for both root (rakshana-123.github.io/) and project (/tricube-v2/) GitHub Pages
     updated = updated.replace(
-      /function\(e\)\{return([`"'/]+)\+e\}/g,
-      'function(e){return(typeof window!=="undefined"&&window.location.hostname.includes("github.io")?"/tricube-v2/":"/")+e}'
+      /function\(([A-Za-z_$][A-Za-z0-9_$]*)\)\{return([`"'/]+)\+\1\}/g,
+      'function($1){return(typeof window!=="undefined"&&window.location.hostname.includes("github.io")&&window.location.pathname.startsWith("/tricube-v2")?"/tricube-v2/":"/")+$1}'
     );
   }
 

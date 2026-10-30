@@ -15,7 +15,15 @@ export function resolveAssetUrl(url?: string | null): string | undefined {
   if (url.startsWith("/uploads/")) {
     return `${API_BASE}${url}`;
   }
-  return url.startsWith("/") ? url : `/${url}`;
+  const clean = url.replace(/^\.?\//, "");
+  if (
+    typeof window !== "undefined" &&
+    window.location.hostname.includes("github.io") &&
+    window.location.pathname.startsWith("/tricube-v2")
+  ) {
+    return `/tricube-v2/${clean}`;
+  }
+  return `/${clean}`;
 }
 
 export async function tryBackendFetch(path: string, init?: RequestInit): Promise<Response | null> {
